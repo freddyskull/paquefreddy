@@ -1,12 +1,10 @@
-import { ProductsPage } from "./app/products/productsPage"
-import { Layout } from "./appLayout/Layout"
-import { Card } from "./components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ProductsPage } from './app/products/productsPage'
+import { Layout } from './appLayout/Layout'
 
 function App () {
   return (
     <>
-      <Layout > 
+      <Layout>
         <ProductsPage />
       </Layout>
     </>

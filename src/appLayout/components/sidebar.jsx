@@ -1,65 +1,54 @@
 import {
   BookOpen,
-  Bot,
   BoxIcon,
-  Command,
   DollarSign,
-  Frame,
   Home,
-  LifeBuoy,
   List,
-  Map,
-  PieChart,
-  Send,
   Settings2,
-  SquareTerminal,
-  Users2,
-} from "lucide-react"
+  Users2
+} from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-project"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
+  SidebarMenuItem
+} from '@/components/ui/sidebar'
+import { NavMain } from './nav-main'
+import { NavUser } from './nav-user'
 const data = {
   user: {
-    name: "USUARIO",
-    email: "Administrador",
-    avatar: "/profile.jpg",
+    name: 'USUARIO',
+    email: 'Administrador',
+    avatar: '/profile.jpg'
   },
   navMain: [
     {
-      title: "Inicio",
-      url: "#",
-      icon: Home,
+      title: 'Inicio',
+      url: '#',
+      icon: Home
     },
     {
-      title: "Productos",
-      url: "#",
+      title: 'Productos',
+      url: '#',
       icon: BoxIcon,
-      isActive: true,
+      isActive: true
     },
     {
-      title: "Categorías",
-      url: "#",
-      icon: List,
+      title: 'Categorías',
+      url: '#',
+      icon: List
     },
     {
-      title: "Proveedores",
-      url: "#",
-      icon: Users2,
+      title: 'Proveedores',
+      url: '#',
+      icon: Users2
     },
     {
-      title: "Lista negra",
-      url: "#",
-      icon: BookOpen,
+      title: 'Lista negra',
+      url: '#',
+      icon: BookOpen
       // items: [
       //   {
       //     title: "Introduction",
@@ -80,40 +69,40 @@ const data = {
       // ],
     },
     {
-      title: "Ventas",
-      url: "#",
-      icon: DollarSign,
+      title: 'Ventas',
+      url: '#',
+      icon: DollarSign
     },
     {
-      title: "Configuración",
-      url: "#",
-      icon: Settings2,
-    },
-  ],
+      title: 'Configuración',
+      url: '#',
+      icon: Settings2
+    }
+  ]
 }
 
 export const SidebarComponent = () => {
   return (
-    <Sidebar >
-      <SidebarHeader  >
-        <SidebarMenu >
-          <SidebarMenuItem >
-            <a href="#" className='flex flex-row items-center gap-2'>
+    <Sidebar>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <a href='#' className='flex flex-row items-center gap-2'>
               <div>
-                <img src="/logo.svg" width={80} />
+                <img src='/logo.svg' width={80} />
               </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-bold text-lg text-primary/80">PAQUEFREDDY</span>
-                <span className="truncate text-xs">Sistema</span>
+              <div className='grid flex-1 text-left text-sm leading-tight'>
+                <span className='truncate font-bold text-lg text-primary/80'>PAQUEFREDDY</span>
+                <span className='truncate text-xs'>Sistema</span>
               </div>
             </a>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent  >
+      <SidebarContent>
         <NavMain items={data.navMain} />
-      </SidebarContent >
-      <SidebarFooter >
+      </SidebarContent>
+      <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>

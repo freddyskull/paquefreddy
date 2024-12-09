@@ -30,9 +30,9 @@ export const Layout = ({ children, variant = 'card' }) => {
             </Breadcrumb>
           </div>
         </header>
-        <div className='container px-3'>
+        <div className='px-3'>
           {
-          variant === 'card'
+            variant === 'card'
             ? (
               <Card className='max-h-[91vh] p-2'>
                 <ScrollArea className='max-h-[91vh] p-4'>
@@ -43,7 +43,7 @@ export const Layout = ({ children, variant = 'card' }) => {
             : (
                 { children }
               )
-        }
+          }
         </div>
       </SidebarInset>
     </SidebarProvider>

@@ -126,3 +126,14 @@
     @apply bg-background text-foreground;
   }
 }
+.product-container .image{
+  transition: 0.2s;
+  background-position: center center;
+  height: 150px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.product-container:hover .image{
+  transform: scale(1.1);
+  
+}

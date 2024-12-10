@@ -12,12 +12,14 @@ module.exports = {
       colors: {
         background: '#E2E8F0',
         foreground: '#666666',
+        darkBackground: '#000',
         card: { DEFAULT: '#fff', foreground: '#666666' },
         popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))'
+          DEFAULT: '#fff',
+          foreground: '#666666'
         },
         primary: { DEFAULT: '#526bd8', foreground: '#fff' },
+        success: { DEFAULT: '#21912a', foreground: '#fff' },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))'
@@ -44,6 +46,15 @@ module.exports = {
           4: 'hsl(var(--chart-4))',
           5: 'hsl(var(--chart-5))'
         },
+        animation: {
+          'pulse-wave': 'pulse-wave 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+        },
+        keyframes: {
+          'pulse-wave': {
+            '0%, 100%': { transform: 'scale(1)', opacity: 1 },
+            '50%': { transform: 'scale(1.8)', opacity: 0.5 }
+          }
+        },
         sidebar: {
           DEFAULT: '#fff',
           foreground: '#666666',
@@ -56,6 +67,6 @@ module.exports = {
         }
       }
     }
-  },
-  plugins: [require('tailwindcss-animate')]
+  }
+  // plugins: [require('tailwindcss-animate')]
 }

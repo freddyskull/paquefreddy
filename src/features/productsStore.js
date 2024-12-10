@@ -9,7 +9,10 @@ export const useProductsStore = create((set) => ({
     load: false
   },
   getProducts: async () => {
-    const products = await client.collection('products').getFullList()
+    const products = await client.collection('products').getFullList({
+      sort: '-created',
+      expand: 'categorie_clt'
+    })
     set(state => ({
       ...state,
       products: {

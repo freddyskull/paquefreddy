@@ -15,13 +15,13 @@ export const Layout = ({ children, variant = 'card' }) => {
     <SidebarProvider>
       <SidebarComponent />
       <SidebarInset>
-        <header className='flex h-16 shrink-0 items-center gap-2'>
+        <header className='flex items-center gap-2 h-16 shrink-0'>
           <div className='flex items-center gap-2 px-4'>
             <SidebarTrigger className='-ml-1' />
-            {/* <Separator orientation="vertical" className="mr-2 h-4 bg-slate-400" /> */}
+            {/* <Separator orientation="vertical" className="bg-slate-400 mr-2 h-4" /> */}
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className='hidden md:block'>
+                <BreadcrumbItem className='md:block hidden'>
                   <BreadcrumbLink href='#'>
                     Productos
                   </BreadcrumbLink>
@@ -33,14 +33,14 @@ export const Layout = ({ children, variant = 'card' }) => {
         <div className='px-3'>
           {
             variant === 'card'
-            ? (
-              <Card className='max-h-[91vh] p-2'>
-                <ScrollArea className='max-h-[91vh] p-4'>
-                  {children}
-                </ScrollArea>
-              </Card>
+              ? (
+                <Card className='bg-slate-100 m-0 p-0 max-h-[92vh]'>
+                  <ScrollArea className='max-h-[94vh]'>
+                    {children}
+                  </ScrollArea>
+                </Card>
               )
-            : (
+              : (
                 { children }
               )
           }

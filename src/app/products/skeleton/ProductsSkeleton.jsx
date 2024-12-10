@@ -2,13 +2,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export const ProductsSkeleton = () => {
   return (
-    <div className='grid grid-cols-4 gap-8'>
+    <div className='gap-8 grid grid-cols-1 md:grid-cols-4 p-4'>
       {Array.from({ length: 16 }).map((_, index) => (
         <div key={index} className='flex flex-col space-y-3'>
-          <Skeleton className='h-[120px] rounded-xl' />
-          <div className='space-y-2 flex flex-col items-center'>
-            <Skeleton className='h-4 w-[90%]' />
-            <Skeleton className='h-4 w-[80%]' />
+          <Skeleton className='rounded-xl h-[120px]' />
+          <div className='flex flex-col items-center space-y-2'>
+            <Skeleton className='w-[90%] h-4' />
+            <Skeleton className='w-[80%] h-4' />
           </div>
         </div>
       ))}

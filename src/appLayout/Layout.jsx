@@ -5,6 +5,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList
 } from '@/components/ui/breadcrumb'
+import { Toaster } from '@/components/ui/toaster'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { SidebarComponent } from './components/sidebar'
 import { Card } from '@/components/ui/card'
@@ -44,6 +45,7 @@ export const Layout = ({ children, variant = 'card' }) => {
                 { children }
               )
           }
+          <Toaster />
         </div>
       </SidebarInset>
     </SidebarProvider>

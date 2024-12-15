@@ -1,8 +1,21 @@
 import React from 'react'
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Button } from '../ui/button'
+import { Edit2, SearchCode, Trash } from 'lucide-react'
 
-export const DataTable = ({ columns, data, filtersTable }) => {
+export const DataTable = ({ columns, data, filtersTable, editItem, deleteItem }) => {
+  const rangeFilterFn = (row, columnId, filterValue) => {
+    if (!filterValue) return true
+
+    const [min, max] = filterValue.split('-').map(val => parseFloat(val.trim()))
+    const cellValue = parseFloat(row.getValue(columnId))
+
+    if (isNaN(min) || isNaN(max)) return true // Si no es un rango válido, no filtrar
+
+    return cellValue >= min && cellValue <= max
+  }
+
   const table = useReactTable({
     data,
     columns,
@@ -16,12 +29,14 @@ export const DataTable = ({ columns, data, filtersTable }) => {
       columnFilters: filtersTable.columnFilters,
       pagination: filtersTable.pagination,
       globalFilter: filtersTable.filters
-    }
+    },
+    globalFilterFn: rangeFilterFn // Asignar el filtro personalizado
+
   })
 
   return (
     <ScrollArea className='my-2 mr-1 p-4 h-[80vh]'>
-      <div className='gap-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 pt-4 pb-4 w-full'>
+      <div className='gap-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 pt-4 pb-4 w-full'>
         {table.getRowModel().rows.map(row => (
           <div key={row.id} className='relative p-4 product-container'>
             {row.getVisibleCells().map(cell => (
@@ -29,6 +44,17 @@ export const DataTable = ({ columns, data, filtersTable }) => {
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </div>
             ))}
+            <div className='mt-4 actions'>
+              <Button variant='outline' className='px-2 h-8' onClick={() => editItem(row.original)}>
+                <Edit2 />
+              </Button>
+              <Button variant='outline' className='hover:bg-destructive px-2 h-8' onClick={() => deleteItem(row.original)}>
+                <Trash />
+              </Button>
+              <Button variant='outline' className='hover:bg-warn px-2 h-8'>
+                <SearchCode />
+              </Button>
+            </div>
           </div>
         ))}
       </div>

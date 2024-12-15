@@ -1,11 +1,22 @@
 import { Input } from '@/components/ui/input'
 import React from 'react'
 // import { CurrencySelector } from './currencySelector'
-import { Button } from '@/components/ui/button'
-import { Boxes } from 'lucide-react'
 import { Settings } from './settings'
+import { ProductForm } from '../productForm'
 
-export const ProductsFilters = ({ filtersTable, setFiltersTable, currency, changeCurrency }) => {
+export const ProductsFilters = ({
+  filtersTable,
+  setFiltersTable,
+  currency,
+  changeCurrency,
+  changeShowPriceEnt,
+  showPriceEnt,
+  data,
+  showEdit,
+  changeShowEdit,
+  productActionDialog,
+  setProductActionDialog
+}) => {
   const onSearchHandle = (e) => {
     setFiltersTable((prevState) => ({ ...prevState, filters: e.target.value }))
   }
@@ -17,12 +28,24 @@ export const ProductsFilters = ({ filtersTable, setFiltersTable, currency, chang
         </div>
       </div>
       <div className='flex justify-end items-center gap-2'>
-        <Button variant='outline' className={`md:block hidden ${currency === 'usd' && 'hover:bg-success'}`}>
-          <span className='lg:block hidden'>Nuevo producto</span>
-          <Boxes className='lg:hidden' />
-        </Button>
+        <ProductForm
+          data={data}
+          currency={currency}
+          changeCurrency={changeCurrency}
+          productActionDialog={productActionDialog}
+          setProductActionDialog={setProductActionDialog}
+        />
         {/* <CurrencySelector currency={currency} changeCurrency={changeCurrency} /> */}
-        <Settings filtersTable={filtersTable} setFiltersTable={setFiltersTable} currency={currency} changeCurrency={changeCurrency} />
+        <Settings
+          filtersTable={filtersTable}
+          setFiltersTable={setFiltersTable}
+          currency={currency}
+          changeCurrency={changeCurrency}
+          changeShowPriceEnt={changeShowPriceEnt}
+          showPriceEnt={showPriceEnt}
+          showEdit={showEdit}
+          changeShowEdit={changeShowEdit}
+        />
       </div>
     </div>
   )

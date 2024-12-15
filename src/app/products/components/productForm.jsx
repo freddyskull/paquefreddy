@@ -1,0 +1,252 @@
+import { FormInput } from '@/components/formInput'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from '@/components/ui/dialog'
+import { Boxes, RotateCcw } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { productSchema } from '@/features/validations/productoSchema'
+import { PreviewProduct } from './previewProduct'
+import { useCategoriesStore } from '@/features/store/categoriesStore'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
+import { SlugsInput } from './filters/suglsInput'
+import { AutocompleteInput } from '@/components/autoCompleteInput'
+import { brands } from './autocompleteBrand'
+import { useConfigStore } from '@/features/store/configStore'
+import { useProductsStore } from '@/features/store/productsStore'
+import { formatPrice } from '@/features/formatPrice'
+import { useToast } from '@/hooks/use-toast'
+
+export const ProductForm = ({
+  data,
+  currency,
+  changeCurrency,
+  productActionDialog,
+  setProductActionDialog
+}) => {
+  const {
+    handleSubmit,
+    register,
+    watch,
+    setValue,
+    reset,
+    formState: { errors }
+  } = useForm({
+    resolver: zodResolver(productSchema),
+    defaultValues: data
+  })
+  const { config } = useConfigStore()
+  const dolar = config.item.dollar
+  const [tags, setTags] = useState(data.slugs)
+  const { categories } = useCategoriesStore()
+  const { products } = useProductsStore()
+  const { addNewProduct, editProduct } = useProductsStore()
+  const [newProduct, setnewProduct] = useState(false)
+  const { toast } = useToast()
+  const onSubmit = (formData) => {
+    const newFormData = {
+      ...formData,
+      slugs: tags.length > 0 ? tags : [],
+      price: currency === 'usd'
+        ? parseFloat(formData.price)
+        : parseFloat(formData.price) / dolar,
+      price_ent: currency === 'usd'
+        ? parseFloat(formData.price_ent)
+        : parseFloat(formData.price_ent) / dolar
+    }
+    if (newProduct) {
+      editProduct(newFormData)
+      toast({
+        title: `El producto "${newFormData.name}" ha sido editado`
+      })
+      reset()
+      setProductActionDialog(false)
+    } else {
+      if (findProduct(products, newFormData.name)) {
+        toast({
+          title: `El producto "${newFormData.name}" ya existe`,
+          description: 'Por favor intenta con otro.'
+        })
+      } else {
+        addNewProduct(newFormData)
+        toast({
+          title: `El producto "${newFormData.name}" ha sido agregado`
+        })
+        reset()
+      }
+    }
+  }
+
+  const findProduct = (object, nombre) => {
+    return object.items.find(item => item.name.toLowerCase() === nombre.toLowerCase())
+  }
+
+  useEffect(() => {
+    if (data.name !== '') {
+      setValue('id', data.id)
+      setValue('name', data.name)
+      setValue('stock', data.stock)
+      setValue('image', data.image)
+      setValue('categorie_clt', data.categorie_clt)
+      setValue('price_ent', formatPrice(data.price_ent, currency, dolar))
+      setValue('price', formatPrice(data.price, currency, dolar))
+      setValue('brand', data.brand)
+      setValue('slugs', data.slugs === null ? [] : data.slugs)
+      setTags(data.slugs === null ? [] : data.slugs)
+      setnewProduct(true)
+    }
+  }, [data])
+
+  const handleReset = () => {
+    reset()
+    setnewProduct(false)
+  }
+
+  return (
+    <Dialog open={productActionDialog} onOpenChange={setProductActionDialog}>
+      <DialogTrigger>
+        <div className='flex gap-2'>
+          <div className='bg-white btn'>
+            <span className='lg:block hidden' onClick={() => handleReset()}>Nuevo producto</span>
+            <Boxes className='lg:hidden' />
+          </div>
+          {
+            watch().name !== '' && (
+              <div className='bg-warn text-white btn pulse'>
+                <RotateCcw size={18} />
+              </div>
+            )
+          }
+        </div>
+      </DialogTrigger>
+      <DialogContent className='max-w-[900px]'>
+        <DialogHeader>
+          <DialogTitle className='uppercase'>Agregar nuevo producto</DialogTitle>
+          <DialogDescription>
+            {' '}
+          </DialogDescription>
+        </DialogHeader>
+        <div className='flex gap-4'>
+          <form onSubmit={handleSubmit(onSubmit)} className='w-[70%]'>
+            <div className='gap-4 grid grid-cols-2'>
+              <FormInput
+                register={register}
+                label='Nombre del producto'
+                name='name'
+                error={errors}
+                placeholder='El nombre es requerido *'
+              />
+              <FormInput
+                register={register}
+                label='Cantidad en inventario'
+                placeholder='La cantidad es requerida *'
+                name='stock'
+                type='number'
+                error={errors}
+              />
+            </div>
+            <div className=''>
+              <FormInput
+                register={register}
+                label='Imágen del producto'
+                name='image'
+                error={errors}
+                placeholder='Introduzca URL valida requerida *'
+              />
+            </div>
+            <div className='gap-4 grid grid-cols-3'>
+              <FormInput
+                register={register}
+                label='Precio entrada'
+                placeholder='Campo requerido *'
+                name='price_ent'
+                type='text'
+                error={errors}
+              />
+              <FormInput
+                register={register}
+                label='Precio venta'
+                name='price'
+                placeholder='Campo requerido *'
+                type='text'
+                error={errors}
+              />
+              <FormInput
+                register={register}
+                label='Cantidad por caja'
+                name='bundle'
+                error={errors}
+                type='number'
+              />
+            </div>
+            <div className='gap-4 grid grid-cols-2'>
+              <div>
+                <label className='mb-1 font-light text-[13px] dark:text-gray-400 uppercase'>Categorías</label>
+                <Select defaultValue={data.categorie_clt !== null ? data.categorie_clt : ''} onValueChange={(e) => setValue('categorie_clt', e)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecciona una' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {
+                      categories.items.map((item, index) => (
+                        <SelectItem value={item.id} key={index}>{item.title}</SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                </Select>
+                {errors.categorie_clt
+                  ? (
+                    <span className='text-red-500 text-xs'>{errors.categorie_clt.message}</span>
+                  )
+                  : (
+                    <span className='opacity-0 text-xs'>ERROR</span>
+                  )}
+              </div>
+              <AutocompleteInput
+                name='brand'
+                register={register}
+                data={brands}
+                label='Marcas'
+                defaultValue={data.brand}
+                setValue={setValue}
+              />
+            </div>
+            <div>
+              <SlugsInput tags={tags} setTags={setTags} />
+            </div>
+            <div className='flex justify-between gap-4 mt-8'>
+              <div className='flex'>
+                <DialogClose asChild>
+                  <Button variant='ghost'>Cancelar</Button>
+                </DialogClose>
+                <Button type='button' variant='ghost' onClick={() => reset()}>Reiniciar</Button>
+              </div>
+              <Button className={newProduct ? 'bg-warn hover:bg-warn/60' : currency === 'usd' ? 'bg-success hover:bg-success/60' : 'bg-primary hover:bg-primary/50'}>
+                {
+                  newProduct ? 'Editar' : 'Guardar'
+                }
+              </Button>
+            </div>
+          </form>
+          <div className='w-[30%]'>
+            <PreviewProduct watch={watch} categories={categories.items} currency={currency} changeCurrency={changeCurrency} dolarPrice={dolar} />
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}

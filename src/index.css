@@ -133,6 +133,23 @@
   border-radius: 10px;
   transition: 0.2s;
 }
+.product-container .actions{
+  display: none;
+}
+.product-container:hover .actions{
+  display: flex;
+  position: absolute;
+  width: 85%;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  top: 60px;
+  height: 15%;
+  border-radius: 10px;
+  left: 40;
+  padding: 0px 20px;
+  background: rgba(0, 0, 0, 0.336);
+}
 .product-container:hover{
   box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.1);
   -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.1);
@@ -176,4 +193,60 @@
   width: 10px;
   height: 10px;
   border-radius: 100px;
+}
+
+.btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ebebeb;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 500;
+}
+.closebtn{
+  display: flex;
+  justify-content: space-between;
+  background: #f5f5f5;
+  margin-top: 10px;
+  padding: 5px 10px;
+}
+.closebtn:hover span{
+  color:white
+}
+
+/* Define estilos personalizados para un switch más pequeño */
+.small-switch {
+  width: 30px; 
+  margin-right: 10px;
+}
+
+.switch:hover > .small-switch {
+  background: white;
+}
+
+.switch:hover span {
+  background: white;
+}
+
+.small-switch,  .switch-thumb {
+  width: 30px; /* Ajusta el ancho del círculo */
+  height: 15px; /* Ajusta la altura del círculo */
+}
+
+.pulse {
+  animation: pulse-animation 2s infinite;
+}
+
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(245, 159, 10, 1);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+  }
 }

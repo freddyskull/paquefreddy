@@ -20,6 +20,7 @@ module.exports = {
         },
         primary: { DEFAULT: '#526bd8', foreground: '#fff' },
         success: { DEFAULT: '#21912a', foreground: '#fff' },
+        warn: { DEFAULT: '#f59e0b', foreground: '#fff' },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))'

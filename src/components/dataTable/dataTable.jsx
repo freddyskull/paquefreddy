@@ -5,17 +5,6 @@ import { Button } from '../ui/button'
 import { Edit2, SearchCode, Trash } from 'lucide-react'
 
 export const DataTable = ({ columns, data, filtersTable, editItem, deleteItem }) => {
-  const rangeFilterFn = (row, columnId, filterValue) => {
-    if (!filterValue) return true
-
-    const [min, max] = filterValue.split('-').map(val => parseFloat(val.trim()))
-    const cellValue = parseFloat(row.getValue(columnId))
-
-    if (isNaN(min) || isNaN(max)) return true // Si no es un rango válido, no filtrar
-
-    return cellValue >= min && cellValue <= max
-  }
-
   const table = useReactTable({
     data,
     columns,
@@ -29,9 +18,7 @@ export const DataTable = ({ columns, data, filtersTable, editItem, deleteItem })
       columnFilters: filtersTable.columnFilters,
       pagination: filtersTable.pagination,
       globalFilter: filtersTable.filters
-    },
-    globalFilterFn: rangeFilterFn // Asignar el filtro personalizado
-
+    }
   })
 
   return (

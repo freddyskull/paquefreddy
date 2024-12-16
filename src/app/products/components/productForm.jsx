@@ -121,7 +121,7 @@ export const ProductForm = ({
   return (
     <Dialog open={productActionDialog} onOpenChange={setProductActionDialog}>
       <DialogTrigger>
-        <div className='flex gap-2'>
+        <div className='md:flex gap-2 hidden'>
           <div className='bg-white btn'>
             <span className='lg:block hidden' onClick={() => handleReset()}>Nuevo producto</span>
             <Boxes className='lg:hidden' />

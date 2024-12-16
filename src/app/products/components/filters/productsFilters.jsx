@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input'
 import React from 'react'
-// import { CurrencySelector } from './currencySelector'
+import { CurrencySelector } from './currencySelector'
 import { Settings } from './settings'
 import { ProductForm } from '../productForm'
 
@@ -35,17 +35,19 @@ export const ProductsFilters = ({
           productActionDialog={productActionDialog}
           setProductActionDialog={setProductActionDialog}
         />
-        {/* <CurrencySelector currency={currency} changeCurrency={changeCurrency} /> */}
-        <Settings
-          filtersTable={filtersTable}
-          setFiltersTable={setFiltersTable}
-          currency={currency}
-          changeCurrency={changeCurrency}
-          changeShowPriceEnt={changeShowPriceEnt}
-          showPriceEnt={showPriceEnt}
-          showEdit={showEdit}
-          changeShowEdit={changeShowEdit}
-        />
+        <CurrencySelector currency={currency} changeCurrency={changeCurrency} />
+        <div className='md:block hidden'>
+          <Settings
+            filtersTable={filtersTable}
+            setFiltersTable={setFiltersTable}
+            currency={currency}
+            changeCurrency={changeCurrency}
+            changeShowPriceEnt={changeShowPriceEnt}
+            showPriceEnt={showPriceEnt}
+            showEdit={showEdit}
+            changeShowEdit={changeShowEdit}
+          />
+        </div>
       </div>
     </div>
   )

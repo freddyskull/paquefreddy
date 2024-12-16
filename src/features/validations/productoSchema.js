@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const productSchema = z.object({
   name: z.string().min(3, 'Nombre es obligatorio'),
-  stock: z.number({ invalid_type_error: 'La cantidad es obligatoria' }).min(1, 'La cantidad debe ser al menos 1'),
+  stock: z.number({ invalid_type_error: 'La cantidad es obligatoria' }).min(0, 'La cantidad debe ser al menos 0'),
   categorie_clt: z.string(),
   image: z.string().url('Debe ser una URL válida'),
   price_ent: z.string({ invalid_type_error: 'El precio de compra es obligatorio' }).refine((val) => {

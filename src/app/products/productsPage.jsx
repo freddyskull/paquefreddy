@@ -116,9 +116,9 @@ export const ProductsPage = () => {
         accessorKey: 'updated',
         header: 'Editado recientemente',
         enableGlobalFilter: false,
-        cell: info => (
+        cell: ({ row }) => (
           <>
-            {formatDistanceInDays(new Date(), info.getValue()) === 'nuevo' &&
+            {formatDistanceInDays(new Date(), row.original.updated) === 'nuevo' && formatDistanceInDays(new Date(), row.original.created) !== 'nuevo' &&
               (
                 <div className={`bg-amber-500 pulse badge-edit ${!showEdit && 'hidden'}`} />
               )}

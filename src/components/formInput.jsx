@@ -16,7 +16,16 @@ export const FormInput = ({
         type={type}
         placeholder={placeholder}
         className={error[name] ? 'border-red-500' : ''}
-        {...register(name)}
+        {
+        ...register(name,
+          {
+            setValueAs: (value) => {
+              if (value === null) return null
+              if (value === '') return ''
+              return type === 'number' ? parseFloat(value) : value
+            }
+          })
+        }
       />
       {error[name]
         ? (

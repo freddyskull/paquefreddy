@@ -60,6 +60,7 @@ export const ProductForm = ({
   const onSubmit = (formData) => {
     const newFormData = {
       ...formData,
+      id: data.id,
       slugs: tags.length > 0 ? tags : [],
       price: currency === 'usd'
         ? parseFloat(formData.price)
@@ -68,6 +69,7 @@ export const ProductForm = ({
         ? parseFloat(formData.price_ent)
         : parseFloat(formData.price_ent) / dolar
     }
+
     if (newProduct) {
       editProduct(newFormData)
       toast({

@@ -5,8 +5,9 @@ import React from 'react'
 import { CurrencySelector } from './filters/currencySelector'
 import { SlugsComponent } from '../productsPage'
 import { Button } from '@/components/ui/button'
+// import { formatPrice } from '@/features/formatPrice'
 
-export const PreviewProduct = ({ watch, categories, currency, changeCurrency }) => {
+export const PreviewProduct = ({ watch, categories, currency, changeCurrency, dolarPrice, bundleProduct }) => {
   const showPriceEnt = JSON.parse(localStorage.getItem('showPriceEnt'))
   const priceClass = `font-bold text-end ${currency === 'bs' ? 'text-primary hover:text-primary/60' : 'text-success hover:text-success/60'}`
   const imgClass = { background: `url(${watch().image})`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
@@ -71,12 +72,17 @@ export const PreviewProduct = ({ watch, categories, currency, changeCurrency }) 
           showPriceEnt
             ? (
               <div className='flex justify-between mt-4'>
-                <div className='flex flex-col items-start gap-1'>
-                  <span className='text-[10px] text-slate-400 uppercase'>venta</span>
-                  <span className={`${priceClass} text-lg`}>{watch().price === 0 || watch().price === '' ? 'N/A' : watch().price}</span>
+                <div className='flex flex-col'>
+                  <span className='text-[10px] text-slate-400 uppercase'>PRECIO PQTE</span>
+                  <span className='font-bold text-lg text-primary/70'>
+                    {watch().price_bundle}
+                  </span>
                 </div>
                 <div>
-                  <span className='text-slate-300'>|</span>
+                  <div className='flex flex-col items-start gap-1'>
+                    <span className='text-[10px] text-slate-400 uppercase'>venta</span>
+                    <span className={`${priceClass} text-lg`}>{watch().price === 0 || watch().price === '' ? 'N/A' : watch().price}</span>
+                  </div>
                 </div>
                 <div className='text-right flex flex-col gap-1'>
                   <span className='text-[10px] text-slate-400 uppercase'>Entrada</span>
@@ -85,13 +91,21 @@ export const PreviewProduct = ({ watch, categories, currency, changeCurrency }) 
               </div>
             )
             : (
-              <div className='flex justify-center mt-4'>
-                <div className='flex flex-col text-center'>
-                  <span className='text-[10px] text-slate-400 uppercase'>PRECIO</span>
+              <div className={`flex mt-4 ${bundleProduct ? 'justify-between' : 'justify-center'}`}>
+                <div className='flex flex-col'>
+                  <span className={`text-[10px] text-slate-400 uppercase ${!bundleProduct && 'text-center'}`}>PRECIO</span>
                   <span className={`${priceClass} text-2xl`}>
                     {watch().price}
                   </span>
                 </div>
+                {bundleProduct && (
+                  <div className='flex flex-col'>
+                    <span className='text-[10px] text-slate-400 uppercase'>PRECIO PQTE</span>
+                    <span className='text-right font-bold text-2xl text-primary/70'>
+                      {watch().price}
+                    </span>
+                  </div>
+                )}
               </div>
             )
         }

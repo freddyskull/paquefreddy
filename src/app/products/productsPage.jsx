@@ -61,14 +61,15 @@ export const ProductsPage = () => {
   const initialState = {
     name: '',
     stock: 0,
-    categorie_clt: config.item.defaultCategory,
+    categorie_clt: 'kmffiyauecs65cp', // TODO: Esto debo resolverlo ya que estoy tomando la categoria directamente
     price: 0,
     price_ent: 0,
     slugs: [],
     image: '',
     brand: '',
     bundle: 0,
-    expiration: new Date()
+    price_bundle: 0,
+    expiration: null
   }
   const { toast } = useToast()
   const [data, setdata] = useState(initialState)
@@ -131,7 +132,7 @@ export const ProductsPage = () => {
         header: 'Nombre del Producto',
         cell: info => (
           <h1 className={
-            `md:line-clamp-2 text-lg w-full flex items-center text-center h-14 justify-center
+            `md:line-clamp-2 text-sm md:text-lg w-full flex items-center text-center h-14 justify-center
             ${currency === 'bs' ? 'hover:text-primary' : 'hover:text-success'} title`
           }
           >

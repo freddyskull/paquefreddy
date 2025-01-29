@@ -30,6 +30,7 @@ import { useConfigStore } from '@/features/store/configStore'
 import { useProductsStore } from '@/features/store/productsStore'
 import { formatPrice } from '@/features/formatPrice'
 import { useToast } from '@/hooks/use-toast'
+import { Badge } from '@/components/ui/badge'
 
 export const ProductForm = ({
   data,
@@ -55,19 +56,24 @@ export const ProductForm = ({
   const { categories } = useCategoriesStore()
   const { products } = useProductsStore()
   const { addNewProduct, editProduct } = useProductsStore()
+  const [tagsinputValue, settagsInputValue] = useState('')
   const [newProduct, setnewProduct] = useState(false)
+  const [bundleProduct, setbundleProduct] = useState(false)
   const { toast } = useToast()
   const onSubmit = (formData) => {
     const newFormData = {
       ...formData,
       id: data.id,
-      slugs: tags.length > 0 ? tags : [],
+      slugs: tags.length > 0 ? tags : [tagsinputValue],
       price: currency === 'usd'
         ? parseFloat(formData.price)
         : parseFloat(formData.price) / dolar,
       price_ent: currency === 'usd'
         ? parseFloat(formData.price_ent)
-        : parseFloat(formData.price_ent) / dolar
+        : parseFloat(formData.price_ent) / dolar,
+      price_bundle: currency === 'usd'
+        ? parseFloat(watch().price_bundle)
+        : parseFloat(watch().price_bundle) / dolar
     }
 
     if (newProduct) {
@@ -107,6 +113,8 @@ export const ProductForm = ({
       setValue('price_ent', formatPrice(data.price_ent, currency, dolar))
       setValue('price', formatPrice(data.price, currency, dolar))
       setValue('brand', data.brand)
+      setValue('bundle', data.bundle)
+      setValue('price_bundle', formatPrice(data.price_bundle, currency, dolar))
       setValue('slugs', data.slugs === null ? [] : data.slugs)
       setTags(data.slugs === null ? [] : data.slugs)
       setnewProduct(true)
@@ -116,6 +124,19 @@ export const ProductForm = ({
   const handleReset = () => {
     reset()
     setnewProduct(false)
+  }
+
+  const autoprice = () => {
+    const profit = parseFloat(config.item.profits)
+    const percent = parseFloat(watch().price_ent) * profit // aqui se multiplica por el porcentaje de ganancia
+    const result = parseFloat(watch().price_ent) + percent
+    setValue('price', formatPrice(result, 'usd', dolar)) // aqui es usd debido a que necesito que sea el precio exacto
+    if (bundleProduct) {
+      const discountValue = parseFloat(config.item.bundle_discount)
+      const bundleResult = result * watch().bundle
+      const discountResult = discountValue * bundleResult
+      setValue('price_bundle', formatPrice((bundleResult - discountResult), 'usd', dolar))
+    }
   }
 
   return (
@@ -137,7 +158,14 @@ export const ProductForm = ({
       </DialogTrigger>
       <DialogContent className='max-w-[900px]'>
         <DialogHeader>
-          <DialogTitle className='uppercase'>Agregar nuevo producto</DialogTitle>
+          <DialogTitle className='flex items-center uppercase'>
+            Agregar nuevo producto
+            <Badge className='ml-2 cursor-pointer' onClick={() => setbundleProduct(!bundleProduct)} type='button'>
+              {bundleProduct
+                ? 'por paquete'
+                : 'individual'}
+            </Badge>
+          </DialogTitle>
           <DialogDescription>
             {' '}
           </DialogDescription>
@@ -170,30 +198,50 @@ export const ProductForm = ({
                 placeholder='Introduzca URL valida requerida *'
               />
             </div>
-            <div className='gap-4 grid grid-cols-3'>
+            <div className={`gap-4 grid ${bundleProduct ? 'grid-cols-4' : 'grid-cols-2'}`}>
+              <div className='relative'>
+                <FormInput
+                  register={register}
+                  label='Precio entrada'
+                  placeholder='Campo requerido *'
+                  name='price_ent'
+                  type='text'
+                  error={errors}
+                />
+                <div className={errors.price_ent === undefined && watch().price_ent > 0 ? 'block' : 'hidden'}>
+                  <small
+                    className='bottom-0 absolute text-primary hover:text-primary/80 uppercase transition-all animate cursor-pointer fade-in'
+                    onClick={() => autoprice()}
+                  >Asignar precio
+                  </small>
+                </div>
+              </div>
+              <div className={bundleProduct ? 'block' : 'hidden'}>
+                <FormInput
+                  register={register}
+                  label='Cantidad por pqte'
+                  name='bundle'
+                  error={errors}
+                  type='number'
+                />
+              </div>
               <FormInput
                 register={register}
-                label='Precio entrada'
-                placeholder='Campo requerido *'
-                name='price_ent'
-                type='text'
-                error={errors}
-              />
-              <FormInput
-                register={register}
-                label='Precio venta'
+                label='Precio individual'
                 name='price'
                 placeholder='Campo requerido *'
                 type='text'
                 error={errors}
               />
-              <FormInput
-                register={register}
-                label='Cantidad por caja'
-                name='bundle'
-                error={errors}
-                type='number'
-              />
+              <div className={bundleProduct ? 'block' : 'hidden'}>
+                <FormInput
+                  register={register}
+                  label='precio por pqte'
+                  name='price_bundle'
+                  error={errors}
+                  type='text'
+                />
+              </div>
             </div>
             <div className='gap-4 grid grid-cols-2'>
               <div>
@@ -228,7 +276,7 @@ export const ProductForm = ({
               />
             </div>
             <div>
-              <SlugsInput tags={tags} setTags={setTags} />
+              <SlugsInput tags={tags} setTags={setTags} tagsinputValue={tagsinputValue} settagsInputValue={settagsInputValue} />
             </div>
             <div className='flex justify-between gap-4 mt-8'>
               <div className='flex'>
@@ -245,7 +293,7 @@ export const ProductForm = ({
             </div>
           </form>
           <div className='w-[30%]'>
-            <PreviewProduct watch={watch} categories={categories.items} currency={currency} changeCurrency={changeCurrency} dolarPrice={dolar} />
+            <PreviewProduct watch={watch} categories={categories.items} currency={currency} changeCurrency={changeCurrency} dolarPrice={dolar} bundleProduct={bundleProduct} />
           </div>
         </div>
       </DialogContent>

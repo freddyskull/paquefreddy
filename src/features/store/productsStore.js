@@ -23,11 +23,13 @@ export const useProductsStore = create((set, get) => ({
   },
 
   addNewProduct: async (data) => {
-    await client.collection('products').create(data)
+    const resp = await client.collection('products').create(data)
+    console.log(resp)
     get().getProducts()
   },
   editProduct: async (data) => {
-    await client.collection('products').update(data.id, data)
+    const resp = await client.collection('products').update(data.id, data)
+    console.log(resp)
     get().getProducts()
   },
   deleteProduct: async (id) => {

@@ -1,19 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { X } from 'lucide-react'
 
-export const SlugsInput = ({ tags, setTags }) => {
-  const [inputValue, setInputValue] = useState('')
+export const SlugsInput = ({ tags, setTags, tagsinputValue, settagsInputValue }) => {
   const handleInputChange = (e) => {
-    setInputValue(e.target.value)
+    settagsInputValue(e.target.value)
   }
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && inputValue.trim() !== '') {
+    if (e.key === 'Enter' && tagsinputValue.trim() !== '') {
       e.preventDefault()
-      setTags([...tags, inputValue.trim()])
-      setInputValue('')
+      setTags([...tags, tagsinputValue.trim()])
+      settagsInputValue('')
     }
   }
 
@@ -27,7 +26,7 @@ export const SlugsInput = ({ tags, setTags }) => {
       <div className='flex flex-wrap items-center gap-1'>
         <Input
           id='slug'
-          value={inputValue}
+          value={tagsinputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder='Añadir etiqueta y presionar Enter'

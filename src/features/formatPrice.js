@@ -3,7 +3,7 @@ export const formatPrice = (price, currency, conversionRate = 49) => {
     price = price * conversionRate
   }
   // Aseguramos que el precio tenga siempre dos decimales
-  let formattedPrice = Number(price).toFixed(2)
+  let formattedPrice = Number(parseFloat(price)).toFixed(2)
 
   // Utilizamos Intl.NumberFormat para formatear sin el símbolo de moneda, manteniendo siempre dos decimales
   formattedPrice = new Intl.NumberFormat('es-VE', {

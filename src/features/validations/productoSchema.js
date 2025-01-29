@@ -5,13 +5,13 @@ export const productSchema = z.object({
   stock: z.number({ invalid_type_error: 'La cantidad es obligatoria' }).min(0, 'La cantidad debe ser al menos 0'),
   categorie_clt: z.string(),
   image: z.string().url('Debe ser una URL válida'),
-  price_ent: z.string({ invalid_type_error: 'El precio de compra es obligatorio' }).refine((val) => {
+  price_ent: z.string({ invalid_type_error: 'Campo obligatorio' }).refine((val) => {
     const number = parseFloat(val)
     return !isNaN(number) && number > 0
   }, {
     message: 'Debe ser un número mayor que 0'
   }),
-  price: z.string({ invalid_type_error: 'El precio de venta es obligatorio' }).refine((val) => {
+  price: z.string({ invalid_type_error: 'No es string' }).refine((val) => {
     const number = parseFloat(val)
     return !isNaN(number) && number > 0
   }, {

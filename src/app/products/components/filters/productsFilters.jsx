@@ -3,6 +3,7 @@ import React from 'react'
 import { CurrencySelector } from './currencySelector'
 import { Settings } from './settings'
 import { ProductForm } from '../productForm'
+import { Calculate } from '../calculate/Calculate'
 
 export const ProductsFilters = ({
   filtersTable,
@@ -35,6 +36,7 @@ export const ProductsFilters = ({
           productActionDialog={productActionDialog}
           setProductActionDialog={setProductActionDialog}
         />
+        <Calculate />
         <CurrencySelector currency={currency} changeCurrency={changeCurrency} />
         <div className='md:block hidden'>
           <Settings

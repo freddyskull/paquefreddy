@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react'
 import {
   Breadcrumb,
@@ -12,6 +13,15 @@ import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@radix-ui/react-scroll-area'
 
 export const Layout = ({ children, variant = 'card' }) => {
+  // const [sidebarState, setsidebarState] = useState(localStorage.getItem('sidebarState'))
+  // useEffect(() => {
+  //   const localstorate = localStorage.getItem('sidebarState')
+  //   if (localstorate === undefined || localstorate === null) {
+  //     localStorage.setItem('sidebarState', true)
+  //   } else {
+  //     setsidebarState(localstorate)
+  //   }
+  // }, [])
   return (
     <SidebarProvider>
       <SidebarComponent />

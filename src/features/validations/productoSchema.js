@@ -24,6 +24,6 @@ export const productSchema = z.object({
   const price = parseFloat(data.price)
   return price > priceEnt
 }, {
-  message: 'El precio de venta debe ser mayor que el precio de entrada',
+  message: 'precio de venta debe ser mayor que precio entrada',
   path: ['price'] // Error mostrado en el campo `price`
 })

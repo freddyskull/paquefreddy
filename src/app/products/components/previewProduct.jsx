@@ -92,7 +92,7 @@ export const PreviewProduct = ({ watch, categories, currency, changeCurrency, do
             )
             : (
               <div className={`flex mt-4 ${bundleProduct ? 'justify-between' : 'justify-center'}`}>
-                <div className='flex flex-col'>
+                <div className={`flex flex-col ${!bundleProduct ? 'items-center' : 'items-start'} gap-1`}>
                   <span className={`text-[10px] text-slate-400 uppercase ${!bundleProduct && 'text-center'}`}>PRECIO</span>
                   <span className={`${priceClass} text-2xl`}>
                     {watch().price}

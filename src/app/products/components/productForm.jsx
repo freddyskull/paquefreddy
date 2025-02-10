@@ -31,6 +31,7 @@ import { useProductsStore } from '@/features/store/productsStore'
 import { formatPrice } from '@/features/formatPrice'
 import { useToast } from '@/hooks/use-toast'
 import { Badge } from '@/components/ui/badge'
+import { Prices } from '@/components/dataTable/Prices'
 
 export const ProductForm = ({
   data,
@@ -126,18 +127,18 @@ export const ProductForm = ({
     setnewProduct(false)
   }
 
-  const autoprice = () => {
-    const profit = parseFloat(config.item.profits)
-    const percent = parseFloat(watch().price_ent) * profit // aqui se multiplica por el porcentaje de ganancia
-    const result = parseFloat(watch().price_ent) + percent
-    setValue('price', formatPrice(result, 'usd', dolar)) // aqui es usd debido a que necesito que sea el precio exacto
-    if (bundleProduct) {
-      const discountValue = parseFloat(config.item.bundle_discount)
-      const bundleResult = result * watch().bundle
-      const discountResult = discountValue * bundleResult
-      setValue('price_bundle', formatPrice((bundleResult - discountResult), 'usd', dolar))
-    }
-  }
+  // const autoprice = () => {
+  //   const profit = parseFloat(config.item.profits)
+  //   const percent = parseFloat(watch().price_ent) * profit // aqui se multiplica por el porcentaje de ganancia
+  //   const result = parseFloat(watch().price_ent) + percent
+  //   setValue('price', formatPrice(result, 'usd', dolar)) // aqui es usd debido a que necesito que sea el precio exacto
+  //   if (bundleProduct) {
+  //     const discountValue = parseFloat(config.item.bundle_discount)
+  //     const bundleResult = result * watch().bundle
+  //     const discountResult = discountValue * bundleResult
+  //     setValue('price_bundle', formatPrice((bundleResult - discountResult), 'usd', dolar))
+  //   }
+  // }
 
   return (
     <Dialog open={productActionDialog} onOpenChange={setProductActionDialog}>
@@ -198,7 +199,8 @@ export const ProductForm = ({
                 placeholder='Introduzca URL valida requerida *'
               />
             </div>
-            <div className={`gap-4 grid ${bundleProduct ? 'grid-cols-4' : 'grid-cols-2'}`}>
+            <Prices register={register} errors={errors} bundleProduct={bundleProduct} watch={watch} setValue={setValue} dolar={dolar} />
+            {/* <div className={`gap-4 grid ${bundleProduct ? 'grid-cols-4' : 'grid-cols-2'}`}>
               <div className='relative'>
                 <FormInput
                   register={register}
@@ -242,7 +244,7 @@ export const ProductForm = ({
                   type='text'
                 />
               </div>
-            </div>
+            </div> */}
             <div className='gap-4 grid grid-cols-2'>
               <div>
                 <label className='mb-1 font-light text-[13px] dark:text-gray-400 uppercase'>Categorías</label>
@@ -279,11 +281,11 @@ export const ProductForm = ({
               <SlugsInput tags={tags} setTags={setTags} tagsinputValue={tagsinputValue} settagsInputValue={settagsInputValue} />
             </div>
             <div className='flex justify-between gap-4 mt-8'>
-              <div className='flex'>
+              <div className='flex gap-2'>
                 <DialogClose asChild>
-                  <Button variant='ghost'>Cancelar</Button>
+                  <Button variant='outline'>Cerrar</Button>
                 </DialogClose>
-                <Button type='button' variant='ghost' onClick={() => reset()}>Reiniciar</Button>
+                <Button type='button' variant='outline' onClick={() => reset()}>Reiniciar</Button>
               </div>
               <Button className={newProduct ? 'bg-warn hover:bg-warn/60' : currency === 'usd' ? 'bg-success hover:bg-success/60' : 'bg-primary hover:bg-primary/50'}>
                 {

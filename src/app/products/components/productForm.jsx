@@ -54,6 +54,7 @@ export const ProductForm = ({
   const { config } = useConfigStore()
   const dolar = config.item.dollar
   const [tags, setTags] = useState(data.slugs)
+  const [categorie, setcategorie] = useState(data.categorie_clt)
   const { categories } = useCategoriesStore()
   const { products } = useProductsStore()
   const { addNewProduct, editProduct } = useProductsStore()
@@ -92,10 +93,10 @@ export const ProductForm = ({
         })
       } else {
         addNewProduct(newFormData)
-        toast({
-          title: `El producto "${newFormData.name}" ha sido agregado`
-        })
-        reset()
+        // toast({
+        //   title: `El producto "${newFormData.name}" ha sido agregado`
+        // })
+        // reset()
       }
     }
   }
@@ -123,7 +124,19 @@ export const ProductForm = ({
   }, [data])
 
   const handleReset = () => {
-    reset()
+    setValue('id', data.id)
+    setValue('name', '')
+    setValue('stock', 0)
+    setValue('image', '')
+    setValue('slugs', [])
+    setValue('price_ent', formatPrice(0, currency, dolar))
+    setValue('price', formatPrice(0, currency, dolar))
+    setValue('brand', '')
+    setValue('bundle', 0)
+    setValue('price_bundle', formatPrice(0, currency, dolar))
+    setTags([])
+    setValue('categorie_clt', '')
+    setcategorie(config.item.defaultCategory)
     setnewProduct(false)
   }
 
@@ -143,9 +156,9 @@ export const ProductForm = ({
   return (
     <Dialog open={productActionDialog} onOpenChange={setProductActionDialog}>
       <DialogTrigger>
-        <div className='md:flex gap-2 hidden'>
+        <div className='hidden md:flex gap-2'>
           <div className='bg-white btn'>
-            <span className='lg:block hidden' onClick={() => handleReset()}>Nuevo producto</span>
+            <span className='hidden lg:block' onClick={() => handleReset()}>Nuevo producto</span>
             <Boxes className='lg:hidden' />
           </div>
           {
@@ -212,7 +225,7 @@ export const ProductForm = ({
                 />
                 <div className={errors.price_ent === undefined && watch().price_ent > 0 ? 'block' : 'hidden'}>
                   <small
-                    className='bottom-0 absolute text-primary hover:text-primary/80 uppercase transition-all animate cursor-pointer fade-in'
+                    className='bottom-0 absolute text-primary hover:text-primary/80 uppercase transition-all cursor-pointer animate fade-in'
                     onClick={() => autoprice()}
                   >Asignar precio
                   </small>
@@ -248,7 +261,7 @@ export const ProductForm = ({
             <div className='gap-4 grid grid-cols-2'>
               <div>
                 <label className='mb-1 font-light text-[13px] dark:text-gray-400 uppercase'>Categorías</label>
-                <Select defaultValue={data.categorie_clt !== null ? data.categorie_clt : ''} onValueChange={(e) => setValue('categorie_clt', e)}>
+                <Select value={categorie} onValueChange={(e) => { setValue('categorie_clt', e); setcategorie(e) }} className='w-full'>
                   <SelectTrigger>
                     <SelectValue placeholder='Selecciona una' />
                   </SelectTrigger>
@@ -285,7 +298,7 @@ export const ProductForm = ({
                 <DialogClose asChild>
                   <Button variant='outline'>Cerrar</Button>
                 </DialogClose>
-                <Button type='button' variant='outline' onClick={() => reset()}>Reiniciar</Button>
+                <Button type='button' variant='outline' onClick={() => handleReset()}>Reiniciar</Button>
               </div>
               <Button className={newProduct ? 'bg-warn hover:bg-warn/60' : currency === 'usd' ? 'bg-success hover:bg-success/60' : 'bg-primary hover:bg-primary/50'}>
                 {

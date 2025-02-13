@@ -25,7 +25,7 @@ export const useProductsStore = create((set, get) => ({
   addNewProduct: async (data) => {
     const resp = await client.collection('products').create(data)
     console.log(resp)
-    get().getProducts()
+    // get().getProducts()
   },
   editProduct: async (data) => {
     const resp = await client.collection('products').update(data.id, data)

@@ -21,11 +21,13 @@ const filterProducts = (inputSearch, products) => {
   return products.filter((product) => {
     const productName = product.name.toLowerCase()
     const productId = product.id.toString().toLowerCase()
+    const productBrand = product.brand.toString().toLowerCase()
     const productSlugs = product.slugs != null ? product.slugs.map((slug) => slug.toLowerCase()) : []
 
     return (
       productName.includes(searchQuery) ||
       productId.includes(searchQuery) ||
+      productBrand.includes(searchQuery) ||
       productSlugs.some(slug => slug.includes(searchQuery))
     )
   })
@@ -80,7 +82,7 @@ export const Calculate = () => {
             Calcular factura
             {
               selectedProducts.length > 0 && (
-                <Button className='ml-2' variant='ghost' size='sm' onClick={() => setselectedProducts([])}>Limpiar</Button>
+                <Button className='ml-2' variant='ghost' size='sm' onClick={() => { setselectedProducts([]); setinputSearch('') }}>Limpiar</Button>
               )
             }
           </SheetTitle>
@@ -116,7 +118,7 @@ export const Calculate = () => {
                     <div className='mb-4 text-primary/10'>
                       <Calculator size={100} />
                     </div>
-                    <h1 className='mt-2 font-bold text-2xl text-slate-600/50 uppercase'>No hay productos seleccionados</h1>
+                    <h1 className='mt-2 font-bold text-slate-600/50 text-2xl uppercase'>No hay productos seleccionados</h1>
                     <p className='mt-2 text-slate-800/50 text-sm'>Para comenzar a calcular una factura primero selecciona un producto, buscalo dentro del formulario y seleccionalo.</p>
                   </div>
                 )

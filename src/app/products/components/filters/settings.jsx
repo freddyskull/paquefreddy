@@ -64,7 +64,7 @@ export const Settings = ({ currency, changeCurrency, changeShowPriceEnt, showPri
           <DropdownMenuSubTrigger className={`${buttonClass} hover:text-foreground`}>
             Ordenar por
           </DropdownMenuSubTrigger>
-          <ShowHidden buttonClass={buttonClass} />
+          <ShowHidden buttonClass={buttonClass} filtersTable={filtersTable} setFiltersTable={setFiltersTable} />
         </DropdownMenuSub>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger className={`${buttonClass} hover:text-foreground`}>

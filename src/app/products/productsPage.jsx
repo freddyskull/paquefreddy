@@ -231,10 +231,12 @@ export const ProductsPage = () => {
       brand: false
     },
     filters: '',
-    sorting: [{
-      id: 'Fecha de creación',
-      desc: true
-    }],
+    sorting: [
+      {
+        id: 'Fecha de creación',
+        desc: true
+      }
+    ],
     columnFilters: [],
     view: 20,
     pagination: {

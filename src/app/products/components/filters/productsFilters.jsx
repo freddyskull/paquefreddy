@@ -3,7 +3,8 @@ import React from 'react'
 import { CurrencySelector } from './currencySelector'
 import { Settings } from './settings'
 import { ProductForm } from '../productForm'
-import { Calculate } from '../calculate/Calculate'
+import { Calculate } from '../filters/calculate/Calculate'
+import { PriceRange } from './PriceRange'
 
 export const ProductsFilters = ({
   filtersTable,
@@ -22,10 +23,13 @@ export const ProductsFilters = ({
     setFiltersTable((prevState) => ({ ...prevState, filters: e.target.value }))
   }
   return (
-    <div className='grid grid-cols-3 px-4 pt-4'>
-      <div className='col-span-2'>
-        <div className='flex flex-col gap-1'>
-          <Input value={filtersTable.filters} onChange={(e) => onSearchHandle(e)} className='bg-white' id='buscador' placeholder='Buscar producto...' />
+    <div className='flex justify-between items-center gap-3 px-4 pt-4 w-full'>
+      <div className='flex justify-between items-center gap-3 w-full'>
+        <div className='flex flex-col gap-1 w-full'>
+          <Input value={filtersTable.filters} onChange={(e) => onSearchHandle(e)} className='bg-white h-[45px]' id='buscador' placeholder='Buscar producto...' />
+        </div>
+        <div className='hidden md:flex gap-2'>
+          <PriceRange filtersTable={filtersTable} setFiltersTable={setFiltersTable} currency={currency} />
         </div>
       </div>
       <div className='flex justify-end items-center gap-2'>
@@ -38,7 +42,7 @@ export const ProductsFilters = ({
         />
         <Calculate />
         <CurrencySelector currency={currency} changeCurrency={changeCurrency} />
-        <div className='md:block hidden'>
+        <div className='hidden md:block'>
           <Settings
             filtersTable={filtersTable}
             setFiltersTable={setFiltersTable}

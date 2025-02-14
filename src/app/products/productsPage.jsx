@@ -302,16 +302,16 @@ export const SlugsComponent = ({ itemsList }) => {
     <>
       {
         items !== null && items !== undefined && (
-          <div className='flex justify-center gap-2 line-clamp-1 text-[10px] uppercase'>
+          <div className='flex justify-center gap-2 text-[10px] uppercase line-clamp-1'>
             {
               items.length > 0
                 ? items.slice(0, maxItemsToShow).map((item, index) => (
-                  <div className='border-1 mt-1 line-clamp-1 text-slate-400/80' key={index}>
+                  <div className='mt-1 border-1 text-slate-400/80 line-clamp-1' key={index}>
                     {item}
                   </div>
                 ))
                 : (
-                  <div className='border-1 mt-1 line-clamp-1 text-slate-400/80'>SIn Etiquetas </div>
+                  <div className='mt-1 border-1 text-slate-400/80 line-clamp-1'>SIn Etiquetas </div>
                 )
             }
           </div>
@@ -338,7 +338,7 @@ const PriceComponent = ({ showPriceEnt, info, currency, dollar }) => {
             </span>
             <div className='flex flex-col items-center'>
               <span className='text-[10px] text-slate-400 uppercase'>Entrada</span>
-              <span className='font-bold text-lg text-slate-400 hover:text-slate-400/60 transition-all'>{formatPrice(info.row.original.price_ent, currency, dollar)}</span>
+              <span className='font-bold text-slate-400 hover:text-slate-400/60 text-lg transition-all'>{formatPrice(info.row.original.price_ent, currency, dollar)}</span>
             </div>
           </div>
         )

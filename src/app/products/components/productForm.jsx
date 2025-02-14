@@ -9,7 +9,7 @@ import {
   DialogTrigger,
   DialogClose
 } from '@/components/ui/dialog'
-import { Boxes, RotateCcw } from 'lucide-react'
+import { Package, RotateCcw } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -157,10 +157,7 @@ export const ProductForm = ({
     <Dialog open={productActionDialog} onOpenChange={setProductActionDialog}>
       <DialogTrigger>
         <div className='hidden md:flex gap-2'>
-          <div className='bg-white btn'>
-            <span className='hidden lg:block' onClick={() => handleReset()}>Nuevo producto</span>
-            <Boxes className='lg:hidden' />
-          </div>
+          <div onClick={() => handleReset()} className='bg-white btn'> <Package size={20} /></div>
           {
             watch().name !== '' && (
               <div className='bg-warn text-white btn pulse'>

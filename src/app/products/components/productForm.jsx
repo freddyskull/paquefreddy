@@ -93,10 +93,11 @@ export const ProductForm = ({
         })
       } else {
         addNewProduct(newFormData)
-        // toast({
-        //   title: `El producto "${newFormData.name}" ha sido agregado`
-        // })
-        // reset()
+        toast({
+          title: `El producto "${newFormData.name}" ha sido agregado`
+        })
+        reset()
+        setProductActionDialog(false)
       }
     }
   }
@@ -156,7 +157,7 @@ export const ProductForm = ({
   return (
     <Dialog open={productActionDialog} onOpenChange={setProductActionDialog}>
       <DialogTrigger>
-        <div className='hidden md:flex gap-2'>
+        <div className='hidden xl:flex gap-2'>
           <div onClick={() => handleReset()} className='bg-white btn'> <Package size={20} /></div>
           {
             watch().name !== '' && (

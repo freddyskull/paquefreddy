@@ -1,11 +1,5 @@
 /* eslint-disable no-undef */
 import React from 'react'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList
-} from '@/components/ui/breadcrumb'
 import { Toaster } from '@/components/ui/toaster'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { SidebarComponent } from './components/sidebar'
@@ -30,15 +24,15 @@ export const Layout = ({ children, variant = 'card' }) => {
           <div className='flex items-center gap-2 px-4'>
             <SidebarTrigger className='-ml-1' />
             {/* <Separator orientation="vertical" className="bg-slate-400 mr-2 h-4" /> */}
-            <Breadcrumb>
+            {/* <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className='md:block hidden'>
+                <BreadcrumbItem className='hidden md:block'>
                   <BreadcrumbLink href='#'>
                     Productos
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </BreadcrumbList>
-            </Breadcrumb>
+            </Breadcrumb> */}
           </div>
         </header>
         <div className='px-3'>

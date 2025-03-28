@@ -23,17 +23,27 @@ export const useProductsStore = create((set, get) => ({
   },
 
   addNewProduct: async (data) => {
-    const resp = await client.collection('products').create(data)
-    console.log(resp)
-    // get().getProducts()
+    try {
+      await client.collection('products').create(data)
+      get().getProducts()
+    } catch (error) {
+      console.error(error)
+    }
   },
   editProduct: async (data) => {
-    const resp = await client.collection('products').update(data.id, data)
-    console.log(resp)
-    get().getProducts()
+    try {
+      await client.collection('products').update(data.id, data)
+      get().getProducts()
+    } catch (error) {
+      console.error(error)
+    }
   },
   deleteProduct: async (id) => {
-    await client.collection('products').delete(id)
-    get().getProducts()
+    try {
+      await client.collection('products').delete(id)
+      get().getProducts()
+    } catch (error) {
+      console.error(error)
+    }
   }
 }))

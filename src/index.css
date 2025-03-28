@@ -244,6 +244,12 @@
 
 .pulse {
   animation: pulse-animation 2s infinite;
+  color: white !important;
+  border: transparent !important;
+}
+
+.pulse:hover {
+  color: var(--primary) !important;
 }
 
 @keyframes pulse-animation {

@@ -121,7 +121,7 @@ export const ProductsPage = () => {
           <>
             {formatDistanceInDays(new Date(), row.original.updated) === 'nuevo' && formatDistanceInDays(new Date(), row.original.created) !== 'nuevo' &&
               (
-                <div className={`bg-amber-500 pulse badge-edit ${!showEdit && 'hidden'}`} />
+                <div className={`bg-amber-500 pulse badge-edit !text-white ${!showEdit && 'hidden'}`} />
               )}
           </>
         )
@@ -213,6 +213,12 @@ export const ProductsPage = () => {
         header: 'brand',
         id: 'brand',
         accessorFn: (row) => `${row.brand}`
+      },
+      {
+        header: 'categorie_clt',
+        id: 'categorie_clt',
+        enableGlobalFilter: false,
+        accessorFn: (row) => `${row.categorie_clt}`
       }
     ],
     [currency, products, showPriceEnt, showEdit, data]
@@ -228,7 +234,8 @@ export const ProductsPage = () => {
       Atributos: true,
       Precio: true,
       slugs: false,
-      brand: false
+      brand: false,
+      categorie_clt: false
     },
     filters: '',
     sorting: [

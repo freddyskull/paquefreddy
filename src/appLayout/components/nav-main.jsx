@@ -1,3 +1,4 @@
+/* eslint-disable space-before-function-paren */
 import { ChevronRight } from 'lucide-react'
 import {
   Collapsible,
@@ -15,7 +16,7 @@ import {
   SidebarMenuSubItem
 } from '@/components/ui/sidebar'
 
-export function NavMain ({ items }) {
+export function NavMain({ items }) {
   return (
     <SidebarGroup>
       <SidebarMenu>
@@ -51,7 +52,7 @@ export function NavMain ({ items }) {
                       </SidebarMenuSub>
                     </CollapsibleContent>
                   </>
-                  )
+                )
                 : null}
             </SidebarMenuItem>
           </Collapsible>

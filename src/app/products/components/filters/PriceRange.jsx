@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useConfigStore } from '@/features/store/configStore'
 import { Eraser } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export const PriceRange = ({ setFiltersTable, filtersTable, currency }) => {
   const [rage, setrage] = useState({ id: 'Precio', value: ['', ''] })
@@ -18,7 +18,13 @@ export const PriceRange = ({ setFiltersTable, filtersTable, currency }) => {
     }
     setrage({ ...rage, value: newValue })
     setDisplayValue({ ...displayValue, min: inputValue })
-    setFiltersTable({ ...filtersTable, columnFilters: [{ id: 'Precio', value: newValue }] })
+    setFiltersTable((prevState) => ({
+      ...prevState,
+      columnFilters: [
+        ...prevState.columnFilters.filter((filter) => filter.id !== 'Precio'),
+        { id: 'Precio', value: newValue }
+      ]
+    }))
   }
 
   const handleMaxChange = (e) => {
@@ -29,24 +35,31 @@ export const PriceRange = ({ setFiltersTable, filtersTable, currency }) => {
     }
     setrage({ ...rage, value: newValue })
     setDisplayValue({ ...displayValue, max: inputValue })
-    setFiltersTable({ ...filtersTable, columnFilters: [{ id: 'Precio', value: newValue }] })
+    setFiltersTable((prevState) => ({
+      ...prevState,
+      columnFilters: [
+        ...prevState.columnFilters.filter((filter) => filter.id !== 'Precio'),
+        { id: 'Precio', value: newValue }
+      ]
+    }))
   }
+
   const onResetValues = () => {
     setrage({ id: 'Precio', value: ['', ''] })
     setDisplayValue({ min: '', max: '' })
-    setFiltersTable({ ...filtersTable, columnFilters: [] })
+    setFiltersTable({ ...filtersTable, filters: '', columnFilters: [] })
   }
-  useEffect(() => {
-    onResetValues()
-  }, [currency])
-
+  // funcion para reseatar todo al darle el boton de borrar
+  // useEffect(() => {
+  //   onResetValues()
+  // }, [currency])
   return (
     <div className='flex gap-2'>
       <Input
         type='number'
         value={displayValue.min}
-        placeholder='Minimo'
-        className='bg-white w-[100px] h-[45px]'
+        placeholder='Min'
+        className='bg-white min-w-[70px] max-w-[100px] h-[45px]'
         min={0}
         max={displayValue.max}
         onChange={handleMinChange}
@@ -54,10 +67,10 @@ export const PriceRange = ({ setFiltersTable, filtersTable, currency }) => {
       <Input
         type='number'
         value={displayValue.max}
-        placeholder='Maximo'
+        placeholder='Max'
         min={displayValue.min}
         max={999999}
-        className='bg-white w-[100px] h-[45px]'
+        className='bg-white min-w-[70px] max-w-[100px] h-[45px]'
         onChange={handleMaxChange}
       />
       {

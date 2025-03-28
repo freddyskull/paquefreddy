@@ -10,10 +10,11 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Settings2 } from 'lucide-react'
-import { DolarPrice } from '../dolarPrice'
+import { DolarPrice } from '../products/components/dolarPrice'
 import { Switch } from '@/components/ui/switch'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ShowHidden } from './showHidden'
+import { ExportData } from './exportData'
 
 export const Settings = ({ currency, changeCurrency, changeShowPriceEnt, showPriceEnt, showEdit, changeShowEdit, filtersTable, setFiltersTable }) => {
   const buttonClass = `text-slate-500 flex bg-white justify-between ${currency === 'usd' ? 'hover:bg-success' : 'hover:bg-primary'} rounded-md hover:text-primary-foreground transition-all cursor-pointer w-full text-sm uppercase font-semibold`
@@ -89,6 +90,16 @@ export const Settings = ({ currency, changeCurrency, changeShowPriceEnt, showPri
                   ))
                 }
               </ToggleGroup>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger className={`${buttonClass} hover:text-foreground`}>
+            Exportar datos
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <ExportData />
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
         </DropdownMenuSub>

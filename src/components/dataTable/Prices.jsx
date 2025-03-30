@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 export const Prices = ({ register, errors, bundleProduct, watch, setValue, dolar }) => {
   const onPercent = (e, percentValue) => {
     e.preventDefault()
-    const price = parseFloat(watch().price_ent)
+    const price = watch().price_ent
     const percent = price * percentValue
     setValue('price', (price + percent).toFixed(2))
   }

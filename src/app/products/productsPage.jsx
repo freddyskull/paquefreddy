@@ -11,6 +11,7 @@ import { ProductsFilters } from './components/filters/productsFilters'
 import { useConfigStore } from '@/features/store/configStore'
 import { useCategoriesStore } from '@/features/store/categoriesStore'
 import { useToast } from '@/hooks/use-toast'
+import { EditPriceDialog } from './components/editPriceDialog'
 
 export const ProductsPage = () => {
   const { getProducts, products, deleteProduct } = useProductsStore()
@@ -202,7 +203,7 @@ export const ProductsPage = () => {
         id: 'Precio',
         accessorKey: 'price',
         header: 'Precio',
-        cell: info => <PriceComponent showPriceEnt={showPriceEnt} info={info} currency={currency} dollar={dollar} />
+        cell: info => <PriceComponent showPriceEnt={showPriceEnt} info={info} currency={currency} dollar={dollar} changeCurrency={changeCurrency} />
       },
       {
         header: 'slugs',
@@ -332,7 +333,8 @@ export const SlugsComponent = ({ itemsList }) => {
   )
 }
 
-const PriceComponent = ({ showPriceEnt, info, currency, dollar }) => {
+const PriceComponent = ({ showPriceEnt, info, currency, dollar, changeCurrency }) => {
+  const [editPriceState, setEditPriceState] = useState(false)
   return (
     <>
       {showPriceEnt
@@ -340,9 +342,21 @@ const PriceComponent = ({ showPriceEnt, info, currency, dollar }) => {
           <div className='flex justify-between items-center gap-2'>
             <div className='flex flex-col'>
               <span className='text-[10px] text-slate-400 uppercase'>Venta</span>
-              <span className={`font-bold text-end text-lg ${currency === 'bs' ? 'text-primary hover:text-primary/60' : 'text-success hover:text-success/60'}`}>
+              <span onClick={() => setEditPriceState(true)} className={`font-bold text-end text-lg ${currency === 'bs' ? 'text-primary hover:text-primary/60' : 'text-success hover:text-success/60'}`}>
                 {formatPrice(info.getValue(), currency, dollar)}
               </span>
+              {
+                editPriceState && (
+                  <EditPriceDialog
+                    editPriceState={editPriceState}
+                    setEditPriceState={setEditPriceState}
+                    data={info.row.original}
+                    currency={currency}
+                    dollar={dollar}
+                    changeCurrency={changeCurrency}
+                  />
+                )
+              }
             </div>
             <span className='text-slate-300'>
               |

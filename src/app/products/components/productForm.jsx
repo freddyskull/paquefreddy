@@ -28,7 +28,6 @@ import { AutocompleteInput } from '@/components/autoCompleteInput'
 import { brands } from './autocompleteBrand'
 import { useConfigStore } from '@/features/store/configStore'
 import { useProductsStore } from '@/features/store/productsStore'
-import { formatPrice } from '@/features/formatPrice'
 import { useToast } from '@/hooks/use-toast'
 import { Badge } from '@/components/ui/badge'
 import { Prices } from '@/components/dataTable/Prices'
@@ -64,41 +63,41 @@ export const ProductForm = ({
   const [newProduct, setnewProduct] = useState(false)
   const [bundleProduct, setbundleProduct] = useState(false)
   const { toast } = useToast()
+
   const onSubmit = (formData) => {
+    const getPrice = (value) => (currency === 'usd' ? value : value / dolar) // Función auxiliar para convertir precios
+
     const newFormData = {
       ...formData,
       id: data.id,
-      slugs: tags.length > 0 ? tags : tagsinputValue !== '' ? [tagsinputValue] : null,
-      price: currency === 'usd'
-        ? formData.price
-        : (formData.price / dolar),
-      price_ent: currency === 'usd'
-        ? formData.price_ent
-        : (formData.price_ent / dolar),
-      price_bundle: currency === 'usd'
-        ? watch().price_bundle
-        : (watch().price_bundle / dolar)
+      slugs: tags.length > 0 ? tags : tagsinputValue ? [tagsinputValue] : null,
+      price: getPrice(formData.price),
+      price_ent: getPrice(formData.price_ent),
+      price_bundle: getPrice(watch().price_bundle)
     }
-    if (newProduct) {
-      editProduct(newFormData)
-      toast({
-        title: `El producto "${newFormData.name}" ha sido editado`
-      })
+
+    const handleSuccessMessage = (message) => {
+      toast({ title: message })
       reset()
       setProductActionDialog(false)
+    }
+
+    if (newProduct) {
+      // Edición de un producto existente
+      editProduct(newFormData)
+      handleSuccessMessage(`El producto "${newFormData.name}" ha sido editado`)
     } else {
-      if (findProduct(products, newFormData.name)) {
+      // Agregar un nuevo producto
+      const productExists = findProduct(products, newFormData.name)
+
+      if (productExists) {
         toast({
           title: `El producto "${newFormData.name}" ya existe`,
           description: 'Por favor intenta con otro.'
         })
       } else {
         addNewProduct(newFormData)
-        toast({
-          title: `El producto "${newFormData.name}" ha sido agregado`
-        })
-        reset()
-        setProductActionDialog(false)
+        handleSuccessMessage(`El producto "${newFormData.name}" ha sido agregado`)
       }
     }
   }

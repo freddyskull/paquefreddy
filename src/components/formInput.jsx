@@ -14,7 +14,7 @@ export const FormInput = ({
       <Input
         name={name}
         type={type}
-        step='0.01'
+        step='0.05'
         min='0'
         max='9999999999'
         placeholder={placeholder}

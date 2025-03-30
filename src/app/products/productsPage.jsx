@@ -275,6 +275,8 @@ export const ProductsPage = () => {
             changeShowPriceEnt={changeShowPriceEnt}
             showPriceEnt={showPriceEnt}
             data={data}
+            initialState={initialState}
+            setdata={setdata}
             showEdit={showEdit}
             changeShowEdit={changeShowEdit}
             productActionDialog={productActionDialog}

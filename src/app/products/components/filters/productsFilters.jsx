@@ -15,6 +15,8 @@ export const ProductsFilters = ({
   changeShowPriceEnt,
   showPriceEnt,
   data,
+  initialState,
+  setdata,
   showEdit,
   changeShowEdit,
   productActionDialog,
@@ -36,6 +38,8 @@ export const ProductsFilters = ({
       <div className='flex justify-end items-center gap-2'>
         <ProductForm
           data={data}
+          initialState={initialState}
+          setdata={setdata}
           currency={currency}
           changeCurrency={changeCurrency}
           productActionDialog={productActionDialog}

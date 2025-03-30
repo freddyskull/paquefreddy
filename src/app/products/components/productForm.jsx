@@ -38,7 +38,9 @@ export const ProductForm = ({
   currency,
   changeCurrency,
   productActionDialog,
-  setProductActionDialog
+  setProductActionDialog,
+  initialState,
+  setdata
 }) => {
   const {
     handleSubmit,
@@ -124,20 +126,10 @@ export const ProductForm = ({
   }, [data])
 
   const handleReset = () => {
-    setValue('id', data.id)
-    setValue('name', '')
-    setValue('stock', 0)
-    setValue('image', '')
-    setValue('slugs', [])
-    setValue('price_ent', null)
-    setValue('price', null)
-    setValue('brand', '')
-    setValue('bundle', 0)
-    setValue('price_bundle', null)
-    setTags([])
-    setValue('categorie_clt', '')
-    setcategorie(config.item.defaultCategory)
+    setdata(initialState)
     setnewProduct(false)
+    setTags([])
+    reset()
   }
 
   return (

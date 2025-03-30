@@ -68,16 +68,15 @@ export const ProductForm = ({
       id: data.id,
       slugs: tags.length > 0 ? tags : [tagsinputValue],
       price: currency === 'usd'
-        ? parseFloat(formData.price)
-        : parseFloat(formData.price) / dolar,
+        ? formData.price
+        : (formData.price / dolar),
       price_ent: currency === 'usd'
-        ? parseFloat(formData.price_ent)
-        : parseFloat(formData.price_ent) / dolar,
+        ? formData.price_ent
+        : (formData.price_ent / dolar),
       price_bundle: currency === 'usd'
-        ? parseFloat(watch().price_bundle)
-        : parseFloat(watch().price_bundle) / dolar
+        ? watch().price_bundle
+        : (watch().price_bundle / dolar)
     }
-
     if (newProduct) {
       editProduct(newFormData)
       toast({
@@ -140,19 +139,6 @@ export const ProductForm = ({
     setcategorie(config.item.defaultCategory)
     setnewProduct(false)
   }
-
-  // const autoprice = () => {
-  //   const profit = parseFloat(config.item.profits)
-  //   const percent = parseFloat(watch().price_ent) * profit // aqui se multiplica por el porcentaje de ganancia
-  //   const result = parseFloat(watch().price_ent) + percent
-  //   setValue('price', formatPrice(result, 'usd', dolar)) // aqui es usd debido a que necesito que sea el precio exacto
-  //   if (bundleProduct) {
-  //     const discountValue = parseFloat(config.item.bundle_discount)
-  //     const bundleResult = result * watch().bundle
-  //     const discountResult = discountValue * bundleResult
-  //     setValue('price_bundle', formatPrice((bundleResult - discountResult), 'usd', dolar))
-  //   }
-  // }
 
   return (
     <Dialog open={productActionDialog} onOpenChange={setProductActionDialog}>

@@ -2,14 +2,13 @@ import React from 'react'
 import { FormInput } from '../formInput'
 import { Badge } from '../ui/badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
-import { formatPrice } from '@/features/formatPrice'
 
 export const Prices = ({ register, errors, bundleProduct, watch, setValue, dolar }) => {
   const onPercent = (e, percentValue) => {
     e.preventDefault()
     const price = parseFloat(watch().price_ent)
     const percent = price * percentValue
-    setValue('price', formatPrice((price + percent), 'usd', dolar)) // aqui es usd debido a que necesito que sea el precio exacto
+    setValue('price', (price + percent).toFixed(2))
   }
 
   return (
@@ -20,7 +19,7 @@ export const Prices = ({ register, errors, bundleProduct, watch, setValue, dolar
           label='Precio entrada'
           placeholder='Campo requerido *'
           name='price_ent'
-          type='text'
+          type='number'
           error={errors}
         />
         <div className={`flex items-center absolute -bottom-1 gap-1 ${errors.price_ent === undefined && watch().price_ent > 0 ? 'block' : 'hidden'}`}>
@@ -60,7 +59,7 @@ export const Prices = ({ register, errors, bundleProduct, watch, setValue, dolar
         label='Precio individual'
         name='price'
         placeholder='Campo requerido *'
-        type='text'
+        type='number'
         error={errors}
       />
       <div className={bundleProduct ? 'block' : 'hidden'}>

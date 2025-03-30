@@ -66,7 +66,7 @@ export const ProductForm = ({
     const newFormData = {
       ...formData,
       id: data.id,
-      slugs: tags.length > 0 ? tags : [tagsinputValue],
+      slugs: tags.length > 0 ? tags : tagsinputValue !== '' ? [tagsinputValue] : null,
       price: currency === 'usd'
         ? formData.price
         : (formData.price / dolar),
@@ -129,11 +129,11 @@ export const ProductForm = ({
     setValue('stock', 0)
     setValue('image', '')
     setValue('slugs', [])
-    setValue('price_ent', formatPrice(0, currency, dolar))
-    setValue('price', formatPrice(0, currency, dolar))
+    setValue('price_ent', null)
+    setValue('price', null)
     setValue('brand', '')
     setValue('bundle', 0)
-    setValue('price_bundle', formatPrice(0, currency, dolar))
+    setValue('price_bundle', null)
     setTags([])
     setValue('categorie_clt', '')
     setcategorie(config.item.defaultCategory)

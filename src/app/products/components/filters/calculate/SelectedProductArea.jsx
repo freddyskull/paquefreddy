@@ -51,7 +51,7 @@ export const SelectedProductArea = ({ inputSearch, selectedProducts, itemsSelect
                     >
                       <div className='bg-[center_center] bg-white bg-contain bg-no-repeat shadow-md rounded-md w-[80px] h-[70px]' style={{ backgroundImage: `url('${product.image}')` }} />
                       <div className='flex flex-col justify-center w-[70%] content'>
-                        <h1 className='line-clamp-2 font-bold text-sm uppercase'>
+                        <h1 className='font-bold text-sm uppercase line-clamp-2'>
                           {product.name}
                         </h1>
                         <div className='flex justify-between gap-2'>
@@ -63,7 +63,7 @@ export const SelectedProductArea = ({ inputSearch, selectedProducts, itemsSelect
                   ))
                 )
                 : (
-                  <div className='flex flex-col justify-center items-center p-4 text-center text-primary/40'>
+                  <div className='flex flex-col justify-center items-center p-4 text-primary/40 text-center'>
                     <SearchX size={50} />
                     <p className='mt-4 font-bold uppercase'>Lo que estás buscando no existe</p>
                     <p className='mt-1 text-sm'>Quizás estés escribiendo mal el producto, o lo que estás buscando no se encuenta en la base de datos.</p>

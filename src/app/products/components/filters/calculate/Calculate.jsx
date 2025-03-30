@@ -71,6 +71,22 @@ export const Calculate = () => {
     settotal(calculateTotal())
   }, [selectedProducts])
 
+  useEffect(() => {
+    const updatedSelectedProducts = selectedProducts.map(selectedProduct => {
+      const matchingItem = items.find(item => item.id === selectedProduct.id)
+      if (matchingItem) {
+        return {
+          ...selectedProduct,
+          price: matchingItem.price,
+          quantity: parseInt(selectedProduct.quantity, 10)
+        }
+      }
+      return selectedProduct
+    })
+    setselectedProducts(updatedSelectedProducts)
+    console.log(selectedProducts)
+  }, [products.items])
+
   return (
     <Sheet>
       <SheetTrigger className='hidden md:block'>
@@ -110,7 +126,7 @@ export const Calculate = () => {
               selectedProducts.length > 0
                 ? selectedProducts.map((product) => (
                   <div key={product.id}>
-                    <ItemsLayout product={product} setselectedProducts={setselectedProducts} dolar={dolar} />
+                    <ItemsLayout productList={items} product={product} setselectedProducts={setselectedProducts} dolar={dolar} />
                   </div>
                 ))
                 : (

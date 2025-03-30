@@ -5,7 +5,7 @@ export const productSchema = z.object({
   stock: z.number({ invalid_type_error: 'La cantidad es obligatoria' }).min(0, 'La cantidad debe ser al menos 0'),
   categorie_clt: z.string(),
   image: z.string().url('Debe ser una URL válida').optional(),
-  price_ent: z.number({ invalid_type_error: 'El precio de entrada es obligatorio' }).min(0, 'El precio de entrada debe ser al menos 0'),
+  price_ent: z.number({ invalid_type_error: 'El precio de entrada es obligatorio' }).min(0.01, 'El precio de entrada debe ser al menos 0.01'),
   price: z.number({ invalid_type_error: 'El precio es obligatorio' }).min(0, 'El precio debe ser al menos 0'),
   bundle: z.number().min(0, 'La cantidad por caja debe ser al menos 0'),
   brand: z.string().nullable().optional()

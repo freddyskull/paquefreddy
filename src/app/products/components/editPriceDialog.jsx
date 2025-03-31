@@ -17,12 +17,14 @@ import { FormInput } from '@/components/formInput'
 import { useEffect } from 'react'
 import { useToast } from '@/hooks/use-toast'
 import { useProductsStore } from '@/features/store/productsStore'
+import { Badge } from '@/components/ui/badge'
 
 export const EditPriceDialog = ({ editPriceState, setEditPriceState, data, currency, dollar, changeCurrency }) => {
   const {
     handleSubmit,
     register,
     setValue,
+    watch,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(productSchema),
@@ -57,6 +59,13 @@ export const EditPriceDialog = ({ editPriceState, setEditPriceState, data, curre
     }
   }, [currency])
 
+  const onPercent = (e, percentValue) => {
+    e.preventDefault()
+    const price = watch().price_ent
+    const percent = price * percentValue
+    currency === 'usd' ? setValue('price', (price + percent).toFixed(2)) : setValue('price', ((price + percent) * dollar).toFixed(2))
+  }
+
   return (
     <Dialog open={editPriceState} onOpenChange={setEditPriceState}>
       <DialogContent className='sm:max-w-md'>
@@ -64,7 +73,7 @@ export const EditPriceDialog = ({ editPriceState, setEditPriceState, data, curre
           <DialogHeader>
             <DialogTitle className={currency === 'usd' ? 'text-success uppercase font-bold' : 'text-primary uppercase font-bold'}>{data.name}</DialogTitle>
             <DialogDescription>
-              Edita el precio de venta y luego haz click en el botón de editar precio, ten en cuenta que el precio de venta no puede ser menor que el precio de entrada.
+              Edita el precio de venta del producto.
               <br />
               <br />
               <span className='font-bold uppercase'> Precio de entrada
@@ -74,8 +83,8 @@ export const EditPriceDialog = ({ editPriceState, setEditPriceState, data, curre
               </span>
             </DialogDescription>
           </DialogHeader>
-          <div className='flex items-center space-x-2 mt-4'>
-            <div className='-mb-6 w-full'>
+          <div className='relative flex items-center space-x-2 mt-4'>
+            <div className='-mb-5 w-full'>
               <FormInput
                 register={register}
                 label='Precio individual'
@@ -84,6 +93,12 @@ export const EditPriceDialog = ({ editPriceState, setEditPriceState, data, curre
                 type='number'
                 error={errors}
               />
+              <div className='-bottom-6 absolute flex items-center gap-1'>
+                <Badge variant='outline' onClick={(e) => onPercent(e, 0.3)} className='text-[10px] cursor-pointer'>30%</Badge>
+                <Badge variant='outline' onClick={(e) => onPercent(e, 0.4)} className='text-[10px] cursor-pointer'>40%</Badge>
+                <span className='ml-2 font-bold text-[11px] text-slate-400 uppercase'>Auto-precio</span>
+              </div>
+
             </div>
             <div>
               <Label htmlFor='currency'>
@@ -92,7 +107,7 @@ export const EditPriceDialog = ({ editPriceState, setEditPriceState, data, curre
               <CurrencySelector currency={currency} id='currency' changeCurrency={changeCurrency} />
             </div>
           </div>
-          <DialogFooter className='sm:justify-start mt-6'>
+          <DialogFooter className='sm:justify-start mt-12'>
 
             <Button type='submit' className='bg-warn hover:bg-warn/50 text-white'>
               editar precio

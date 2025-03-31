@@ -84,7 +84,6 @@ export const Calculate = () => {
       return selectedProduct
     })
     setselectedProducts(updatedSelectedProducts)
-    console.log(selectedProducts)
   }, [products.items])
 
   return (

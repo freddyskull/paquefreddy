@@ -3,6 +3,7 @@ import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '../ui/button'
 import { Edit2, SearchCode, Trash } from 'lucide-react'
+import { ConfirmDialog } from '../confirm'
 
 export const DataTable = ({ columns, data, filtersTable, editItem, deleteItem }) => {
   const table = useReactTable({
@@ -32,12 +33,14 @@ export const DataTable = ({ columns, data, filtersTable, editItem, deleteItem })
               </div>
             ))}
             <div className='mt-4 actions'>
-              <Button variant='outline' className='px-2 h-8' onClick={() => editItem(row.original)}>
+              <Button variant='outline' className='hover:bg-warn px-2 h-8 hover:text-white' onClick={() => editItem(row.original)}>
                 <Edit2 />
               </Button>
-              <Button variant='outline' className='hover:bg-destructive px-2 h-8' onClick={() => deleteItem(row.original)}>
-                <Trash />
-              </Button>
+              <ConfirmDialog onConfirm={(e) => e && deleteItem(row.original)} message='Esta acción no se puede deshacer, eliminarás un producto de la lista ¿Estás seguro de que deseas continuar?'>
+                <div className='flex justify-center items-center bg-slate-200 hover:bg-destructive px-[10px] rounded-md h-8 hover:text-white text-sm cursor-pointer'>
+                  <Trash size={16} />
+                </div>
+              </ConfirmDialog>
               <Button variant='outline' className='hover:bg-warn px-2 h-8'>
                 <SearchCode />
               </Button>

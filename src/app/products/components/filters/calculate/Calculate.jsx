@@ -14,7 +14,7 @@ import { useConfigStore } from '@/features/store/configStore'
 import { SelectedProductArea } from './SelectedProductArea'
 import { ItemsLayout } from './ItemsLayout'
 import { Total } from './Total'
-import { Button } from '@/components/ui/button'
+import { ConfirmDialog } from '@/components/confirm'
 
 const filterProducts = (inputSearch, products) => {
   const searchQuery = inputSearch.toLowerCase()
@@ -38,6 +38,7 @@ export const Calculate = () => {
   const [selectedProducts, setselectedProducts] = useState([])
   const [isACode, setisACode] = useState(false)
   const [total, settotal] = useState(0)
+  const [profit, setprofit] = useState(0)
   const { products } = useProductsStore()
   const { config } = useConfigStore()
   const dolar = config.item.dollar
@@ -51,6 +52,12 @@ export const Calculate = () => {
   const calculateTotal = () => {
     return selectedProducts.reduce((total, product) => {
       return total + product.price * product.quantity
+    }, 0)
+  }
+
+  const calculateProfits = () => {
+    return selectedProducts.reduce((total, product) => {
+      return total + ((product.price * product.quantity) - (product.price_ent * product.quantity))
     }, 0)
   }
 
@@ -69,6 +76,7 @@ export const Calculate = () => {
 
   useEffect(() => {
     settotal(calculateTotal())
+    setprofit(calculateProfits())
   }, [selectedProducts])
 
   useEffect(() => {
@@ -86,6 +94,11 @@ export const Calculate = () => {
     setselectedProducts(updatedSelectedProducts)
   }, [products.items])
 
+  const onCleanHandle = () => {
+    setselectedProducts([])
+    setinputSearch('')
+  }
+
   return (
     <Sheet>
       <SheetTrigger className='hidden md:block'>
@@ -97,7 +110,11 @@ export const Calculate = () => {
             Calcular factura
             {
               selectedProducts.length > 0 && (
-                <Button className='ml-2' variant='ghost' size='sm' onClick={() => { setselectedProducts([]); setinputSearch('') }}>Limpiar</Button>
+                <ConfirmDialog onConfirm={(e) => e && onCleanHandle()} message='Limpiarás la lista de productos, pero en cualquier momento puedes volverla a llenar.'>
+                  <span className='bg-white ml-4 p-1 px-2 rounded-md font-light text-[14px] uppercase cursor-pointer'>
+                    limpiar
+                  </span>
+                </ConfirmDialog>
               )
             }
           </SheetTitle>
@@ -140,7 +157,7 @@ export const Calculate = () => {
             }
           </div>
           <div className='bottom-0 absolute w-full'>
-            <Total total={total} dolar={dolar} />
+            <Total total={total} dolar={dolar} profit={profit} />
           </div>
         </div>
       </SheetContent>

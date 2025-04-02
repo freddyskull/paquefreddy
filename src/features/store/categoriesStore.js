@@ -1,28 +1,49 @@
 import { create } from 'zustand'
-import PocketBase from 'pocketbase'
-const client = new PocketBase('http://192.168.0.25:8090')
-client.autoCancellation(false)
+import { handleCollectionOperation } from '../../utils/handleCollectionOperation'
 
 export const useCategoriesStore = create((set, get) => ({
   categories: {
-    items: {},
+    items: [],
     load: false
   },
   getCategories: async () => {
-    const resp = await client.collection('category').getFullList()
-    set(state => ({
-      ...state,
-      categories: {
-        items: resp,
-        load: true
-      }
-    }))
+    try {
+      const resp = await handleCollectionOperation('get', 'category', {
+        sort: '-created'
+      })
+      set(state => ({
+        ...state,
+        categories: {
+          items: resp,
+          load: true
+        }
+      }))
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+    }
   },
   editCategories: async (data) => {
-    await client.collection('category').update(data.id, data)
-    get().getCategories()
+    try {
+      await handleCollectionOperation('update', 'category', data)
+      get().getCategories()
+    } catch (error) {
+      console.error('Error editing category:', error)
+    }
   },
   addCategories: async (data) => {
-
+    try {
+      await handleCollectionOperation('create', 'category', data)
+      get().getCategories()
+    } catch (error) {
+      console.error('Error adding category:', error)
+    }
+  },
+  deleteCategory: async (id) => {
+    try {
+      await handleCollectionOperation('delete', 'category', id)
+      get().getCategories()
+    } catch (error) {
+      console.error('Error deleting category:', error)
+    }
   }
 }))

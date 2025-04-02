@@ -1,7 +1,5 @@
 import { create } from 'zustand'
-import PocketBase from 'pocketbase'
-const client = new PocketBase('http://192.168.0.25:8090')
-client.autoCancellation(false)
+import { handleCollectionOperation } from '../../utils/handleCollectionOperation'
 
 export const useConfigStore = create((set, get) => ({
   config: {
@@ -9,17 +7,27 @@ export const useConfigStore = create((set, get) => ({
     load: false
   },
   getConfig: async () => {
-    const resp = await client.collection('config').getFullList()
-    set(state => ({
-      ...state,
-      config: {
-        item: resp[0],
-        load: true
-      }
-    }))
+    try {
+      const resp = await handleCollectionOperation('get', 'config', {
+        sort: '-created'
+      })
+      set(state => ({
+        ...state,
+        config: {
+          item: resp[0],
+          load: true
+        }
+      }))
+    } catch (error) {
+      console.error('Error fetching config:', error)
+    }
   },
   editConfig: async (data) => {
-    await client.collection('config').update(data.id, data)
-    get().getConfig()
+    try {
+      await handleCollectionOperation('update', 'config', data)
+      get().getConfig()
+    } catch (error) {
+      console.error('Error editing config:', error)
+    }
   }
 }))

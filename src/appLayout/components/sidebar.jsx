@@ -26,12 +26,12 @@ const data = {
   navMain: [
     {
       title: 'Inicio',
-      url: '#',
+      url: '/',
       icon: Home
     },
     {
       title: 'Productos',
-      url: '#',
+      url: '/productos',
       icon: BoxIcon,
       isActive: true
     },
@@ -70,7 +70,7 @@ const data = {
     },
     {
       title: 'Ventas',
-      url: '#',
+      url: '/ventas',
       icon: DollarSign
     },
     {
@@ -91,9 +91,9 @@ export const SidebarComponent = () => {
               <div>
                 <img src='/logo.svg' width={80} />
               </div>
-              <div className='grid flex-1 text-left text-sm leading-tight'>
-                <span className='truncate font-bold text-lg text-primary/80'>PAQUEFREDDY</span>
-                <span className='truncate text-xs'>Sistema</span>
+              <div className='flex-1 grid text-sm text-left leading-tight'>
+                <span className='font-bold text-primary/80 text-lg truncate'>PAQUEFREDDY</span>
+                <span className='text-xs truncate'>Sistema</span>
               </div>
             </a>
           </SidebarMenuItem>

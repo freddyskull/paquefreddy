@@ -12,6 +12,7 @@ import { useConfigStore } from '@/features/store/configStore'
 import { useCategoriesStore } from '@/features/store/categoriesStore'
 import { useToast } from '@/hooks/use-toast'
 import { EditPriceDialog } from './components/editPriceDialog'
+import { Layout } from '@/appLayout/Layout'
 
 export const ProductsPage = () => {
   const { getProducts, products, deleteProduct } = useProductsStore()
@@ -265,45 +266,47 @@ export const ProductsPage = () => {
   }
 
   return (
-    <div>
-      {
-        categories.load && (
-          <ProductsFilters
-            filtersTable={filtersTable}
-            setFiltersTable={setFiltersTable}
-            currency={currency}
-            changeCurrency={changeCurrency}
-            changeShowPriceEnt={changeShowPriceEnt}
-            showPriceEnt={showPriceEnt}
-            data={data}
-            initialState={initialState}
-            setdata={setdata}
-            showEdit={showEdit}
-            changeShowEdit={changeShowEdit}
-            productActionDialog={productActionDialog}
-            setProductActionDialog={setProductActionDialog}
-          />
-        )
-      }
-      {
-        products.load
-          ? (
-            <DataTable
-              data={products.items}
-              columns={columns}
+    <Layout>
+      <div>
+        {
+          categories.load && (
+            <ProductsFilters
               filtersTable={filtersTable}
-              editItem={editProductHandle}
-              deleteItem={deleteProductHandle}
-            />
-          )
-          : (
-            <ProductsSkeleton
-              changeCurrency={changeCurrency}
+              setFiltersTable={setFiltersTable}
               currency={currency}
+              changeCurrency={changeCurrency}
+              changeShowPriceEnt={changeShowPriceEnt}
+              showPriceEnt={showPriceEnt}
+              data={data}
+              initialState={initialState}
+              setdata={setdata}
+              showEdit={showEdit}
+              changeShowEdit={changeShowEdit}
+              productActionDialog={productActionDialog}
+              setProductActionDialog={setProductActionDialog}
             />
           )
-      }
-    </div>
+        }
+        {
+          products.load
+            ? (
+              <DataTable
+                data={products.items}
+                columns={columns}
+                filtersTable={filtersTable}
+                editItem={editProductHandle}
+                deleteItem={deleteProductHandle}
+              />
+            )
+            : (
+              <ProductsSkeleton
+                changeCurrency={changeCurrency}
+                currency={currency}
+              />
+            )
+        }
+      </div>
+    </Layout>
   )
 }
 

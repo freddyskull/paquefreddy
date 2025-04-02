@@ -1,7 +1,10 @@
+import { Layout } from '@/appLayout/Layout'
 import React from 'react'
 
 export const SalesPage = () => {
   return (
-    <div>salesPage</div>
+    <Layout>
+      <div className='p-4 h-[100%]'>salesPage</div>
+    </Layout>
   )
 }

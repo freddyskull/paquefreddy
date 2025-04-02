@@ -1,12 +1,10 @@
-import { ProductsPage } from './app/products/productsPage'
-import { Layout } from './appLayout/Layout'
+/* eslint-disable space-before-function-paren */
+import AppRouter from './router/AppRouter'
 
-function App () {
+function App() {
   return (
     <>
-      <Layout>
-        <ProductsPage />
-      </Layout>
+      <AppRouter />
     </>
   )
 }

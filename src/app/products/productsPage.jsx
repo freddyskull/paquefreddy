@@ -371,10 +371,22 @@ const PriceComponent = ({ showPriceEnt, info, currency, dollar, changeCurrency }
           <div className='flex justify-center'>
             <div className='flex flex-col text-center'>
               <span className='text-[10px] text-slate-400 uppercase'>PRECIO</span>
-              <span className={`font-bold text-end text-2xl ${currency === 'bs' ? 'text-primary hover:text-primary/60' : 'text-success hover:text-success/60'}`}>
+              <span onClick={() => setEditPriceState(true)} className={`font-bold text-end text-2xl cursor-pointer ${currency === 'bs' ? 'text-primary hover:text-primary/60' : 'text-success hover:text-success/60'}`}>
                 {formatPrice(info.getValue(), currency, dollar)}
               </span>
             </div>
+            {
+              editPriceState && (
+                <EditPriceDialog
+                  editPriceState={editPriceState}
+                  setEditPriceState={setEditPriceState}
+                  data={info.row.original}
+                  currency={currency}
+                  dollar={dollar}
+                  changeCurrency={changeCurrency}
+                />
+              )
+            }
           </div>
         )}
     </>

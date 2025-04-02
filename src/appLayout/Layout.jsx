@@ -5,7 +5,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { SidebarComponent } from './components/sidebar'
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@radix-ui/react-scroll-area'
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from '@/components/ui/breadcrumb'
+// import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from '@/components/ui/breadcrumb'
 
 export const Layout = ({ children, variant = 'card' }) => {
   // const [sidebarState, setsidebarState] = useState(localStorage.getItem('sidebarState'))
@@ -25,7 +25,7 @@ export const Layout = ({ children, variant = 'card' }) => {
           <div className='flex items-center gap-2 px-4'>
             <SidebarTrigger className='-ml-1' />
             {/* <Separator orientation="vertical" className="bg-slate-400 mr-2 h-4" /> */}
-            <Breadcrumb>
+            {/* <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className='hidden md:block'>
                   <BreadcrumbLink href='#'>
@@ -33,7 +33,7 @@ export const Layout = ({ children, variant = 'card' }) => {
                   </BreadcrumbLink>
                 </BreadcrumbItem>
               </BreadcrumbList>
-            </Breadcrumb>
+            </Breadcrumb> */}
           </div>
         </header>
         <div className='px-3'>

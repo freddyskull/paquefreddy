@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import PocketBase from 'pocketbase'
 
-const client = new PocketBase('http://192.168.0.25:8090')
+const client = new PocketBase('https://89s4zc3w-8090.use2.devtunnels.ms')
 client.autoCancellation(false)
 
 export const handleCollectionOperation = async (operation, collection, data = null) => {

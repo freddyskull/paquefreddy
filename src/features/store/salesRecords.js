@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { create } from 'zustand'
 import { handleCollectionOperation } from '../../utils/handleCollectionOperation'
 
@@ -10,7 +11,7 @@ export const useSalesRecordsStore = create((set, get) => ({
     try {
       const records = await handleCollectionOperation('get', 'record', {
         sort: '-created',
-        expand: 'records_collection'
+        expand: 'black_list_clt'
       })
       set(state => ({
         ...state,

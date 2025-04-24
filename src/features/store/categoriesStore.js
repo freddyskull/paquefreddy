@@ -14,7 +14,9 @@ export const useCategoriesStore = create((set, get) => ({
       set(state => ({
         ...state,
         categories: {
-          items: resp,
+          items: resp.map(category => ({
+            ...category
+          })),
           load: true
         }
       }))

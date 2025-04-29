@@ -8,33 +8,41 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  ValidationPipe,
+  ValidationPipe
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiTags } from '@nestjs/swagger';
 import { productDto } from './dto/product.dto';
+import { ConfigService } from '../config/config.service';
 
 @Controller('products')
 @ApiTags('Products')
 export class ProductsController {
-  constructor(private productsService: ProductsService) {}
+  constructor(
+    private productsService: ProductsService,
+    private config: ConfigService
+  ) {}
 
-  private formatProductDates(product: any) {
+  private async formatProductDates(product: any): Promise<any> {
+    const config = await this.config.findAll(); // Obtener configuración
+    const dolarPrice = config?.dolar || 1; // Usa 1 como valor predeterminado si no está definido
+
     return {
       ...product,
+      dolarPrice: dolarPrice * product.price,
       categorie: {
         ...product.categorie,
         createdAt: undefined,
-        updatedAt: undefined,
+        updatedAt: undefined
       },
       supplier: {
         ...product.supplier,
         createdAt: undefined,
-        updatedAt: undefined,
+        updatedAt: undefined
       },
       createdAt: new Date(product.createdAt).toLocaleDateString(),
       updatedAt: new Date(product.updatedAt).toLocaleDateString(),
-      expiration: new Date(product.expiration).toLocaleDateString(),
+      expiration: new Date(product.expiration).toLocaleDateString()
     };
   }
 
@@ -48,14 +56,16 @@ export class ProductsController {
   @HttpCode(HttpStatus.OK)
   async findOne(@Param() params: any) {
     const product = await this.productsService.findOne(parseInt(params.id));
-    return this.formatProductDates(product);
+    return await this.formatProductDates(product);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
   async index() {
     const products = await this.productsService.findAll();
-    return products.map(this.formatProductDates);
+    return await Promise.all(
+      products.map((product) => this.formatProductDates(product))
+    );
   }
 
   @Put(':id')

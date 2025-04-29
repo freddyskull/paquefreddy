@@ -24,7 +24,7 @@ export class ProductsService {
       expiration: dto.expiration,
       unity: dto.unity,
       supplier_id: dto.supplier_id,
-      category_id: dto.category_id,
+      category_id: dto.category_id
     };
   }
 
@@ -45,26 +45,26 @@ export class ProductsService {
     categorie: true,
     supplier: true,
     createdAt: true,
-    updatedAt: true,
+    updatedAt: true
   };
 
   async productExists(
     field: keyof productDto,
     value: any,
-    message: string = 'Intentas duplicar un producto, por favor verifica el nombre',
+    message: string = 'Intentas duplicar un producto, por favor verifica el nombre'
   ): Promise<void> {
     const product = await this.prisma.products.findFirst({
       where: {
-        [field]: value,
-      },
+        [field]: value
+      }
     });
     if (product) {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          message,
+          message
         },
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
     }
   }
@@ -72,7 +72,7 @@ export class ProductsService {
   async create(dto: productDto) {
     await this.productExists('name', dto.name);
     await this.prisma.products.create({
-      data: this.buildProductData(dto),
+      data: this.buildProductData(dto)
     });
     return { status: 'ok', message: 'Producto creado correctamente' };
   }
@@ -81,14 +81,14 @@ export class ProductsService {
     return this.prisma.products.findMany({
       select: this.formatedData,
       orderBy: {
-        createdAt: 'desc',
-      },
+        createdAt: 'desc'
+      }
     });
   }
 
   async findOne(id: number) {
     const dato = await this.prisma.products.findFirst({
-      where: { id: Number(id) },
+      where: { id: Number(id) }
     });
 
     if (!dato) {
@@ -102,24 +102,24 @@ export class ProductsService {
     await this.productExists('name', dto.name);
     await this.prisma.products.update({
       where: {
-        id: Number(id),
+        id: Number(id)
       },
-      data: this.buildProductData(dto),
+      data: this.buildProductData(dto)
     });
     return { status: 'ok', message: 'Producto actualizado correctamente' };
   }
 
   async remove(id: any) {
     const product = await this.prisma.products.findFirst({
-      where: { id: Number(id) },
+      where: { id: Number(id) }
     });
     if (!product) {
       throw new HttpException('No existe el producto', HttpStatus.BAD_REQUEST);
     }
     await this.prisma.products.delete({
       where: {
-        id: Number(id),
-      },
+        id: Number(id)
+      }
     });
     return { status: 'ok', message: 'Producto eliminado correctamente' };
   }

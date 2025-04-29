@@ -4,6 +4,9 @@ import { ConfigDto } from './dto/configDto';
 
 @Injectable()
 export class ConfigService {
+  getConfig(): any {
+    throw new Error('Method not implemented.');
+  }
   private prisma: PrismaClient;
   constructor() {
     this.prisma = new PrismaClient();
@@ -11,7 +14,7 @@ export class ConfigService {
 
   async findAll() {
     const dato = await this.prisma.config.findFirst({
-      where: { id: 1 },
+      where: { id: 1 }
     });
     return dato;
   }
@@ -20,12 +23,12 @@ export class ConfigService {
     const config = await this.findAll();
     const updatedConfig = await this.prisma.config.update({
       where: { id: 1 },
-      data: { ...config, ...dto },
+      data: { ...config, ...dto }
     });
     return {
       status: 'ok',
       message: 'configuración actualizada',
-      data: updatedConfig,
+      data: updatedConfig
     };
   }
 }

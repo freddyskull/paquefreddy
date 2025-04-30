@@ -2,10 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { productDto } from './dto/product.dto';
 import slugify from 'slugify';
+import { ConfigService } from 'src/config/config.service';
+
 @Injectable()
 export class ProductsService {
   private prisma: PrismaClient;
-  constructor() {
+
+  constructor(private readonly configService: ConfigService) {
     this.prisma = new PrismaClient();
   }
 
@@ -14,8 +17,8 @@ export class ProductsService {
       name: dto.name,
       stock: dto.stock,
       status: dto.status,
-      price: parseFloat(dto.price.toString()),
-      price_ent: parseFloat(dto.price_ent.toString()),
+      price: parseFloat(dto.price),
+      price_ent: parseFloat(dto.price_ent),
       slugs: dto.slugs,
       slugs_url: slugify(dto.name),
       images: dto.images,
@@ -24,7 +27,7 @@ export class ProductsService {
       expiration: dto.expiration,
       unity: dto.unity,
       supplier_id: dto.supplier_id,
-      category_id: dto.category_id
+      categorie_id: dto.categorie_id
     };
   }
 
@@ -69,11 +72,36 @@ export class ProductsService {
     }
   }
 
+  private convertPricesToUSD(dto: productDto, dolar: number): productDto {
+    return {
+      ...dto,
+      price_ent: (dto.price_ent / dolar).toFixed(2),
+      price: (dto.price / dolar).toFixed(2)
+    };
+  }
+
+  private validatePrices(price_ent: string, price: string): void {
+    if (parseFloat(price_ent) >= parseFloat(price)) {
+      throw new HttpException(
+        'El precio de entrada no puede ser mayor o igual al de venta',
+        HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
   async create(dto: productDto) {
+    this.validatePrices(dto.price_ent, dto.price);
     await this.productExists('name', dto.name);
-    await this.prisma.products.create({
-      data: this.buildProductData(dto)
-    });
+
+    const config = await this.configService.findAll();
+    const dolar = config?.dolar || 0;
+    const productData =
+      dto.currency === 'USD' || !dto.currency
+        ? this.buildProductData(dto)
+        : this.buildProductData(this.convertPricesToUSD(dto, dolar));
+
+    await this.prisma.products.create({ data: productData });
+
     return { status: 'ok', message: 'Producto creado correctamente' };
   }
 
@@ -88,25 +116,64 @@ export class ProductsService {
 
   async findOne(id: number) {
     const dato = await this.prisma.products.findFirst({
-      where: { id: Number(id) }
+      where: { id: Number(id) },
+      select: this.formatedData
     });
 
     if (!dato) {
       throw new HttpException('No existe el producto', HttpStatus.BAD_REQUEST);
     }
-
     return dato;
   }
 
   async update(id: any, dto: productDto) {
-    await this.productExists('name', dto.name);
+    const product = await this.prisma.products.findFirst({
+      where: { id: Number(id) }
+    });
+    if (!product) {
+      throw new HttpException('No existe el producto', HttpStatus.BAD_REQUEST);
+    }
+    this.validatePrices(dto.price_ent, dto.price);
+
+    const config = await this.configService.findAll();
+    const dolar = config?.dolar || 0;
+    const productData =
+      dto.currency === 'USD' || !dto.currency
+        ? this.buildProductData(dto)
+        : this.buildProductData(this.convertPricesToUSD(dto, dolar));
     await this.prisma.products.update({
       where: {
         id: Number(id)
       },
-      data: this.buildProductData(dto)
+      data: productData
     });
     return { status: 'ok', message: 'Producto actualizado correctamente' };
+  }
+
+  async patch(id: number, dto: productDto) {
+    const product = await this.prisma.products.findFirst({
+      where: { id: Number(id) }
+    });
+    if (!product) {
+      throw new HttpException('No existe el producto', HttpStatus.BAD_REQUEST);
+    }
+    if (dto.price_ent && dto.price) {
+      this.validatePrices(dto.price_ent, dto.price);
+    }
+    const config = await this.configService.findAll();
+    const dolar = config?.dolar || 0;
+    const newData = { ...product, ...dto };
+    const updatedData =
+      dto.currency === 'USD' || !dto.currency
+        ? this.buildProductData(newData)
+        : this.buildProductData(this.convertPricesToUSD(newData, dolar));
+
+    await this.prisma.products.update({
+      where: { id: Number(id) },
+      data: updatedData
+    });
+
+    return { status: 'ok', message: 'Producto actualizado parcialmente' };
   }
 
   async remove(id: any) {

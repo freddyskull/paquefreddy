@@ -8,7 +8,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  ValidationPipe
+  ValidationPipe,
+  Patch
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -20,16 +21,15 @@ import { ConfigService } from '../config/config.service';
 export class ProductsController {
   constructor(
     private productsService: ProductsService,
-    private config: ConfigService
+    private readonly config: ConfigService
   ) {}
 
   private async formatProductDates(product: any): Promise<any> {
-    const config = await this.config.findAll(); // Obtener configuración
-    const dolarPrice = config?.dolar || 1; // Usa 1 como valor predeterminado si no está definido
-
+    const config = await this.config.findAll();
+    const dolarPrice = config?.dolar || 1;
     return {
       ...product,
-      dolarPrice: dolarPrice * product.price,
+      dolarPrice: parseFloat((dolarPrice * product.price).toFixed(2)),
       categorie: {
         ...product.categorie,
         createdAt: undefined,
@@ -78,5 +78,11 @@ export class ProductsController {
   @HttpCode(HttpStatus.OK)
   remove(@Param('id') id: any) {
     return this.productsService.remove(parseInt(id));
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  async patchProduct(@Param('id') id: number, @Body() dto: productDto) {
+    return this.productsService.patch(id, dto);
   }
 }

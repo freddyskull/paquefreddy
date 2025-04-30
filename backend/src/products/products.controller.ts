@@ -55,8 +55,17 @@ export class ProductsController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param() params: any) {
-    const product = await this.productsService.findOne(parseInt(params.id));
+    const product = await this.productsService.findOne(params.id);
     return await this.formatProductDates(product);
+  }
+
+  @Get('search/:query')
+  @HttpCode(HttpStatus.OK)
+  async search(@Param('query') query: string) {
+    const products = await this.productsService.searchProduct(query);
+    return await Promise.all(
+      products.map((product) => this.formatProductDates(product))
+    );
   }
 
   @Get()

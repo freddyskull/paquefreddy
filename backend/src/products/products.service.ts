@@ -114,7 +114,21 @@ export class ProductsService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: any) {
+    if (isNaN(Number(id))) {
+      const product = await this.prisma.products.findFirst({
+        where: { slugs_url: id },
+        select: this.formatedData
+      });
+
+      if (!product) {
+        throw new HttpException(
+          'No existe el producto',
+          HttpStatus.BAD_REQUEST
+        );
+      }
+      return product;
+    }
     const dato = await this.prisma.products.findFirst({
       where: { id: Number(id) },
       select: this.formatedData
@@ -189,5 +203,22 @@ export class ProductsService {
       }
     });
     return { status: 'ok', message: 'Producto eliminado correctamente' };
+  }
+
+  async searchProduct(query: string) {
+    return this.prisma.products.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { slugs_url: { contains: query, mode: 'insensitive' } },
+          { slugs: { has: query } }, // Adjusted to handle array of strings
+          { brand: { contains: query, mode: 'insensitive' } }
+        ]
+      },
+      select: this.formatedData,
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
   }
 }

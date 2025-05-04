@@ -1,14 +1,18 @@
-import React from 'react';
-import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState } from 'react';
+import { useReactTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from '@tanstack/react-table';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DateBadge } from './dateBadge';
 import { useConfigStore } from '@/store/configStore';
+import { Input } from '../ui/input';
 
 export const ProductsDataTable = ({ data }) => {
     const columns = [
         {
             accessorKey: 'name',
             header: 'Nombre',
+            filterFn: (row, columnId, value) => {
+                return value ? row.getValue(columnId).toString().toLowerCase().includes(value.toLowerCase()) : true;
+            },
         },
         {
             accessorKey: 'images',
@@ -26,44 +30,80 @@ export const ProductsDataTable = ({ data }) => {
         {
             accessorKey: 'price',
             header: 'Precio',
-            cell: info => `$${info.getValue()}`,
-        },
-        {
-            accessorKey: 'price_ent',
-            header: 'price_ent',
-        },
-        {
-            accessorKey: 'categorie',
-            header: 'categorie',
+            cell: info => `${info.getValue()}`,
+            filterFn: (row, columnId, value) => {
+                const price = parseFloat(row.getValue(columnId));
+                const searchValue = parseFloat(value);
+                return !value || isNaN(searchValue) || price === searchValue;
+            },
         },
         {
             accessorKey: 'slugs',
-            header: 'slugs',
+            header: 'Slugs',
+            filterFn: (row, columnId, value) => {
+                return value ? row.getValue(columnId).toString().toLowerCase().includes(value.toLowerCase()) : true;
+            },
         },
         {
             accessorKey: 'brand',
-            header: 'brand',
+            header: 'Marca',
+            filterFn: (row, columnId, value) => {
+                return value ? row.getValue(columnId).toString().toLowerCase().includes(value.toLowerCase()) : true;
+            },
+        },
+        {
+            accessorKey: 'price_ent',
+            header: 'precio entrada',
+            cell: info => `${info.getValue()}`,
+            filterFn: (row, columnId, value) => {
+                const price = parseFloat(row.getValue(columnId));
+                const searchValue = parseFloat(value);
+                return !value || isNaN(searchValue) || price === searchValue;
+            },
+        },
+        {
+            accessorKey: 'categorie',
+            header: 'categoría',
         },
         {
             accessorKey: 'createdAt',
-            header: 'createdAt',
+            header: 'fecha creación',
         },
     ];
 
-    const { currency } = useConfigStore()
-
+    const { currency } = useConfigStore();
+    const [searchTerm, setSearchTerm] = useState('');
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        onSortingChange: (newSorting) => {
+            table.setSorting(newSorting);
+        },
+        getSortedRowModel: getSortedRowModel(),
     });
+
+    const handleSearch = (value) => {
+        // Normalize decimal separator to '.' for consistent filtering
+        const normalizedValue = value.replace(',', '.');
+        setSearchTerm(value);
+        table.setGlobalFilter(normalizedValue);
+    };
     return (
         <Card className="h-[88vh] bg-secondary">
+            <CardHeader>
+                <Input
+                    placeholder="Buscar producto..."
+                    value={searchTerm}
+                    onChange={(e) => handleSearch(e.target.value)}
+                />
+            </CardHeader>
             <CardContent className="overflow-y-auto h-full">
                 <div className="grid xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4">
                 {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map(row => (
-                    <Card key={row.id} className="flex flex-col py-4 px-3 relative min-h-[440px] hover:shadow-xl shadow-primary/10 transition-all product-card">    
+                    <Card key={row.id} className="flex flex-col p-4 relative min-h-[440px] transition-shadow duration-500 hover:shadow-2xl hover:shadow-primary/10 product-card">    
                         <DateBadge date={row.original.createdAt} />
                         <div className="w-full h-48 bg-white rounded-md bg-contain bg-center bg-no-repeat image" style={{ backgroundImage: `url(${row.original.images})` }}></div>
                         <div className='flex justify-center gap-2 text-center'>
@@ -83,15 +123,15 @@ export const ProductsDataTable = ({ data }) => {
                             <span className="text-sm -mt-2 lg:text-md xl:text-lg font-bold text-center uppercase text-pretty line-clamp-2">{row.original.name}</span>
                             <div className="grid grid-cols-2 gap-4 absolute bottom-5 left-0 w-full px-2">
                                 <div className="">
-                                    <p className="text-[10px] font-light uppercase text-muted-foreground">Venta</p>
-                                    <p className={`text-xl font-bold ${currency === 'USD' ? 'text-success' : 'text-primary'}`}>
-                                        {currency === 'USD'? row.original.price : row.original.price_bs}
+                                    <p className="text-[10px] font-light uppercase">Venta</p>
+                                    <p className={`text-xl font-bold ${currency === 'USD' ? 'text-usd' : 'text-primary'}`}>
+                                        {currency === 'USD' ? row.original.price.toString().replace('.', ',') : row.original.price_bs.toString().replace('.', ',')}
                                     </p>
                                 </div>
                                 <div className="text-end">
-                                    <p className="text-[10px] font-light uppercase text-muted-foreground">Entrada</p>
-                                    <p className="text-xl text-muted-foreground font-bold">
-                                            {currency === 'USD'? row.original.price_ent : row.original.price_ent_bs}
+                                    <p className="text-[10px] font-light uppercase">Entrada</p>
+                                    <p className="text-xl font-bold">
+                                        {currency === 'USD' ? row.original.price_ent.toString().replace('.', ',') : row.original.price_ent_bs.toString().replace('.', ',')}
                                     </p>
                                 </div>
                             </div>

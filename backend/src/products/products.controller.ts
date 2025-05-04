@@ -29,7 +29,7 @@ export class ProductsController {
     const dolarPrice = config?.dolar || 1;
     return {
       ...product,
-      product_bs: parseFloat((dolarPrice * product.price).toFixed(2)),
+      price_bs: parseFloat((dolarPrice * product.price).toFixed(2)),
       price_ent_bs: parseFloat((dolarPrice * product.price).toFixed(2)),
       categorie: {
         ...product.categorie,
@@ -40,10 +40,10 @@ export class ProductsController {
         ...product.supplier,
         createdAt: undefined,
         updatedAt: undefined
-      },
-      createdAt: new Date(product.createdAt).toLocaleDateString(),
-      updatedAt: new Date(product.updatedAt).toLocaleDateString(),
-      expiration: new Date(product.expiration).toLocaleDateString()
+      }
+      // createdAt: new Date(product.createdAt).toLocaleDateString(),
+      // updatedAt: new Date(product.updatedAt).toLocaleDateString(),
+      // expiration: new Date(product.expiration).toLocaleDateString()
     };
   }
 

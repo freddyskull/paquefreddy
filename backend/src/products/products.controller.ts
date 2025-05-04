@@ -29,7 +29,8 @@ export class ProductsController {
     const dolarPrice = config?.dolar || 1;
     return {
       ...product,
-      dolarPrice: parseFloat((dolarPrice * product.price).toFixed(2)),
+      product_bs: parseFloat((dolarPrice * product.price).toFixed(2)),
+      price_ent_bs: parseFloat((dolarPrice * product.price).toFixed(2)),
       categorie: {
         ...product.categorie,
         createdAt: undefined,

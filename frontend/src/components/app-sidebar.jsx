@@ -1,5 +1,6 @@
 import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
+import Logo from "../../public/logo.svg"
+
 
 import {
   Sidebar,
@@ -21,16 +22,16 @@ const data = {
     {
       title: "Productos",
       url: "/productos",
-      // items: [
-      //   {
-      //     title: "Installation",
-      //     url: "#",
-      //   },
-      //   {
-      //     title: "Project Structure",
-      //     url: "#",
-      //   },
-      // ],
+      items: [
+        {
+          title: "Nuevo producto",
+          url: "#",
+        },
+        {
+          title: "Nuevo categoría",
+          url: "#",
+        },
+      ],
     },
 
     {
@@ -69,7 +70,7 @@ export function AppSidebar({
               <div >
                 <div
                   className="flex justify-center items-center">
-                  <img src="logo.svg" className="w-22" alt="" />
+                  <img src="logo.svg" className="w-22 h-auto" alt="Logo" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-medium text-[17px] text-primary">Pa'que Freddy</span>

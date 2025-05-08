@@ -50,9 +50,10 @@ export const useCategoriesStore = create((set, get) => ({
     set({ isLoading: true, error: null })
     try {
       const response = await axiosInstance.post('categories', category)
-      const newCategory = response.data
-      const { categories } = get()
-      set({ categories: [...categories, newCategory] })
+      const newCategory = response.data.data
+
+      set({ categories: newCategory })
+
     } catch (error) {
       set({ error: handleApiError(error, 'Failed to create category') })
     } finally {

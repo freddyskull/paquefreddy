@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { Input } from '../ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Button } from '../ui/button';
 import { PlusIcon, Calculator } from 'lucide-react';
+import { CategoryDialog } from '../dialogs/categoryDialog';
+import { DateBadge } from './dateBadge';
 
-export const FiltersTable = ({ 
-  categories, 
-  searchTerm, 
-  setSearchTerm, 
-  selectedCategory, 
+export const FiltersTable = ({
+  categories,
+  searchTerm,
+  setSearchTerm,
+  selectedCategory,
   setSelectedCategory,
-  handleSearch 
+  handleSearch,
 }) => {
   return (
     <div className="flex justify-between gap-4 px-6">
@@ -31,10 +39,7 @@ export const FiltersTable = ({
           <label htmlFor="category" className="text-[10px] uppercase">
             Categoría
           </label>
-          <Select
-            value={selectedCategory}
-            onValueChange={setSelectedCategory}
-          >
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger id="category" className="mt-2 w-full">
               <SelectValue
                 placeholder="Seleccionar categoría"
@@ -42,19 +47,19 @@ export const FiltersTable = ({
               />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem
-                value={'#'}
-                className="text-primary font-bold uppercase"
-              >
-                Crear nueva categoría
-              </SelectItem>
+              <div key="category-dialog-container" className="my-2 text-center">
+                <CategoryDialog key="category-dialog" />
+              </div>
               {categories.map((category) => (
                 <SelectItem
-                  key={category.id}
+                  key={category.name}
                   value={category.id}
                   className="uppercase"
                 >
-                  {category.name}
+                  <div className="flex justify-between items-center gap-4">
+                    <div className="text-xs">{category.name}</div>
+                    {/* <div className="text-xs flex justify-end"> {category.createdAt}</div> */}
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>

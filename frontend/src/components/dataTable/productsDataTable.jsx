@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,13 +18,18 @@ import { FiltersTable } from './filtersTable';
 export const ProductsDataTable = ({ data }) => {
   const { categories } = useCategoriesStore();
   const { patchProduct } = useProductStore();
-  const categoryOptions = categories.map((cat) => ({
-    value: cat.id,
-    label: cat.name,
-  }));
+
+  const categoryOptions = useMemo(() => 
+    categories.map((cat) => ({
+      value: cat.id,
+      label: cat.name,
+    }))
+  , [categories]);
 
   const { config, currency } = useConfigStore();
-  const columns = [
+
+
+  const columns = useMemo(() => [
     {
       accessorKey: 'name',
       header: 'Nombre',
@@ -89,11 +94,13 @@ export const ProductsDataTable = ({ data }) => {
       accessorKey: 'createdAt',
       header: 'fecha creación',
     },
-  ];
+  ], [config, currency]);
+
+  const memoizedData = useMemo(() => data, [data]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const table = useReactTable({
-    data,
+    data: memoizedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

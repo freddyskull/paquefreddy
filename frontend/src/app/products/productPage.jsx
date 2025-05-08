@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useProductStore } from '@/store/productStore'
 import { ProductsDataTable } from '@/components/dataTable/productsDataTable'
 

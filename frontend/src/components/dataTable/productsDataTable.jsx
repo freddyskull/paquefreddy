@@ -20,15 +20,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { useProductStore } from '@/store/productStore';
+import { Calculator, PlusIcon } from 'lucide-react';
 
 export const ProductsDataTable = ({ data }) => {
   const { categories } = useCategoriesStore();
+  const { patchProduct } = useProductStore();
   const categoryOptions = categories.map((cat) => ({
     value: cat.id,
     label: cat.name,
   }));
 
-  const { config } = useConfigStore();
+  const { config, currency } = useConfigStore();
   const columns = [
     {
       accessorKey: 'name',
@@ -49,7 +52,7 @@ export const ProductsDataTable = ({ data }) => {
     },
     {
       accessorKey: 'price',
-      header: 'Precio',
+      header: 'price',
       filterFn: (row, columnId, value) => {
         const price = parseFloat(row.getValue(columnId));
         const searchValue = parseFloat(value);
@@ -84,12 +87,7 @@ export const ProductsDataTable = ({ data }) => {
     },
     {
       accessorKey: 'price_ent',
-      header: 'precio entrada',
-      filterFn: (row, columnId, value) => {
-        const price = parseFloat(row.getValue(columnId));
-        const searchValue = parseFloat(value);
-        return !value || isNaN(searchValue) || price === searchValue;
-      },
+      header: 'price_ent',
     },
     {
       accessorKey: 'categorie',
@@ -100,7 +98,6 @@ export const ProductsDataTable = ({ data }) => {
       header: 'fecha creación',
     },
   ];
-  const { currency } = useConfigStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const table = useReactTable({
@@ -108,9 +105,9 @@ export const ProductsDataTable = ({ data }) => {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: (newSorting) => {
-      table.setSorting(newSorting);
-    },
+    // onSortingChange: (newSorting) => {
+    //   table.setSorting(newSorting);
+    // },
     getSortedRowModel: getSortedRowModel(),
   });
 
@@ -125,14 +122,24 @@ export const ProductsDataTable = ({ data }) => {
     }
   }, [config]);
 
+  const handleEdit = (label, value, productId) => {
+    const updatedProduct = {
+      [label]: value,
+      currency: currency,
+    };
+    if (value !== '' || value !== null || value !== undefined) {
+      patchProduct(productId, updatedProduct);
+    }
+  };
+
   return (
     <Card className="h-[88vh]">
       <CardHeader>
         <div className="flex justify-between gap-4">
           <div className="flex w-full items-center gap-2">
-            <div className="w-full">
+            <div className="w-1/1 md:w-1/2 xl:w-full">
               <label htmlFor="search" className="text-[10px] uppercase">
-                Buscar producto
+                Buscador
               </label>
               <Input
                 id="search"
@@ -142,7 +149,7 @@ export const ProductsDataTable = ({ data }) => {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
-            <div className="w-80">
+            <div className="w-1/3 md:w-1/4 xl:w-1/3">
               <label htmlFor="category" className="text-[10px] uppercase">
                 Categoría
               </label>
@@ -151,7 +158,10 @@ export const ProductsDataTable = ({ data }) => {
                 onValueChange={setSelectedCategory}
               >
                 <SelectTrigger id="category" className="mt-2 w-full">
-                  <SelectValue placeholder="Seleccionar categoría" />
+                  <SelectValue
+                    placeholder="Seleccionar categoría"
+                    className="uppercase"
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem
@@ -161,32 +171,39 @@ export const ProductsDataTable = ({ data }) => {
                     Crear nueva categoría
                   </SelectItem>
                   {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
+                    <SelectItem
+                      key={category.id}
+                      value={category.id}
+                      className="uppercase"
+                    >
                       {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            <div className="w-120">
+            <div className="hidden w-1/3 sm:block md:w-1/3">
               <label htmlFor="category" className="text-[10px] uppercase">
                 Rango de precios
               </label>
               <div className="mt-2 flex items-center gap-2">
-                <Input type="number" placeholder="Precio mínimo" />
-                <Input type="number" placeholder="Precio máximo" />
+                <Input type="number" placeholder="Minimo" />
+                <Input type="number" placeholder="Maximo" />
               </div>
             </div>
           </div>
           <div className="flex items-end justify-end gap-2">
-            <Button variant="outline" onClick={() => table.resetGlobalFilter()}>
-              Reset
+            <Button variant="outline">
+              <PlusIcon />
+            </Button>
+            <Button variant="outline">
+              <Calculator />
             </Button>
           </div>
         </div>
       </CardHeader>
       <CardContent className="h-full overflow-y-auto">
-        <div className="xs:grid-cols-1 grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+        <div className="xs:grid-cols-1 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <Card
@@ -203,30 +220,63 @@ export const ProductsDataTable = ({ data }) => {
                     {row.original.slugs.slice(0, 3).join(', ')}
                   </span>
                 </div>
-                <div className="flex justify-center gap-2">
+                <div className="flex justify-center items-center gap-2">
                   <div className="flex flex-col text-center">
-                    <span className="text-[10px] uppercase">Categoría</span>
-                    <div className="bg-primary mt-1 rounded-full px-2 text-[10px] text-white uppercase">
-                      <EditableSelect
-                        value={row.original.categorie.name}
-                        options={categoryOptions}
-                        onBlur={(e) => {
-                          console.log('Categoría editada', e);
-                        }}
-                        placeholder="Selecciona una categoría"
-                      />
-                    </div>
+                    {row.original.categorie && (
+                      <div className="flex items-center gap-2">
+                        <div className='flex flex-col'>
+                          <span className="text-[10px] uppercase">
+                            Categoría
+                          </span>
+                          <div className="bg-primary mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase">
+                            <EditableSelect
+                              value={row.original.categorie.name}
+                              options={categoryOptions}
+                              onBlur={(e) => {
+                                handleEdit('categorie', e, row.original.id);
+                              }}
+                              placeholder="Selecciona una categoría"
+                            />
+                          </div>
+                        </div>
+                        {row.original.brand === null && (
+                          <div className='flex flex-col'>
+                            <span className="text-[10px] uppercase">Marca</span>
+                            <div className="bg-primary mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase">
+                              <EditableInput
+                                value={'N/A'}
+                                onBlur={(e) => {
+                                  handleEdit(
+                                    'brand',
+                                    e.target.value,
+                                    row.original.id
+                                  );
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div className="flex flex-col text-center">
-                    <span className="text-[10px] uppercase">Marca</span>
-                    <span className="bg-primary mt-1 rounded-full px-2 text-[10px] text-white uppercase">
-                      <EditableInput
-                        value={row.original.brand}
-                        onBlur={(e) => {
-                          console.log('Nombre editado:', e.target.value);
-                        }}
-                      />
-                    </span>
+                    {row.original.brand && (
+                      <>
+                        <span className="text-[10px] uppercase">Marca</span>
+                        <div className="bg-primary mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase">
+                          <EditableInput
+                            value={row.original.brand}
+                            onBlur={(e) => {
+                              handleEdit(
+                                'brand',
+                                e.target.value,
+                                row.original.id
+                              );
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -234,7 +284,7 @@ export const ProductsDataTable = ({ data }) => {
                   <EditableInput
                     value={row.original.name}
                     onBlur={(e) => {
-                      console.log('Nombre editado:', e.target.value);
+                      handleEdit('name', e.target.value, row.original.id);
                     }}
                   />
                 </span>
@@ -252,10 +302,7 @@ export const ProductsDataTable = ({ data }) => {
                         }
                         type="number"
                         onBlur={(e) => {
-                          console.log(
-                            'Precio entrada editado:',
-                            e.target.value
-                          );
+                          handleEdit('price', e.target.value, row.original.id);
                         }}
                       />
                     </div>
@@ -267,17 +314,22 @@ export const ProductsDataTable = ({ data }) => {
                         value={
                           currency === 'USD'
                             ? row.original.price_ent
-                                .toString()
-                                .replace('.', ',')
+                              ? row.original.price_ent
+                                  .toString()
+                                  .replace('.', ',')
+                              : 'N/A'
                             : row.original.price_ent_bs
-                                .toString()
-                                .replace('.', ',')
+                              ? row.original.price_ent_bs
+                                  .toString()
+                                  .replace('.', ',')
+                              : 'N/A'
                         }
                         type="number"
                         onBlur={(e) => {
-                          console.log(
-                            'Precio entrada editado:',
-                            e.target.value
+                          handleEdit(
+                            'price_ent',
+                            e.target.value,
+                            row.original.id
                           );
                         }}
                       />

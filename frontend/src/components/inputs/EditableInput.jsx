@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { PencilIcon, XIcon } from 'lucide-react';
+import { PencilIcon } from 'lucide-react';
 
 export const EditableInput = ({
-  value,
+  value = '',
   onChange,
   onBlur,
   type = 'text',
-  placeholder,
+  placeholder = '',
   className = '',
   ...props
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [localValue, setLocalValue] = useState(value);
+  const [localValue, setLocalValue] = useState(value || '');
+  const inputRef = useRef(null);
 
   const handleBlur = (e) => {
     setIsEditing(false);
     onBlur?.(e);
+    setLocalValue(value || '');
   };
 
   const handleCancel = () => {
@@ -33,6 +35,7 @@ export const EditableInput = ({
   const handleDoubleClick = (e) => {
     e.stopPropagation();
     setIsEditing(true);
+    inputRef.current?.focus();
   };
 
   return (
@@ -41,19 +44,25 @@ export const EditableInput = ({
         <div
           className={`cursor-pointer ${isEditing ? 'hidden' : ''}`}
           onDoubleClick={handleDoubleClick}
-          // onClick={(e) => {
-          //   e.stopPropagation();
-          //   setIsEditing(true);
-          // }}
         >
           {value || placeholder}
         </div>
         <Input
           type={type}
-          value={isEditing ? localValue : value}
+          value={isEditing ? localValue : type === 'number' ? (value || '').toString().replace(',', '.') : value || ''}
+          
           onChange={handleChange}
           onBlur={handleBlur}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleBlur(e);
+            } else if (e.key === 'Escape') {
+              handleCancel();
+            }
+          }}
           className={`${className} ${isEditing ? '' : 'hidden'}`}
+          placeholder={placeholder}
+          ref={inputRef}
           {...props}
         />
       </div>
@@ -71,7 +80,7 @@ export const EditableInput = ({
           >
             <PencilIcon />
           </Button>
-          <Button
+          {/* <Button
             variant="outline"
             size="sm"
             onClick={(e) => {
@@ -80,7 +89,7 @@ export const EditableInput = ({
             }}
           >
             <XIcon />
-          </Button>
+          </Button> */}
         </div>
       )}
     </div>

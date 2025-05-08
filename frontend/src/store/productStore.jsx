@@ -85,11 +85,14 @@ export const useProductStore = create((set, get) => ({
     set({ isLoading: true, error: null })
     try {
       const response = await axiosInstance.patch(`products/${id}`, updates)
-      const updatedProduct = response.data
+      const updatedProduct = response.data.data
       const { products } = get()
-      set({
-        products: products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)),
-      })
+      
+      // Crear una nueva lista de productos actualizada
+      const newProducts = products.map((product) => 
+        product.id === id ? updatedProduct : product
+      )
+      set({ products: newProducts })
     } catch (error) {
       set({ error: handleApiError(error, 'Failed to patch product') })
     } finally {

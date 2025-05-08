@@ -46,9 +46,9 @@ export class CategoriesController {
             // updatedAt: new Date(product.updatedAt).toLocaleDateString(),
             // expiration: new Date(product.expiration).toLocaleDateString()
           }))
-        : []
-      // createdAt: new Date(categorie.createdAt).toLocaleDateString(),
-      // updatedAt: new Date(categorie.updatedAt).toLocaleDateString()
+        : [],
+      createdAt: new Date(categorie.createdAt).toLocaleDateString(),
+      updatedAt: new Date(categorie.updatedAt).toLocaleDateString()
     };
   }
 

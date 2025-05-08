@@ -54,8 +54,14 @@ export class CategoriesController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createCategoryDto: CategorieDto) {
-    return this.categoriesService.create(createCategoryDto);
+  async create(@Body() createCategoryDto: CategorieDto) {
+    const categorie = await this.categoriesService.create(createCategoryDto);
+    const allCategories = await this.categoriesService.findAll();
+    
+    return {
+      data: await Promise.all(allCategories.map(c => this.formatCategorie(c))),
+      categorie: await this.formatCategorie(categorie)
+    };
   }
 
   @Get()
@@ -76,8 +82,9 @@ export class CategoriesController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  update(@Param('id') id: number, @Body() updateCategoryDto: CategorieDto) {
-    return this.categoriesService.update(id, updateCategoryDto);
+  async update(@Param('id') id: number, @Body() updateCategoryDto: CategorieDto) {
+    const categorie = await this.categoriesService.update(id, updateCategoryDto);
+    return await this.formatCategorie(categorie);
   }
 
   @Delete(':id')

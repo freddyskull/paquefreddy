@@ -50,7 +50,12 @@ export class ProductsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(new ValidationPipe()) dto: productDto) {
-    return this.productsService.create(dto);
+    const product = await this.productsService.create(dto);
+    const allProducts = await this.productsService.findAll();
+    return {
+      data: await Promise.all(allProducts.map(p => this.formatProductDates(p))),
+      product: await this.formatProductDates(product)
+    };
   }
 
   @Get(':id')

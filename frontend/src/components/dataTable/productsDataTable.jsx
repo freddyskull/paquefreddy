@@ -5,23 +5,15 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
 } from '@tanstack/react-table';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { DateBadge } from './dateBadge';
 import { useConfigStore } from '@/store/configStore';
-import { Input } from '../ui/input';
 import { EditableInput } from '../inputs/EditableInput';
 import { EditableSelect } from '../inputs/EditableSelect';
-import { Button } from '../ui/button';
 import { useCategoriesStore } from '@/store/categoriesStore';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
 import { useProductStore } from '@/store/productStore';
 import { Calculator, PlusIcon } from 'lucide-react';
+import { FiltersTable } from './filtersTable';
 
 export const ProductsDataTable = ({ data }) => {
   const { categories } = useCategoriesStore();
@@ -134,74 +126,14 @@ export const ProductsDataTable = ({ data }) => {
 
   return (
     <Card className="h-[88vh]">
-      <CardHeader>
-        <div className="flex justify-between gap-4">
-          <div className="flex w-full items-center gap-2">
-            <div className="w-1/1 md:w-1/2 xl:w-full">
-              <label htmlFor="search" className="text-[10px] uppercase">
-                Buscador
-              </label>
-              <Input
-                id="search"
-                placeholder="Nombre, palabras clave, categoría, marca, precio..."
-                value={searchTerm}
-                className="mt-2"
-                onChange={(e) => handleSearch(e.target.value)}
-              />
-            </div>
-            <div className="w-1/3 md:w-1/4 xl:w-1/3">
-              <label htmlFor="category" className="text-[10px] uppercase">
-                Categoría
-              </label>
-              <Select
-                value={selectedCategory}
-                onValueChange={setSelectedCategory}
-              >
-                <SelectTrigger id="category" className="mt-2 w-full">
-                  <SelectValue
-                    placeholder="Seleccionar categoría"
-                    className="uppercase"
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem
-                    value={'#'}
-                    className="text-primary font-bold uppercase"
-                  >
-                    Crear nueva categoría
-                  </SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem
-                      key={category.id}
-                      value={category.id}
-                      className="uppercase"
-                    >
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="hidden w-1/3 sm:block md:w-1/3">
-              <label htmlFor="category" className="text-[10px] uppercase">
-                Rango de precios
-              </label>
-              <div className="mt-2 flex items-center gap-2">
-                <Input type="number" placeholder="Minimo" />
-                <Input type="number" placeholder="Maximo" />
-              </div>
-            </div>
-          </div>
-          <div className="flex items-end justify-end gap-2">
-            <Button variant="outline">
-              <PlusIcon />
-            </Button>
-            <Button variant="outline">
-              <Calculator />
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
+      <FiltersTable
+        categories={categories}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        handleSearch={handleSearch}
+      />
       <CardContent className="h-full overflow-y-auto">
         <div className="xs:grid-cols-1 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
           {table.getRowModel().rows?.length ? (
@@ -220,11 +152,11 @@ export const ProductsDataTable = ({ data }) => {
                     {row.original.slugs.slice(0, 3).join(', ')}
                   </span>
                 </div>
-                <div className="flex justify-center items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <div className="flex flex-col text-center">
                     {row.original.categorie && (
                       <div className="flex items-center gap-2">
-                        <div className='flex flex-col'>
+                        <div className="flex flex-col">
                           <span className="text-[10px] uppercase">
                             Categoría
                           </span>
@@ -240,7 +172,7 @@ export const ProductsDataTable = ({ data }) => {
                           </div>
                         </div>
                         {row.original.brand === null && (
-                          <div className='flex flex-col'>
+                          <div className="flex flex-col">
                             <span className="text-[10px] uppercase">Marca</span>
                             <div className="bg-primary mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase">
                               <EditableInput

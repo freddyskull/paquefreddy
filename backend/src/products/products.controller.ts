@@ -30,7 +30,7 @@ export class ProductsController {
     return {
       ...product,
       price_bs: parseFloat((dolarPrice * product.price).toFixed(2)),
-      price_ent_bs: parseFloat((dolarPrice * product.price).toFixed(2)),
+      price_ent_bs: parseFloat((dolarPrice * product.price_ent).toFixed(2)),
       categorie: {
         ...product.categorie,
         createdAt: undefined,
@@ -93,6 +93,11 @@ export class ProductsController {
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async patchProduct(@Param('id') id: number, @Body() dto: productDto) {
-    return this.productsService.patch(id, dto);
+    const patch = await this.productsService.patch(id, dto);
+    const response = {
+      ...patch,
+      data: await this.formatProductDates(patch.data)
+    };
+    return response;
   }
 }

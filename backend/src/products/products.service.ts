@@ -12,6 +12,13 @@ export class ProductsService {
     this.prisma = new PrismaClient();
   }
 
+  private convertEmptyStringToNull<T>(value: T): T | null {
+    if (typeof value === 'string' && value.trim() === '') {
+      return null;
+    }
+    return value;
+  }
+
   private buildProductData(dto: productDto) {
     return {
       name: dto.name,
@@ -19,13 +26,13 @@ export class ProductsService {
       status: dto.status,
       price: parseFloat(dto.price),
       price_ent: parseFloat(dto.price_ent),
-      slugs: dto.slugs,
+      slugs: dto.slugs.length === 0 ? [] : dto.slugs,
       slugs_url: slugify(dto.name),
-      images: dto.images,
-      brand: dto.brand,
-      bundle: dto.bundle,
-      expiration: dto.expiration,
-      unity: dto.unity,
+      images: dto.images?.trim() === '' ? null : dto.images,
+      brand: dto.brand?.trim() === '' ? null : dto.brand,
+      bundle: dto.bundle === 0 ? null : dto.bundle,
+      expiration: dto.expiration ? dto.expiration : null,
+      unity: dto.unity?.trim() === '' ? null : dto.unity,
       supplier_id: dto.supplier_id,
       categorie_id: dto.categorie_id
     };
@@ -73,11 +80,15 @@ export class ProductsService {
   }
 
   private convertPricesToUSD(dto: productDto, dolar: number): productDto {
-    return {
-      ...dto,
-      price_ent: (dto.price_ent / dolar).toFixed(2),
-      price: (dto.price / dolar).toFixed(2)
-    };
+    const keys = Object.keys(dto);
+    const hasPrice = keys.includes('price') || keys.includes('price_ent');
+    if (!hasPrice) return dto;
+    for (const key of keys) {
+      if (key === 'price' || key === 'price_ent') {
+        dto[key] = (parseFloat(dto[key]) / dolar).toFixed(2);
+      }
+    }
+    return dto;
   }
 
   private validatePrices(price_ent: string, price: string): void {
@@ -177,6 +188,12 @@ export class ProductsService {
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;
     const newData = { ...product, ...dto };
+    
+    
+    const keys = Object.keys(dto)
+    const hasPrice = keys.includes('price') || keys.includes('price_ent');
+    
+    
     const updatedData =
       dto.currency === 'USD' || !dto.currency
         ? this.buildProductData(newData)
@@ -187,7 +204,13 @@ export class ProductsService {
       data: updatedData
     });
 
-    return { status: 'ok', message: 'Producto actualizado parcialmente' };
+    const data = await this.findOne(id);
+
+    return {
+      status: 'ok',
+      message: 'Producto actualizado parcialmente',
+      data: data
+    };
   }
 
   async remove(id: any) {

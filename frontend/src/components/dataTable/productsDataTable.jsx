@@ -110,7 +110,7 @@ export const ProductsDataTable = ({ data }) => {
   const [columnFilters, setColumnFilters] = useState([
     {
       id: "price",
-      value: []
+      value: ['', '']
     },
     {
       id: "categorie_slug",

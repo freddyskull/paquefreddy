@@ -90,8 +90,28 @@ export const FiltersTable = ({
             Rango de precios
           </label>
           <div className="mt-2 flex items-center gap-2">
-            <Input type="number" placeholder="Minimo" />
-            <Input type="number" placeholder="Maximo" />
+            <Input type="number" value={columnFilters[0].value[0] || ''} onChange={(e) => setColumnFilters((prev) => {
+              return prev.map((filter) => {
+                if (filter.id === 'price') {
+                  return {
+                    ...filter,
+                    value: [e.target.value, filter.value[1] || ''],
+                  };
+                }
+                return filter;
+              });
+            })} placeholder="Minimo" />
+            <Input type="number" value={columnFilters[0].value[1] || ''} onChange={(e) => setColumnFilters((prev) => {
+              return prev.map((filter) => {
+                if (filter.id === 'price') {
+                  return {
+                    ...filter,
+                    value: [filter.value[0] || '', e.target.value],
+                  };
+                }
+                return filter;
+              });
+            })} placeholder="Maximo" />
           </div>
         </div>
       </div>

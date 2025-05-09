@@ -15,6 +15,7 @@ export class CategoriesService {
     id: true,
     name: true,
     products: true,
+    slug_url: true,
     createdAt: true,
     updatedAt: true
   };

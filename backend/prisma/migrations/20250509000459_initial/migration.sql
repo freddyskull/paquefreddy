@@ -100,7 +100,7 @@ CREATE TABLE "Config" (
     "autoPrice" BOOLEAN DEFAULT true,
     "profit" DOUBLE PRECISION NOT NULL DEFAULT 0.3,
     "roundPrice" BOOLEAN DEFAULT false,
-    "default_categories_id" INTEGER,
+    "default_categories_slug" TEXT DEFAULT 'varios',
     "threshold" INTEGER,
     "defafult_currency" TEXT DEFAULT 'BS',
     "expiration_default" INTEGER DEFAULT 30,
@@ -131,6 +131,9 @@ CREATE TABLE "_ProductsToPurhases" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Categories_slug_url_key" ON "Categories"("slug_url");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Products_slugs_url_key" ON "Products"("slugs_url");
 
 -- CreateIndex
@@ -152,7 +155,7 @@ ALTER TABLE "Records" ADD CONSTRAINT "Records_user_id_fkey" FOREIGN KEY ("user_i
 ALTER TABLE "Purhases" ADD CONSTRAINT "Purhases_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Config" ADD CONSTRAINT "Config_default_categories_id_fkey" FOREIGN KEY ("default_categories_id") REFERENCES "Categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Config" ADD CONSTRAINT "Config_default_categories_slug_fkey" FOREIGN KEY ("default_categories_slug") REFERENCES "Categories"("slug_url") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ProductsToRecords" ADD CONSTRAINT "_ProductsToRecords_A_fkey" FOREIGN KEY ("A") REFERENCES "Products"("id") ON DELETE CASCADE ON UPDATE CASCADE;

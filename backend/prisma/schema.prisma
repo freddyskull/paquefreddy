@@ -28,11 +28,10 @@ model User {
 model Categories {
   id          Int     @id @default(autoincrement())
   name        String
-  slug_url    String
+  slug_url    String @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   products    Products[]
-  config      Config[]
 }
 
 model Suppliers {
@@ -109,12 +108,11 @@ model Config {
   autoPrice             Boolean? @default(true)
   profit                Float  @default(0.3) // 30%
   roundPrice            Boolean? @default(false)
-  default_categories_id Int?
+  default_categories_slug String? @default("varios")
   threshold             Int?
   defafult_currency     String? @default("BS")
   expiration_default    Int? @default(30)
   bundle_discount       Float? @default(0.05) // 5%
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
-  categorie             Categories? @relation(fields: [default_categories_id], references: [id])
 }

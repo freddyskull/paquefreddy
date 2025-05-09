@@ -2,17 +2,35 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Crear una categoría por defecto
-  const defaultCategory = await prisma.categories.upsert({
-    where: { id: 1 }, // Replace with the correct unique identifier for the category
-    update: {},
-    create: {
-      name: 'Varios',
-      slug_url: 'varios',
-    },
-  });
+  // Crear categorías por defecto
+  const defaultCategories = await Promise.all([
+    prisma.categories.upsert({
+      where: { id: 1 },
+      update: {},
+      create: {
+        name: 'Varios',
+        slug_url: 'varios',
+      },
+    }),
+    prisma.categories.upsert({
+      where: { id: 2 },
+      update: {},
+      create: {
+        name: 'Higiene',
+        slug_url: 'higiene',
+      },
+    }),
+    prisma.categories.upsert({
+      where: { id: 3 },
+      update: {},
+      create: {
+        name: 'Lacteos',
+        slug_url: 'lacteos',
+      },
+    }),
+  ]);
 
-  console.log('Categoria por defecto creada:', defaultCategory);
+  console.log('Categorías creadas:', defaultCategories);
 
   // Crear un usuario por defecto
   const defaultUser = await prisma.user.upsert({
@@ -38,7 +56,6 @@ async function main() {
       autoPrice: true,
       profit: 0.3,
       roundPrice: false,
-      default_categories_id: 1,
       defafult_currency: 'BS',
       expiration_default: 30,
       bundle_discount: 0.05,
@@ -94,8 +111,36 @@ async function main() {
           'https://costazul.sigo.com.ve/images/thumbs/0021683_leche-entera-uht-natulac-946ml_450.jpeg',
         slugs_url: 'leche-natulac',
         brand: 'natulac',
-        categorie_id: 1,
+        categorie_id: 2,
         unity: 'lt',
+        status: true,
+      },
+      {
+        name: 'papel rosal plus 400h 4 rollos',
+        stock: 20,
+        price: 2.44,
+        price_ent: 3.20,
+        slugs: ['papel', 'rosal', 'rosal-plus', '400h', '4 rollos'],
+        images:
+          'https://caraotamarket.com/6739-large_default/papel-rosal-plus-400-hojas-4rollos.jpg',
+        slugs_url: 'papel-rosal-plus',
+        brand: 'rosal',
+        categorie_id: 3,
+        unity: 'rollos',
+        status: true,
+      },
+      {
+        name: 'Jabón (Lemon)',
+        stock: 20,
+        price: 0.68,
+        price_ent: 0.97,
+        slugs: ['jabon', 'baño', 'lemon'],
+        images:
+          'https://mercayahorra.com/wp-content/uploads/2020/06/Jab%C3%B2n-Lem%C3%B2n-x-130g.jpg',
+        slugs_url: 'jabon-lemon',
+        brand: 'lemon',
+        categorie_id: 3,
+        unity: 'g',
         status: true,
       },
     ],

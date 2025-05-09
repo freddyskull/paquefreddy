@@ -36,6 +36,7 @@ export class ProductsController {
         createdAt: undefined,
         updatedAt: undefined
       },
+      categorie_slug: product.categorie.slug_url,
       supplier: {
         ...product.supplier,
         createdAt: undefined,

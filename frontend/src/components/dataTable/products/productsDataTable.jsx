@@ -6,13 +6,13 @@ import {
   getSortedRowModel,
 } from '@tanstack/react-table';
 import { Card, CardContent } from '@/components/ui/card';
-import { DateBadge } from './dateBadge';
+import { DateBadge } from '@/components/dataTable/products/dateBadge';
 import { useConfigStore } from '@/store/configStore';
-import { EditableInput } from '../inputs/EditableInput';
-import { EditableSelect } from '../inputs/EditableSelect';
+import { EditableInput } from '@/components/inputs/EditableInput';
+import { EditableSelect } from '@/components/inputs/EditableSelect';
 import { useCategoriesStore } from '@/store/categoriesStore';
 import { useProductStore } from '@/store/productStore';
-import { FiltersTable } from './filtersTable';
+import { FiltersTable } from '@/components/dataTable/products/filtersTable';
 
 export const ProductsDataTable = ({ data }) => {
   const { categories } = useCategoriesStore();

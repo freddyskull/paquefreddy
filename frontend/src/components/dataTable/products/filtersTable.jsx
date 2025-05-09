@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { Input } from '../ui/input';
+import React from 'react';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Button } from '../ui/button';
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 import { PlusIcon, Calculator } from 'lucide-react';
-import { CategoryDialog } from '../dialogs/categoryDialog';
-import { DateBadge } from './dateBadge';
+import { CategoryDialog } from '@/components/dialogs/categoryDialog';
 
 export const FiltersTable = ({
   categories,

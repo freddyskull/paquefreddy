@@ -7,7 +7,7 @@ import {
   SelectValue,
   SelectSeparator,
 } from '@/components/ui/select';
-import { CategoryDialog } from '../dialogs/categoryDialog';
+import { CategoryDialog } from '@/components/dialogs/categoryDialog';
 
 export const CategorySelect = ({ categories, selectedCategoryState, setSelectedCategoryState, onCategoryChange }) => {
   const [searchTerm, setSearchTerm] = useState('');

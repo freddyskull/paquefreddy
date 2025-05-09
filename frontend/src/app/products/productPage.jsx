@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { useProductStore } from '@/store/productStore'
-import { ProductsDataTable } from '@/components/dataTable/productsDataTable'
+import { ProductsDataTable } from '@/components/dataTable/products/productsDataTable'
 
 export const ProductPage = () => {
   const { products } = useProductStore()

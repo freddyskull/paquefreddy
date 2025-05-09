@@ -6,7 +6,6 @@ export const ProductPage = () => {
   const { products } = useProductStore()
 
   const memoizedProducts = useMemo(() => products, [products])
-
   return (
     <>
       <ProductsDataTable data={memoizedProducts} />

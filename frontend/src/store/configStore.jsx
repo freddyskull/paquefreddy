@@ -1,17 +1,6 @@
 import { create } from 'zustand'
 import { axiosInstance } from '../config/axios.config'
-
-// Recursive error handler
-const handleApiError = (error, parentError = '') => {
-  if (error.response) {
-    const errorMessage = error.response.data?.message || error.response.statusText
-    return `${parentError}${parentError ? ' -> ' : ''}Server error: ${errorMessage}`
-  } else if (error.request) {
-    return `${parentError}${parentError ? ' -> ' : ''}No response from server`
-  } else {
-    return `${parentError}${parentError ? ' -> ' : ''}Request error: ${error.message}`
-  }
-}
+import { errorHandler } from '../utils/errorHandler'
 
 export const useConfigStore = create((set, get) => {
   // Initialize currency in localStorage if it doesn't exist
@@ -33,7 +22,8 @@ export const useConfigStore = create((set, get) => {
         const response = await axiosInstance.get('config')
         set({ config: response.data })
       } catch (error) {
-        set({ error: handleApiError(error, 'Failed to fetch config') })
+        errorHandler.handleApiError(error)
+        set({ error: error.message })
       } finally {
         set({ isLoading: false })
       }
@@ -44,9 +34,12 @@ export const useConfigStore = create((set, get) => {
       set({ isLoading: true, error: null })
       try {
         const response = await axiosInstance.put('config', dto)
-        set({ config: response.data })
+        const updatedConfig = response.data.data
+        set({ config: updatedConfig })
+        toast("Configuración actualizada exitosamente")
       } catch (error) {
-        set({ error: handleApiError(error, 'Failed to update config') })
+        errorHandler.handleApiError(error)
+        set({ error: error.message })
       } finally {
         set({ isLoading: false })
       }

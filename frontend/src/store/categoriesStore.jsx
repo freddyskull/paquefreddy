@@ -1,17 +1,7 @@
 import { create } from 'zustand'
 import { axiosInstance } from '../config/axios.config'
-
-// Recursive error handler
-const handleApiError = (error, parentError = '') => {
-  if (error.response) {
-    const errorMessage = error.response.data?.message || error.response.statusText
-    return `${parentError}${parentError ? ' -> ' : ''}Server error: ${errorMessage}`
-  } else if (error.request) {
-    return `${parentError}${parentError ? ' -> ' : ''}No response from server`
-  } else {
-    return `${parentError}${parentError ? ' -> ' : ''}Request error: ${error.message}`
-  }
-}
+import { errorHandler } from '../utils/errorHandler'
+import { toast } from "sonner"
 
 export const useCategoriesStore = create((set, get) => ({
   categories: [],
@@ -26,7 +16,8 @@ export const useCategoriesStore = create((set, get) => ({
       const response = await axiosInstance.get('categories')
       set({ categories: response.data })
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to fetch categories') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -39,7 +30,8 @@ export const useCategoriesStore = create((set, get) => ({
       const response = await axiosInstance.get(`categories/${id}`)
       set({ selectedCategory: response.data })
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to fetch category') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -51,11 +43,11 @@ export const useCategoriesStore = create((set, get) => ({
     try {
       const response = await axiosInstance.post('categories', category)
       const newCategory = response.data.data
-
       set({ categories: newCategory })
-
+      toast("Categoria creada exitosamente")
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to create category') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -71,8 +63,10 @@ export const useCategoriesStore = create((set, get) => ({
       set({
         categories: categories.map((c) => (c.id === updatedCategory.id ? updatedCategory : c)),
       })
+      toast("Categoria actualizada exitosamente")
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to update category') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -88,8 +82,10 @@ export const useCategoriesStore = create((set, get) => ({
       set({
         categories: categories.map((c) => (c.id === updatedCategory.id ? updatedCategory : c)),
       })
+      toast("Categoria actualizada exitosamente")
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to patch category') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -102,8 +98,10 @@ export const useCategoriesStore = create((set, get) => ({
       await axiosInstance.delete(`categories/${id}`)
       const { categories } = get()
       set({ categories: categories.filter((c) => c.id !== id) })
+      toast("Categoria eliminada exitosamente")
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to delete category') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { X } from 'lucide-react';
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { useCategoriesStore } from '@/store/categoriesStore';
 
@@ -27,7 +26,7 @@ export const CategoryDialog = () => {
       setIsOpen(false);
     }
   };
-
+  
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>

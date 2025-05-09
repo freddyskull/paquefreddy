@@ -1,20 +1,7 @@
 import { create } from 'zustand'
 import { axiosInstance } from '../config/axios.config'
-
-// Recursive error handler
-const handleApiError = (error, parentError = '') => {
-  if (error.response) {
-    // Server responded with an error
-    const errorMessage = error.response.data?.message || error.response.statusText
-    return `${parentError}${parentError ? ' -> ' : ''}Server error: ${errorMessage}`
-  } else if (error.request) {
-    // Request made but no response
-    return `${parentError}${parentError ? ' -> ' : ''}No response from server`
-  } else {
-    // Something happened in setting up the request
-    return `${parentError}${parentError ? ' -> ' : ''}Request error: ${error.message}`
-  }
-}
+import { toast } from "sonner"
+import { errorHandler } from '../utils/errorHandler'
 
 export const useProductStore = create((set, get) => ({
   products: [],
@@ -29,7 +16,8 @@ export const useProductStore = create((set, get) => ({
       const response = await axiosInstance.get('products')
       set({ products: response.data })
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to fetch products') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -42,7 +30,8 @@ export const useProductStore = create((set, get) => ({
       const response = await axiosInstance.get(`products/${id}`)
       set({ selectedProduct: response.data })
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to fetch product') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -53,11 +42,13 @@ export const useProductStore = create((set, get) => ({
     set({ isLoading: true, error: null })
     try {
       const response = await axiosInstance.post('products', product)
-      const newProduct = response.data
+      const newProduct = response.data.data
       const { products } = get()
       set({ products: [...products, newProduct] })
+      toast("Producto creado exitosamente")
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to create product') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -73,8 +64,10 @@ export const useProductStore = create((set, get) => ({
       set({
         products: products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)),
       })
+      toast("Producto actualizado exitosamente")
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to update product') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -93,8 +86,10 @@ export const useProductStore = create((set, get) => ({
         product.id === id ? updatedProduct : product
       )
       set({ products: newProducts })
+      toast("Producto actualizado exitosamente")
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to patch product') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }
@@ -107,8 +102,10 @@ export const useProductStore = create((set, get) => ({
       await axiosInstance.delete(`products/${id}`)
       const { products } = get()
       set({ products: products.filter((p) => p.id !== id) })
+      toast("Producto eliminado exitosamente")
     } catch (error) {
-      set({ error: handleApiError(error, 'Failed to delete product') })
+      errorHandler.handleApiError(error)
+      set({ error: error.message })
     } finally {
       set({ isLoading: false })
     }

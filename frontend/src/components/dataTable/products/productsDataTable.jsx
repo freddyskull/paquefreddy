@@ -24,6 +24,7 @@ export const ProductsDataTable = ({ data }) => {
       label: cat.name,
     }))
   , [categories]);
+  console.log(data)
 
   const { config, currency } = useConfigStore();
 
@@ -49,11 +50,11 @@ export const ProductsDataTable = ({ data }) => {
     {
       accessorKey: 'price',
       header: 'price',
-      // filterFn: (row, columnId, value) => {
-      //   const price = parseFloat(row.getValue(columnId));
-      //   const searchValue = parseFloat(value);
-      //   return !value || isNaN(searchValue) || price === searchValue;
-      // },
+      filterFn: (row, columnId, value) => {
+        const price = parseFloat(row.getValue(columnId));
+        const searchValue = parseFloat(value);
+        return !value || isNaN(searchValue) || price === searchValue;
+      },
       meta: {
         filterVariant: 'range',
       },
@@ -74,6 +75,19 @@ export const ProductsDataTable = ({ data }) => {
     {
       accessorKey: 'brand',
       header: 'Marca',
+      filterFn: (row, columnId, value) => {
+        return value
+          ? row
+              .getValue(columnId)
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : true;
+      },
+    },
+    {
+      accessorKey: 'slugs_url',
+      header: 'Slugs URL',
       filterFn: (row, columnId, value) => {
         return value
           ? row

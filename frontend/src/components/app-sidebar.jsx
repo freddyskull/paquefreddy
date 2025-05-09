@@ -1,7 +1,5 @@
 import * as React from "react"
-import Logo from "../../public/logo.svg"
-
-
+import { Link } from "react-router-dom"
 import {
   Sidebar,
   SidebarContent,
@@ -25,11 +23,11 @@ const data = {
       items: [
         {
           title: "Nuevo producto",
-          url: "#",
+          url: "/nuevo-producto",
         },
         {
           title: "Nuevo categoría",
-          url: "#",
+          url: "/",
         },
       ],
     },
@@ -87,16 +85,16 @@ export function AppSidebar({
             {data.navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <a href={item.url} className="font-medium">
+                  <Link to={item.url} className="font-medium">
                     {item.title}
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
                 {item.items?.length ? (
                   <SidebarMenuSub>
                     {item.items.map((item) => (
                       <SidebarMenuSubItem key={item.title}>
                         <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <a href={item.url}>{item.title}</a>
+                          <Link to={item.url}>{item.title}</Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

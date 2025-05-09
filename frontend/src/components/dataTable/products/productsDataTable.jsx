@@ -24,7 +24,6 @@ export const ProductsDataTable = ({ data }) => {
       label: cat.name,
     }))
   , [categories]);
-  console.log(data)
 
   const { config, currency } = useConfigStore();
 

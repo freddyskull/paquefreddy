@@ -19,9 +19,7 @@ function App() {
 
   return (
     <>
-      <Layout>
-        <AppRouter />
-      </Layout>
+      <AppRouter />
     </>
   )
 }

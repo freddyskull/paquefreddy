@@ -74,7 +74,7 @@ export function AppSidebar({
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-medium text-[17px] text-primary">Pa'que Freddy</span>
-                  <span className="ligth:text-slate-500 text-xs">v1.0.0</span>
+                  <span className="ligth:text-slate-500 text-xs">V3.1.0</span>
                 </div>
               </div>
             </SidebarMenuButton>

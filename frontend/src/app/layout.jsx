@@ -13,8 +13,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { CurrencySelector } from "./currencySelector"
+import { Toaster } from "@/components/ui/sonner"
 
 export default function Layout({ children }) {
   return (
@@ -47,6 +47,7 @@ export default function Layout({ children }) {
           {children}
         </div>
       </SidebarInset>
+      <Toaster />
     </SidebarProvider>
   )
 }

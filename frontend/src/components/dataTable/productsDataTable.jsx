@@ -12,7 +12,6 @@ import { EditableInput } from '../inputs/EditableInput';
 import { EditableSelect } from '../inputs/EditableSelect';
 import { useCategoriesStore } from '@/store/categoriesStore';
 import { useProductStore } from '@/store/productStore';
-import { Calculator, PlusIcon } from 'lucide-react';
 import { FiltersTable } from './filtersTable';
 
 export const ProductsDataTable = ({ data }) => {
@@ -50,10 +49,13 @@ export const ProductsDataTable = ({ data }) => {
     {
       accessorKey: 'price',
       header: 'price',
-      filterFn: (row, columnId, value) => {
-        const price = parseFloat(row.getValue(columnId));
-        const searchValue = parseFloat(value);
-        return !value || isNaN(searchValue) || price === searchValue;
+      // filterFn: (row, columnId, value) => {
+      //   const price = parseFloat(row.getValue(columnId));
+      //   const searchValue = parseFloat(value);
+      //   return !value || isNaN(searchValue) || price === searchValue;
+      // },
+      meta: {
+        filterVariant: 'range',
       },
     },
     {
@@ -85,10 +87,17 @@ export const ProductsDataTable = ({ data }) => {
     {
       accessorKey: 'price_ent',
       header: 'price_ent',
+      meta: {
+        filterVariant: 'range',
+      },
     },
     {
       accessorKey: 'categorie',
-      header: 'categoría',
+      header: 'categorie',
+    },
+    {
+      accessorKey: 'categorie_slug',
+      header: 'categorie_slug',
     },
     {
       accessorKey: 'createdAt',
@@ -98,17 +107,34 @@ export const ProductsDataTable = ({ data }) => {
 
   const memoizedData = useMemo(() => data, [data]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [columnFilters, setColumnFilters] = useState([
+    {
+      id: "price",
+      value: []
+    },
+    {
+      id: "categorie_slug",
+      value: ""
+    }
+  ]);
+
   const table = useReactTable({
     data: memoizedData,
     columns,
+    filterFns: {},
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    
     // onSortingChange: (newSorting) => {
     //   table.setSorting(newSorting);
     // },
+    state: {
+      columnFilters,
+    },
+    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
   });
+
 
   const handleSearch = (value) => {
     const normalizedValue = value.replace(',', '.');
@@ -117,8 +143,30 @@ export const ProductsDataTable = ({ data }) => {
   };
   useEffect(() => {
     if (config?.default_categories_id) {
-      setSelectedCategory(config.default_categories_id);
+      setColumnFilters((prev) => {
+        return prev.map((filter) => {
+          if (filter.id === 'categorie_slug') {
+            return {
+              ...filter,
+              value: config.default_categories_id,
+            };
+          }
+          return filter;
+        });
+      });
     }
+
+    // setColumnFilters((prev) => {
+    //   return prev.map((filter) => {
+    //     if (filter.id === 'categorie_slug') {
+    //       return {
+    //         ...filter,
+    //         value: selectedCategory,
+    //       };
+    //     }
+    //     return filter;
+    //   });
+    // });
   }, [config]);
 
   const handleEdit = (label, value, productId) => {
@@ -137,9 +185,9 @@ export const ProductsDataTable = ({ data }) => {
         categories={categories}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
         handleSearch={handleSearch}
+        columnFilters={columnFilters}
+        setColumnFilters={setColumnFilters}
       />
       <CardContent className="h-full overflow-y-auto">
         <div className="xs:grid-cols-1 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">

@@ -16,10 +16,23 @@ export const FiltersTable = ({
   categories,
   searchTerm,
   setSearchTerm,
-  selectedCategory,
-  setSelectedCategory,
+  columnFilters,
+  setColumnFilters,
   handleSearch,
 }) => {
+  const setSelectedCategory = (value) => {
+    setColumnFilters((prev) => {
+      return prev.map((filter) => {
+        if (filter.id === 'categorie_slug') {
+          return {
+            ...filter,
+            value: value === null ? "" : value,
+          };
+        }
+        return filter;
+      });
+    });
+  };
   return (
     <div className="flex justify-between gap-4 px-6">
       <div className="flex w-full items-center gap-2">
@@ -39,7 +52,7 @@ export const FiltersTable = ({
           <label htmlFor="category" className="text-[10px] uppercase">
             Categoría
           </label>
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <Select value={columnFilters[1].value} onValueChange={setSelectedCategory}>
             <SelectTrigger id="category" className="mt-2 w-full">
               <SelectValue
                 placeholder="Seleccionar categoría"
@@ -50,15 +63,22 @@ export const FiltersTable = ({
               <div key="category-dialog-container" className="my-2 text-center">
                 <CategoryDialog key="category-dialog" />
               </div>
+              <SelectItem
+                  value={null}
+                  className="uppercase"
+                >
+                  <div className="flex justify-between items-center gap-4">
+                    <div className="text-xs">Todas</div>
+                  </div>
+                </SelectItem>
               {categories.map((category) => (
                 <SelectItem
                   key={category.name}
-                  value={category.id}
+                  value={category.slug_url}
                   className="uppercase"
                 >
                   <div className="flex justify-between items-center gap-4">
                     <div className="text-xs">{category.name}</div>
-                    {/* <div className="text-xs flex justify-end"> {category.createdAt}</div> */}
                   </div>
                 </SelectItem>
               ))}

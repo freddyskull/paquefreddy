@@ -27,14 +27,19 @@ export class CategoriesService {
   ): Promise<void> {
     const category = await this.prisma.categories.findFirst({
       where: {
-        [field]: value
+        OR: [
+          { name: value },
+          { slug_url: value }
+        ]
       }
     });
     if (category) {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          message
+          message: field === 'name' 
+            ? 'El nombre de la categoría ya existe' 
+            : 'La URL amigable ya está en uso'
         },
         HttpStatus.BAD_REQUEST
       );

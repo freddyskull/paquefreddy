@@ -10,7 +10,7 @@ import {
   IsOptional,
   Min,
   MaxLength,
-  IsIn
+  IsIn,
 } from 'class-validator';
 
 export class productDto {
@@ -55,6 +55,7 @@ export class productDto {
         "El precio de venta debe ser un valor monetario válido y contener '.' decimales"
     }
   )
+  @Min(0, { message: 'El precio de venta no puede ser negativo' })
   price: any;
 
   @ApiProperty({

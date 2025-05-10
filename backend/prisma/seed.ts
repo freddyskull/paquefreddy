@@ -51,7 +51,7 @@ async function main() {
     where: { id: 1 },
     update: {},
     create: {
-      dolar: 25.0,
+      dolar: 93,
       useIva: true,
       autoPrice: true,
       profit: 0.3,

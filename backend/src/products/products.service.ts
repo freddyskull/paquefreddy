@@ -20,12 +20,10 @@ export class ProductsService {
   }
 
   private buildProductData(dto: productDto) {
-    return {
+    const productData = {
       name: dto.name,
       stock: dto.stock,
       status: dto.status,
-      price: parseFloat(dto.price),
-      price_ent: parseFloat(dto.price_ent),
       slugs: dto.slugs.length === 0 ? [] : dto.slugs,
       slugs_url: slugify(dto.name),
       images: dto.images?.trim() === '' ? null : dto.images,
@@ -34,8 +32,12 @@ export class ProductsService {
       expiration: dto.expiration ? dto.expiration : null,
       unity: dto.unity?.trim() === '' ? null : dto.unity,
       supplier_id: dto.supplier_id,
-      categorie_id: dto.categorie_id
+      categorie_id: dto.categorie_id,
+      price: dto.price ? parseFloat(dto.price) : undefined,
+      price_ent: dto.price_ent ? parseFloat(dto.price_ent) : undefined
     };
+
+    return productData as any;
   }
 
   private formatedData = {
@@ -79,16 +81,18 @@ export class ProductsService {
     }
   }
 
-  private convertPricesToUSD(dto: productDto, dolar: number): productDto {
+  private convertPricesToUSD(dto: productDto, dolar: number, request?: any): productDto {
     const keys = Object.keys(dto);
     const hasPrice = keys.includes('price') || keys.includes('price_ent');
     if (!hasPrice) return dto;
-    for (const key of keys) {
+    Object.keys(request).forEach(key => {
       if (key === 'price' || key === 'price_ent') {
-        dto[key] = (parseFloat(dto[key]) / dolar).toFixed(2);
+        dto[key] = (parseFloat(request[key]) / dolar).toFixed(2);
       }
-    }
+    });
+    
     return dto;
+    
   }
 
   private validatePrices(price_ent: string, price: string): void {
@@ -193,11 +197,11 @@ export class ProductsService {
     const keys = Object.keys(dto)
     const hasPrice = keys.includes('price') || keys.includes('price_ent');
     
-    
+    //FIXED: tengo un problema con el precio debo arreglarlo
     const updatedData =
       dto.currency === 'USD' || !dto.currency
         ? this.buildProductData(newData)
-        : this.buildProductData(this.convertPricesToUSD(newData, dolar));
+        : this.buildProductData(this.convertPricesToUSD(newData, dolar, dto));
 
     await this.prisma.products.update({
       where: { id: Number(id) },

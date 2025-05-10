@@ -86,6 +86,7 @@ export const useProductStore = create((set, get) => ({
         product.id === id ? updatedProduct : product
       )
       set({ products: newProducts })
+      console.log("hola");
       toast("Producto actualizado exitosamente")
     } catch (error) {
       errorHandler.handleApiError(error)

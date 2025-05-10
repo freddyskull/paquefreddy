@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { PlusIcon, Calculator } from 'lucide-react';
 import { CategoryDialog } from '@/components/dialogs/categoryDialog';
+import { Link } from 'react-router-dom';
 
 export const FiltersTable = ({
   categories,
@@ -115,9 +116,11 @@ export const FiltersTable = ({
         </div>
       </div>
       <div className="flex items-end justify-end gap-2">
-        <Button variant="outline">
-          <PlusIcon />
-        </Button>
+        <Link to="/productos/nuevo">
+          <Button variant="outline">
+            <PlusIcon />
+          </Button>
+        </Link>
         <Button variant="outline">
           <Calculator />
         </Button>

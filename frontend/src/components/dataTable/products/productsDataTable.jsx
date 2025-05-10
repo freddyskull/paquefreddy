@@ -169,7 +169,6 @@ export const ProductsDataTable = ({ data }) => {
         [label]: value,
       };
     }
-    console.log(updatedProduct);
     if (value.length > 0) {
       patchProduct(productId, updatedProduct);
     }

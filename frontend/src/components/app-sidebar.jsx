@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Link } from "react-router-dom"
+import logo from "/logo.svg";
 import {
   Sidebar,
   SidebarContent,
@@ -23,11 +24,11 @@ const data = {
       items: [
         {
           title: "Nuevo producto",
-          url: "/nuevo-producto",
+          url: "/productos/nuevo",
         },
         {
           title: "Nuevo categoría",
-          url: "/",
+          url: "/categorias/nuevo",
         },
       ],
     },
@@ -68,7 +69,7 @@ export function AppSidebar({
               <div >
                 <div
                   className="flex justify-center items-center">
-                  <img src="logo.svg" className="w-22 h-auto" alt="Logo" />
+                  <img src={logo} className="w-22 h-auto" alt="Logo" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-medium text-[17px] text-primary">Pa'que Freddy</span>

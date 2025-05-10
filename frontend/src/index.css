@@ -130,6 +130,24 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #5a5a6e;
   }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) invert(1);
+  }
+  input[type="date"]::-webkit-datetime-edit {
+    color: var(--foreground);
+  }
+  input[type="date"]::-webkit-datetime-edit-text {
+    color: var(--foreground);
+  }
+  input[type="date"]::-webkit-datetime-edit-month-field {
+    color: var(--foreground);
+  }
+  input[type="date"]::-webkit-datetime-edit-day-field {
+    color: var(--foreground);
+  }
+  input[type="date"]::-webkit-datetime-edit-year-field {
+    color: var(--foreground);
+  }
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -152,6 +170,8 @@ input[type="number"] {
     @apply bg-background text-foreground;
   }
 }
+
+
 .product-card .image {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: scale(1);

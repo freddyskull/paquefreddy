@@ -15,12 +15,8 @@ export const useProductStore = create((set, get) => ({
     try {
       const response = await axiosInstance.get('products')
       set({ products: response.data })
-      const products = get().products
-      console.log(products)
-      
     } catch (error) {
       errorHandler.handleApiError(error)
-      console.log(error)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })

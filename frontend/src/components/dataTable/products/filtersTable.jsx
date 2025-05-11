@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { PlusIcon, Calculator } from 'lucide-react';
+import { PlusIcon, Calculator, BrushCleaningIcon, XIcon } from 'lucide-react';
 import { CategoryDialog } from '@/components/dialogs/categoryDialog';
 import { Link } from 'react-router-dom';
 
@@ -19,7 +19,17 @@ export const FiltersTable = ({
   columnFilters,
   setColumnFilters,
   handleSearch,
+  currency,
+  config,
+  isLoadingConfig,
 }) => {
+  
+  const dolar = isLoadingConfig ? 0 : config.dolar;
+  const [inputValues, setInputValues] = useState({
+    min: '',
+    max: ''
+  });
+
   const setSelectedCategory = (value) => {
     setColumnFilters((prev) => {
       return prev.map((filter) => {
@@ -33,6 +43,60 @@ export const FiltersTable = ({
       });
     });
   };
+
+  const minHandle = (value) => {
+    setInputValues(prev => ({ ...prev, min: value }));
+    setColumnFilters((prev) => {
+      return prev.map((filter) => {
+        if (filter.id === 'price') {
+          const numericValue = parseFloat(value) || 0;
+          const convertedValue = currency === 'BS' && dolar ? 
+            numericValue / dolar : 
+            value;
+          return {
+            ...filter,
+            value: [convertedValue, filter.value[1] || ''],
+          };
+        }
+        return filter;
+      });
+    });
+  };  
+
+  const maxHandle = (value) => {
+    setInputValues(prev => ({ ...prev, max: value }));
+    setColumnFilters((prev) => {
+      return prev.map((filter) => {
+        if (filter.id === 'price') {
+          const numericValue = parseFloat(value) || 0;
+          const convertedValue = currency === 'BS' && dolar ? 
+            numericValue / dolar : 
+            value;
+          return {
+            ...filter,
+            value: [filter.value[0] || '', convertedValue],
+          };
+        }
+        return filter;
+      });
+    });
+  };
+  
+  const resetFilters = () => {
+    handleSearch('');
+    setInputValues({ min: '', max: '' });
+    setColumnFilters([
+      {
+        id: "price",
+        value: ["", ""]
+      },
+      {
+        id: "categorie_slug",
+        value: ""
+      }
+    ]);
+  };
+
   return (
     <div className="flex justify-between gap-4 px-6">
       <div className="flex w-full items-center gap-2">
@@ -40,13 +104,23 @@ export const FiltersTable = ({
           <label htmlFor="search" className="text-[10px] uppercase">
             Buscador
           </label>
-          <Input
-            id="search"
-            placeholder="Nombre, palabras clave, categoría, marca, precio..."
-            value={searchTerm}
-            className="mt-2"
-            onChange={(e) => handleSearch(e.target.value)}
-          />
+          <div className="relative">
+            <Input
+              id="search"
+              placeholder="Nombre, palabras clave, categoría, marca, precio..."
+              value={searchTerm}
+              className="mt-2"
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+            {
+              searchTerm.length > 0 && (
+                <div className="absolute top-[7px] right-2 cursor-pointer bg-accent text-accent-foreground rounded-full p-1" onClick={() => handleSearch('')}>
+                  <XIcon size={15} />
+                </div>
+              )
+            }
+          </div>
+          
         </div>
         <div className="w-1/3 md:w-1/4 xl:w-1/3">
           <label htmlFor="category" className="text-[10px] uppercase">
@@ -87,35 +161,39 @@ export const FiltersTable = ({
         </div>
         <div className="hidden w-1/3 sm:block md:w-1/3">
           <label htmlFor="category" className="text-[10px] uppercase">
-            Rango de precios
+            Rango precios
           </label>
           <div className="mt-2 flex items-center gap-2">
-            <Input type="number" value={columnFilters[0].value[0] || ''} onChange={(e) => setColumnFilters((prev) => {
-              return prev.map((filter) => {
-                if (filter.id === 'price') {
-                  return {
-                    ...filter,
-                    value: [e.target.value, filter.value[1] || ''],
-                  };
-                }
-                return filter;
-              });
-            })} placeholder="Minimo" />
-            <Input type="number" value={columnFilters[0].value[1] || ''} onChange={(e) => setColumnFilters((prev) => {
-              return prev.map((filter) => {
-                if (filter.id === 'price') {
-                  return {
-                    ...filter,
-                    value: [filter.value[0] || '', e.target.value],
-                  };
-                }
-                return filter;
-              });
-            })} placeholder="Maximo" />
+            <Input 
+              type="number" 
+              value={inputValues.min || columnFilters[0].value[0] || ''} 
+              onChange={(e) => minHandle(e.target.value)} 
+              placeholder="Mínimo" 
+              step="0.01"
+              min="0"
+            />
+            <Input 
+              type="number" 
+              value={inputValues.max || columnFilters[0].value[1] || ''} 
+              onChange={(e) => maxHandle(e.target.value)} 
+              placeholder="Máximo" 
+              step="0.01"
+              min="0"
+            />
           </div>
         </div>
       </div>
       <div className="flex items-end justify-end gap-2">
+        {columnFilters.some((filter) => filter.value[0] || filter.value[1] || searchTerm !== '' ) && (
+          <Button
+            variant="outline"
+            className="bg-primary! text-white/60! relative overflow-hidden"
+            onClick={resetFilters}
+          >
+            <BrushCleaningIcon />
+            <div className="absolute top-0 left-0 h-full w-full opacity-0 bg-secondary rounded-md scale-150 animate-pulse" />
+          </Button>
+        )}
         <Link to="/productos/nuevo">
           <Button variant="outline">
             <PlusIcon />

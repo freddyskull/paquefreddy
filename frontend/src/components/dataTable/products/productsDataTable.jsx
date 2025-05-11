@@ -16,8 +16,7 @@ export const ProductsDataTable = ({ data }) => {
   const { categories } = useCategoriesStore();
   const { patchProduct } = useProductStore();
 
-  const { config, currency } = useConfigStore();
-
+  const { config, currency, isLoading: isLoadingConfig } = useConfigStore();
   const columns = useMemo(() => [
     {
       accessorKey: 'name',
@@ -39,14 +38,14 @@ export const ProductsDataTable = ({ data }) => {
     {
       accessorKey: 'price',
       header: 'price',
-      filterFn: (row, columnId, value) => {
-        const price = parseFloat(row.getValue(columnId));
-        const searchValue = parseFloat(value);
-        return !value || isNaN(searchValue) || price === searchValue;
-      },
-      meta: {
-        filterVariant: 'range',
-      },
+      // filterFn: (row, columnId, value) => {
+      //   const price = parseFloat(row.getValue(columnId));
+      //   const searchValue = parseFloat(value);
+      //   return !value || isNaN(searchValue) || price === searchValue;
+      // },
+      // meta: {
+      //   filterVariant: 'range',
+      // },
     },
     {
       accessorKey: 'slugs',
@@ -113,7 +112,7 @@ export const ProductsDataTable = ({ data }) => {
   const [columnFilters, setColumnFilters] = useState([
     {
       id: "price",
-      value: ['', '']
+      value: ["", ""]
     },
     {
       id: "categorie_slug",
@@ -122,7 +121,7 @@ export const ProductsDataTable = ({ data }) => {
   ]);
 
   const table = useReactTable({
-    data,
+    data: memoizedData,
     columns,
     filterFns: {},
     getCoreRowModel: getCoreRowModel(),
@@ -168,6 +167,9 @@ export const ProductsDataTable = ({ data }) => {
         handleSearch={handleSearch}
         columnFilters={columnFilters}
         setColumnFilters={setColumnFilters}
+        currency={currency}
+        config={config}
+        isLoadingConfig={isLoadingConfig}
       />
       <CardContent className="h-full overflow-y-auto">
         <div className="xs:grid-cols-1 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">

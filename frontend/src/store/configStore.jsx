@@ -11,7 +11,7 @@ export const useConfigStore = create((set, get) => {
   
   return {
     config: null,
-    isLoading: false,
+    isLoading: true,
     error: null,
     currency: defaultCurrency,
 

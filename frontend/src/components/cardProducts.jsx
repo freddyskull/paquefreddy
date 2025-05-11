@@ -5,12 +5,13 @@ import { useConfigStore } from '@/store/configStore';
 import { useCategoriesStore } from '@/store/categoriesStore';
 import { EditableInput } from '@/components/inputs/EditableInput';
 import { EditableSelect } from '@/components/inputs/EditableSelect';
+import { formatPrice } from '@/utils/format';
 
 
 export const ProductCard = ({ product, handleEdit }) => {
   const { categories } = useCategoriesStore();
   const { config, currency } = useConfigStore();
-
+  const roundPrice = config?.roundPrice;
   const categoryOptions = useMemo(
     () =>
       categories.map((cat) => ({
@@ -102,8 +103,8 @@ export const ProductCard = ({ product, handleEdit }) => {
             <EditableInput
               value={
                 currency === 'USD'
-                  ? product.price.toString().replace('.', ',')
-                  : product.price_bs.toString().replace('.', ',')
+                  ? formatPrice(product.price, roundPrice)
+                  : formatPrice(product.price_bs, roundPrice)
               }
               type="number"
               onBlur={(e) => {
@@ -118,12 +119,8 @@ export const ProductCard = ({ product, handleEdit }) => {
             <EditableInput
               value={
                 currency === 'USD'
-                  ? product.price_ent
-                    ? product.price_ent.toString().replace('.', ',')
-                    : 'N/A'
-                  : product.price_ent_bs
-                    ? product.price_ent_bs.toString().replace('.', ',')
-                    : 'N/A'
+                  ? formatPrice(product.price_ent, roundPrice)
+                  : formatPrice(product.price_ent_bs, roundPrice)
               }
               type="number"
               onBlur={(e) => {

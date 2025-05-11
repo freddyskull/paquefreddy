@@ -153,7 +153,7 @@ export const ProductsDataTable = ({ data }) => {
         [label]: value,
       };
     }
-    if (value.length > 0) {
+    if (value !== "") {
       patchProduct(productId, updatedProduct);
     }
   };

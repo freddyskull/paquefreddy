@@ -47,7 +47,7 @@ export const ProductCard = ({ product, handleEdit }) => {
                     value={product.categorie.name}
                     options={categoryOptions}
                     onBlur={(e) => {
-                      handleEdit('categorie', e, product.id);
+                      handleEdit('categorie_id', e, product.id);
                     }}
                     placeholder="Selecciona una categoría"
                   />

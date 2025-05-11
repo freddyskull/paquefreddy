@@ -84,7 +84,7 @@ export class productDto {
   @ApiProperty()
   @IsOptional()
   @IsString({ message: 'Las imágenes deben ser una cadena de texto' })
-  images: string;
+  image: string;
 
   @ApiProperty({
     description: 'Campo para determinar la marca del producto',

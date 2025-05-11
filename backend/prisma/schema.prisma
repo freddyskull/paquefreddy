@@ -37,6 +37,7 @@ model Categories {
 model Suppliers {
   id          Int     @id @default(autoincrement())
   name        String
+  credit_days Int @default(0)
   company     String?
   email       String?
   address     String?
@@ -59,7 +60,7 @@ model Products {
   price_ent   Float
   slugs       String[] @default([])
   slugs_url   String @unique
-  images      String?
+  image       String?
   brand       String?
   bundle      Int?
   expiration  DateTime? 
@@ -102,17 +103,18 @@ model Purhases {
 }
 
 model Config {
-  id                    Int      @id @default(autoincrement())
-  dolar                 Float
-  useIva                Boolean? @default(false)
-  autoPrice             Boolean? @default(true)
-  profit                Float  @default(0.3) // 30%
-  roundPrice            Boolean? @default(false)
+  id                      Int      @id @default(autoincrement())
+  dolar                   Float
+  useIva                  Boolean? @default(false)
+  autoPrice               Boolean? @default(true)
+  profit                  Float  @default(0.3) // 30%
+  roundPrice              Boolean? @default(false)
+  default_categories_id   Int? @default(1)
   default_categories_slug String? @default("varios")
-  threshold             Int?
-  defafult_currency     String? @default("BS")
-  expiration_default    Int? @default(30)
-  bundle_discount       Float? @default(0.05) // 5%
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  threshold               Int?
+  default_currency       String? @default("BS")
+  expiration_default      Int? @default(30)
+  bundle_discount         Float? @default(0.05) // 5%
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 }

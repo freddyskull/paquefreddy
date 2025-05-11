@@ -29,7 +29,7 @@ export const ProductCard = ({ product, handleEdit }) => {
       <DateBadge date={product.createdAt} />
       <div
         className="image relative flex h-48 w-full items-center justify-center rounded-md bg-white bg-contain bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${product.images})` }}
+        style={{ backgroundImage: `url(${product.image})` }}
       ></div>
       <div className="flex justify-center gap-2 text-center">
         <span className="text-muted-foreground -mb-4 line-clamp-1 text-[8px] uppercase">

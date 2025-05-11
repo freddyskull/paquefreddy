@@ -24,7 +24,7 @@ const productSchema = z
       .number()
       .min(0, 'El precio de entrada debe ser mayor o igual a 0'),
     slugs: z.array(z.string()).default(null),
-    images: z.string().optional(),
+    image: z.string().optional(),
     brand: z.string().optional(),
     bundle: z.number().optional(),
     expiration: z.string().optional(),
@@ -59,7 +59,7 @@ export const NewProductPage = () => {
       price: 0,
       price_ent: 0,
       slugs: [],
-      images: '',
+      image: '',
       brand: '',
       bundle: 0,
       expiration: '',
@@ -115,7 +115,7 @@ export const NewProductPage = () => {
 
                   <ChadCnFormInput
                     control={form.control}
-                    name="images"
+                    name="image"
                     type="url"
                     label="Imágen"
                     placeholder="URL de la imágen del producto"
@@ -216,7 +216,7 @@ export const NewProductPage = () => {
                 <DateBadge date={new Date().toISOString()} />
                 <div
                   className="image relative flex h-48 w-full items-center justify-center rounded-md bg-white bg-contain bg-center bg-no-repeat"
-                  style={{ backgroundImage: `url(${product.images.length <= 3 ? defaultImage : product.images})` }}
+                  style={{ backgroundImage: `url(${product.image.length <= 3 ? defaultImage : product.image})` }}
                 ></div>
                 <div className="flex justify-center gap-2 text-center">
                   <span className="text-muted-foreground -mb-4 line-clamp-1 text-[8px] uppercase">

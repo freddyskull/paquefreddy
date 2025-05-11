@@ -18,7 +18,6 @@ export const ProductsDataTable = ({ data }) => {
 
   const { config, currency } = useConfigStore();
 
-
   const columns = useMemo(() => [
     {
       accessorKey: 'name',
@@ -34,7 +33,7 @@ export const ProductsDataTable = ({ data }) => {
       },
     },
     {
-      accessorKey: 'images',
+      accessorKey: 'image',
       header: 'Imagen',
     },
     {
@@ -123,7 +122,7 @@ export const ProductsDataTable = ({ data }) => {
   ]);
 
   const table = useReactTable({
-    data: memoizedData,
+    data,
     columns,
     filterFns: {},
     getCoreRowModel: getCoreRowModel(),
@@ -141,21 +140,7 @@ export const ProductsDataTable = ({ data }) => {
     setSearchTerm(value);
     table.setGlobalFilter(normalizedValue);
   };
-  useEffect(() => {
-    if (config?.default_categories_id) {
-      setColumnFilters((prev) => {
-        return prev.map((filter) => {
-          if (filter.id === 'categorie_slug') {
-            return {
-              ...filter,
-              value: config.default_categories_id,
-            };
-          }
-          return filter;
-        });
-      });
-    }
-  }, [config]);
+
 
   const handleEdit = (label, value, productId) => {
     let updatedProduct;

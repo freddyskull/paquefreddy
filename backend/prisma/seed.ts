@@ -15,16 +15,9 @@ async function main() {
   await prisma.categories.deleteMany({}); // Limpiar categorías existentes
   
   const categoriesToCreate = [
+    { name: 'Varios', slug_url: 'varios' },
+    { name: 'Lácteos', slug_url: 'lacteos' },
     { name: 'Higiene', slug_url: 'higiene' },
-    { name: 'Lacteos', slug_url: 'lacteos' },
-    { name: 'Granos', slug_url: 'granos' },
-    { name: 'Enlatados', slug_url: 'enlatados' },
-    { name: 'Carnes', slug_url: 'carnes' },
-    { name: 'Frutas', slug_url: 'frutas' },
-    { name: 'Verduras', slug_url: 'verduras' },
-    { name: 'Bebidas', slug_url: 'bebidas' },
-    { name: 'Limpieza', slug_url: 'limpieza' },
-    { name: 'Otros', slug_url: 'varios' },
   ];
 
   // Crear categorías una por una para obtener sus IDs
@@ -169,7 +162,7 @@ async function main() {
           'https://costazul.sigo.com.ve/images/thumbs/0021683_leche-entera-uht-natulac-946ml_450.jpeg',
         slugs_url: 'leche-natulac',
         brand: 'natulac',
-        categorie_id: 3,
+        categorie_id: 2,
         unity: 'lt',
       },
       {
@@ -182,7 +175,7 @@ async function main() {
           'https://caraotamarket.com/6739-large_default/papel-rosal-plus-400-hojas-4rollos.jpg',
         slugs_url: 'papel-rosal-plus',
         brand: 'rosal',
-        categorie_id: 2,
+        categorie_id: 3,
         unity: 'rollos',
       },
       {
@@ -195,7 +188,7 @@ async function main() {
           'https://mercayahorra.com/wp-content/uploads/2020/06/Jab%C3%B2n-Lem%C3%B2n-x-130g.jpg',
         slugs_url: 'jabon-lemon',
         brand: 'lemon',
-        categorie_id: 2,
+        categorie_id: 3,
         unity: 'g',
       },
     ],

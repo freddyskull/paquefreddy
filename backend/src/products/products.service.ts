@@ -33,8 +33,8 @@ export class ProductsService {
       unity: dto.unity?.trim() === '' ? null : dto.unity,
       supplier_id: dto.supplier_id,
       categorie_id: dto.categorie_id,
-      price: dto.price ? parseFloat(dto.price) : undefined,
-      price_ent: dto.price_ent ? parseFloat(dto.price_ent) : undefined
+      price: dto.price ? Number(dto.price) : undefined,
+      price_ent: dto.price_ent ? Number(dto.price_ent) : undefined
     };
 
     return productData as any;
@@ -87,7 +87,7 @@ export class ProductsService {
     if (!hasPrice) return dto;
     Object.keys(request).forEach(key => {
       if (key === 'price' || key === 'price_ent') {
-        dto[key] = (parseFloat(request[key]) / dolar).toFixed(2);
+        dto[key] = (parseFloat(request[key]) / dolar)
       }
     });
     
@@ -95,8 +95,8 @@ export class ProductsService {
     
   }
 
-  private validatePrices(price_ent: string, price: string): void {
-    if (parseFloat(price_ent) >= parseFloat(price)) {
+  private validatePrices(price_ent: number, price: number): void {
+    if (price_ent >= price) {
       throw new HttpException(
         'El precio de entrada no puede ser mayor o igual al de venta',
         HttpStatus.BAD_REQUEST
@@ -193,11 +193,6 @@ export class ProductsService {
     const dolar = config?.dolar || 0;
     const newData = { ...product, ...dto };
     
-    
-    const keys = Object.keys(dto)
-    const hasPrice = keys.includes('price') || keys.includes('price_ent');
-    
-    //FIXED: tengo un problema con el precio debo arreglarlo
     const updatedData =
       dto.currency === 'USD' || !dto.currency
         ? this.buildProductData(newData)

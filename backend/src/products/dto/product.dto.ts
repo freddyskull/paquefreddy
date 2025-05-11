@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsNumber,
-  IsCurrency,
   IsBoolean,
   IsArray,
   IsString,
@@ -48,29 +47,15 @@ export class productDto {
     default: 0
   })
   @IsNotEmpty({ message: 'El precio de venta es requerido' })
-  @IsCurrency(
-    {},
-    {
-      message:
-        "El precio de venta debe ser un valor monetario válido y contener '.' decimales"
-    }
-  )
   @Min(0, { message: 'El precio de venta no puede ser negativo' })
-  price: any;
+  price: number;
 
   @ApiProperty({
     description:
       'Campo para determinar el precio en que se compró el producto, se utiliza para calcular el margen de ganancia'
   })
   @IsNotEmpty({ message: 'El precio de entrada es requerido' })
-  @IsCurrency(
-    {},
-    {
-      message:
-        "El precio de entrada debe ser un valor monetario válido y contener '.' decimales"
-    }
-  )
-  price_ent: any;
+  price_ent: number;
 
   @ApiProperty({
     description:

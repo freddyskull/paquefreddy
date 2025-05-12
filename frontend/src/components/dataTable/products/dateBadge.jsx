@@ -13,7 +13,7 @@ export const DateBadge = ({ date }) => {
   const text = daysDiff <= 2 ? 'nuevo' : distance
   
   return (
-    <div className="flex justify-between gap-2 absolute top-5 left-0 w-full px-4">
+    <div className="flex justify-between gap-2 left-0 w-full px-4">
       <span className={`text-[8px] uppercase ${daysDiff <= 2 ? currency === 'USD' ? 'bg-usd text-usd-foreground' : 'bg-primary text-primary-foreground'  : 'bg-muted dark:text-white'} z-10 p-1 px-3 rounded-full`}>
         {text}
       </span>

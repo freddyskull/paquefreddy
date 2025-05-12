@@ -61,7 +61,7 @@ body {
   --primary-foreground: #fff;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --usd: #0aa60a;
+  --usd: #21912A;
   --usd-foreground: #fff;
   --muted: #DCDEFF;
   --muted-foreground: #666666;
@@ -126,7 +126,7 @@ body {
   --primary-foreground: #fff;
   --secondary: #21202b;
   --secondary-foreground: oklch(0.985 0 0);
-  --usd: #008500;
+  --usd: #21912A;
   --usd-foreground: #fff;
   --muted: #706da2;
   --muted-foreground: #acacac;

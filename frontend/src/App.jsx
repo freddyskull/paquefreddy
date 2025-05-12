@@ -1,8 +1,8 @@
 import { AppRouter } from "./app/AppRouter"
-import Layout from "./app/layout"
 import { useProductStore } from "./store/productStore"
 import { useConfigStore } from "./store/configStore"
 import { useCategoriesStore } from "./store/categoriesStore"
+import { useSuppliersStore } from "./store/suppliersStore"
 import { useEffect } from "react"
 
 function App() {
@@ -10,11 +10,14 @@ function App() {
   const { fetchProducts } = useProductStore()
   const { fetchConfig } = useConfigStore()
   const { fetchCategories } = useCategoriesStore()
+  const { fetchSuppliers } = useSuppliersStore()
+
 
   useEffect(() => {
     fetchProducts()
     fetchConfig()
     fetchCategories()
+    fetchSuppliers()
   }, [])
 
   return (

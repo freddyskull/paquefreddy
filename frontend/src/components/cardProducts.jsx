@@ -27,7 +27,12 @@ export const ProductCard = ({ product, handleEdit }) => {
       id="card-product"
       className="dark:bg-secondary hover:shadow-primary/10 product-card relative flex min-h-[440px] flex-col bg-white p-4 transition-shadow duration-500 hover:shadow-2xl"
     >
-      <DateBadge date={product.createdAt} />
+      <div className="flex justify-between gap-2 left-0 w-full px-1 absolute top-5">
+        <DateBadge date={product.createdAt} />
+        <span className="text-[8px] uppercase bg-accent text-primary-foreground z-10 p-1 px-3 rounded-full mr-4">
+          {product.unity}
+        </span>
+      </div>
       <div
         className="image relative flex h-48 w-full items-center justify-center rounded-md bg-white bg-contain bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${product.image})` }}

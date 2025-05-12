@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../layout';
-import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
-import { Form } from '@/components/ui/form';
-import { ChadCnFormInput } from '@/components/inputs/chadCnFormInput';
+import { Card, CardContent } from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import { ChadCnFormSelect } from '@/components/inputs/chadCnFormSelect';
 import { useCategoriesStore } from '@/store/categoriesStore';
 import { useConfigStore } from '@/store/configStore';
-import { Skeleton } from '@/components/ui/skeleton';
-import { TagsInput } from '@/components/inputs/tagsInput';
+import { useSuppliersStore } from '@/store/suppliersStore';
+import { ProductForm } from './components/productForm';
 import { DateBadge } from '@/components/dataTable/products/dateBadge';
 import defaultImage from '/default-img.jpg';
+import { UnityBadge } from '@/components/dataTable/products/unityBadge';
 const productSchema = z
   .object({
-    name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
-    stock: z.number().min(0, 'El stock debe ser mayor o igual a 0'),
+    name: z.string().min(2, 'tener al menos 2 caracteres'),
+    stock: z.number().min(0, 'debe ser mayor o igual a 0'),
     status: z.boolean().optional(),
-    price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
-    price_ent: z
-      .number()
-      .min(0, 'El precio de entrada debe ser mayor o igual a 0'),
+    sell_unity: z.boolean().optional(),
+    price: z.number().min(0, 'debe ser mayor o igual a 0'),
+    price_ent: z.number().min(0, 'debe ser mayor o igual a 0'),
     slugs: z.array(z.string()).default(null),
     image: z.string().optional(),
     brand: z.string().optional(),
@@ -33,14 +29,15 @@ const productSchema = z
     categorie_id: z.number().optional(),
   })
   .refine((data) => data.price > data.price_ent, {
-    message: 'El precio de venta debe ser mayor al precio de entrada',
+    message: 'debe ser mayor al precio de entrada',
     path: ['price'],
   });
 
 export const NewProductPage = () => {
-  const { categories, isLoading } = useCategoriesStore();
-  const { config } = useConfigStore();
-  const [slugs, setSlugs] = useState([]);
+  const { categories, isLoading: isLoadingCategories } = useCategoriesStore();
+  const { config, currency } = useConfigStore();
+  const { suppliers, isLoading: isLoadingSuppliers } = useSuppliersStore();
+  const [slugs, setSlugs] = useState(['caramelos', 'dulces', 'barato', 'nano']);
   const defaultCategory = categories.find(
     (category) => category.slug_url === config.default_categories_slug
   );
@@ -49,187 +46,176 @@ export const NewProductPage = () => {
     value: category.id,
     label: category.name,
   }));
+  const optionsSuppliers = suppliers.map((supplier) => ({
+    value: supplier.id,
+    label: supplier.name,
+  }));
+
+  const today = new Date();
+  const options = { timeZone: 'America/Caracas' };
+  const venezuelaDate = today.toLocaleDateString('en-CA', options); // 'en-CA' da formato YYYY-MM-DD
+
+  const isExpirationValid = (expiration) => {
+    const expirationDate = new Date(expiration);
+    return expirationDate >= new Date(venezuelaDate);
+  };
 
   const form = useForm({
     resolver: zodResolver(productSchema),
-    defaultValues: {
-      name: '',
-      stock: 0,
-      status: true,
-      price: 0,
-      price_ent: 0,
-      slugs: [],
-      image: '',
-      brand: '',
-      bundle: 0,
-      expiration: '',
-      unity: 'unidad',
-      supplier_id: undefined,
-      categorie_id: defaultCategoryId ?? optionsCategories[0]?.value,
-    },
+    defaultValues:
+      // {
+      //   name: '',
+      //   stock: 0,
+      //   status: true,
+      //   price: 0,
+      //   price_ent: 0,
+      //   slugs: slugs,
+      //   image: '',
+      //   brand: '',
+      //   bundle: 0,
+      //   expiration: '',
+      //   unity: 'und',
+      //   supplier_id: undefined,
+      //   categorie_id: defaultCategoryId,
+      // },
+      {
+        name: 'Oka loka',
+        stock: 10,
+        status: true,
+        price: 25,
+        price_ent: 20,
+        slugs: [],
+        image:
+          'https://th.bing.com/th/id/OIP.7sXZgcmN0lAWSj6Czwt5igHaHd?rs=1&pid=ImgDetMain',
+        brand: 'Oka loka',
+        bundle: 12,
+        expiration: '2025-05-11',
+        unity: 'und',
+        supplier_id: 1,
+        categorie_id: 1,
+        sell_unity: false,
+        currency: 'BS',
+      },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  // Inicializar los slugs en el formulario al montar el componente
+  useEffect(() => {
+    if (slugs && slugs.length > 0) {
+      form.setValue('slugs', slugs);
+    }
+  }, [form, slugs]);
+
+  const onSubmit = async (data) => {
+    try {
+      const tagsInput = document.querySelector('input[name="slugs"]');
+      const currentInput = tagsInput?.value?.trim();
+      let finalSlugs = [...slugs];
+      if (currentInput) {
+        finalSlugs = [...new Set([...slugs, currentInput])];
+        setSlugs(finalSlugs);
+        form.setValue('slugs', finalSlugs);
+        if (tagsInput) tagsInput.value = '';
+      }
+      const newProduct = {
+        ...data,
+        slugs: finalSlugs,
+        currency: localStorage.getItem('currency'),
+      };
+
+      console.log('Submitting product:', newProduct);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
   const product = form.watch();
   return (
     <Layout>
       <Card>
-        <CardHeader>
-          <CardTitle className="text-center font-bold uppercase md:text-left md:text-2xl">
-            Crear Nuevo Producto
-          </CardTitle>
-        </CardHeader>
         <CardContent>
           <div className="flex gap-4">
             <div className="w-full">
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-8"
-                >
-                  <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                    <ChadCnFormInput
-                      control={form.control}
-                      name="name"
-                      ClassName="col-span-2 md:col-span-1"
-                      label="Nombre"
-                      placeholder="Nombre del producto"
-                    />
-                    <ChadCnFormInput
-                      control={form.control}
-                      name="stock"
-                      type="number"
-                      label="Stock"
-                      placeholder="Stock del producto"
-                    />
-                    <ChadCnFormInput
-                      control={form.control}
-                      name="bundle"
-                      type="number"
-                      label="Cant x caja"
-                      placeholder="Cantidad por caja"
-                    />
-                  </div>
-
-                  <ChadCnFormInput
-                    control={form.control}
-                    name="image"
-                    type="url"
-                    label="Imágen"
-                    placeholder="URL de la imágen del producto"
-                  />
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <ChadCnFormInput
-                      control={form.control}
-                      name="price_ent"
-                      type="number"
-                      label={`Precio de entrada por ${form.watch('unity')}`}
-                      min={0}
-                      placeholder="Ingrese el precio de entrada del producto"
-                    />
-                    <ChadCnFormInput
-                      control={form.control}
-                      name="price"
-                      type="number"
-                      label={`Precio de venta por ${form.watch('unity')}`}
-                      min={0}
-                      placeholder="Ingrese el precio del producto"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <ChadCnFormSelect
-                      control={form.control}
-                      name="unity"
-                      options={[
-                        { value: 'unidad', label: 'Unidad' },
-                        { value: 'paquete', label: 'Paquete' },
-                        { value: 'kilogramo', label: 'Kilogramo' },
-                        { value: 'gramo', label: 'Gramo' },
-                        { value: 'litro', label: 'Litro' },
-                      ]}
-                      defaultValue="unidad"
-                      label="Unidad"
-                      placeholder="Ingrese la unidad del producto"
-                    />
-
-                    {isLoading ? (
-                      <div className="flex h-full flex-col justify-center">
-                        <Skeleton className="h-[10px] w-12 rounded-md" />
-                        <Skeleton className="mt-2 h-[35px] w-full rounded-md" />
-                      </div>
-                    ) : (
-                      <ChadCnFormSelect
-                        control={form.control}
-                        name="categorie_id"
-                        options={optionsCategories}
-                        type="number"
-                        label="Categoria"
-                        defaultValue={defaultCategoryId}
-                        placeholder="Ingrese la categoria del producto"
-                      />
-                    )}
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                    <ChadCnFormInput
-                      control={form.control}
-                      ClassName="col-span-2 md:col-span-1"
-                      type="date"
-                      name="expiration"
-                      label="Fecha de expiracion"
-                      placeholder="Fecha de expiracion"
-                    />
-
-                    <ChadCnFormInput
-                      control={form.control}
-                      name="brand"
-                      label="Marca"
-                      placeholder="Marca del producto"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium">
-                      Palabras clave
-                    </label>
-                    <div className="mt-1">
-                      <TagsInput
-                        slugs={slugs}
-                        setSlugs={setSlugs}
-                        placeholder="Sirven para buscar el producto"
-                      />
-                    </div>
-                  </div>
-                  <Button type="submit">Crear</Button>
-                </form>
-              </Form>
+              <ProductForm
+                form={form}
+                onSubmit={onSubmit}
+                optionsCategories={optionsCategories}
+                optionsSuppliers={optionsSuppliers}
+                defaultCategoryId={defaultCategoryId}
+                slugs={slugs}
+                setSlugs={setSlugs}
+                isLoadingCategories={isLoadingCategories}
+                isLoadingSuppliers={isLoadingSuppliers}
+              />
             </div>
-            <div className="hidden md:flex items-center flex-col md:w-[40%] 2xl:w-1/4 ">
-            <h2 className="text-center text-2xl font-bold uppercase mb-4">Previsualizacion</h2>  
+            <div className="hidden flex-col items-center md:w-[40%] xl:flex 2xl:w-1/4">
+              <h2 className="mb-4 text-center text-2xl font-bold uppercase">
+                Previsualizacion
+              </h2>
               <Card
                 id="card-product"
-                className="dark:bg-secondary w-full hover:shadow-primary/10 product-card relative flex min-h-[440px] flex-col bg-white p-4 transition-shadow duration-500 hover:shadow-2xl"
+                className={`hover:shadow-primary/20 product-card relative flex min-h-[440px] w-full flex-col rounded-lg p-4 text-white transition-shadow duration-500 hover:shadow-lg ${!isExpirationValid(form.watch('expiration')) ? 'border-2 border-amber-700' : 'border-gray-300 dark:border-gray-700'}`}
               >
-                <DateBadge date={new Date().toISOString()} />
+                <div className="absolute top-5 left-0 flex w-full justify-between gap-2 px-4">
+                  <div className="-ml-2">
+                    <DateBadge date={new Date().toISOString()} />
+                  </div>
+                  <UnityBadge unity={product.unity} />
+                </div>
                 <div
-                  className="image relative flex h-48 w-full items-center justify-center rounded-md bg-white bg-contain bg-center bg-no-repeat"
-                  style={{ backgroundImage: `url(${product.image.length <= 3 ? defaultImage : product.image})` }}
+                  className="image relative flex h-48 w-full items-center justify-center rounded-md border-b border-gray-500 bg-white bg-contain bg-center bg-no-repeat"
+                  style={{
+                    backgroundImage: `url(${product.image.length <= 3 ? defaultImage : product.image})`,
+                  }}
                 ></div>
-                <div className="flex justify-center gap-2 text-center">
-                  <span className="text-muted-foreground -mb-4 line-clamp-1 text-[8px] uppercase">
+                <div className="mt-4 flex flex-col items-center">
+                  <span className="line-clamp-1 text-xs text-gray-400 uppercase">
                     {product.slugs.slice(0, 3).join(', ')}
                   </span>
+                  <h3 className="mt-2 text-center text-lg font-bold uppercase">
+                    {product.name || 'Nombre del Producto'}
+                  </h3>
+                  <div className="mt-2 flex gap-2">
+                    <div className="flex flex-col items-center justify-center text-center">
+                      <span className="text-[10px] uppercase">Marca</span>
+                      <div
+                        className={`mt-1 min-w-[40px] rounded-full p-1 px-2 text-[10px] text-white uppercase ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
+                      >
+                        {product.brand || 'N/A'}
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center text-center">
+                      <span className="text-[10px] uppercase">Proveedor</span>
+                      <div
+                        className={`mt-1 min-w-[40px] rounded-full p-1 px-2 text-[10px] text-white uppercase ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
+                      >
+                        {suppliers.find((sup) => sup.id === product.supplier_id)
+                          ?.name || 'N/A'}
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center text-center">
+                      <span className="text-[10px] uppercase">Categoria</span>
+                      <div
+                        className={`mt-1 min-w-[40px] rounded-full p-1 px-2 text-[10px] text-white uppercase ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
+                      >
+                        {categories.find(
+                          (cat) => cat.id === product.categorie_id
+                        )?.name || 'N/A'}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-center gap-2 text-center">
-                  <div className="flex flex-col text-center">
-                    <span className="text-2xl font-bold">
-                      {product.price} 
+                <div className="mt-4 flex items-center justify-between">
+                  <div className="text-left">
+                    <span className="block text-sm text-gray-400">Venta</span>
+                    <span
+                      className={`text-lg font-bold ${currency === 'BS' ? 'text-primary' : 'text-usd'}`}
+                    >
+                      {product.price || 0}
                     </span>
-                    <span className="text-muted-foreground text-[8px]">
-                      {product.brand}
+                  </div>
+                  <div className="text-right">
+                    <span className="block text-sm text-gray-400">Entrada</span>
+                    <span className={`text-lg font-bold text-gray-400`}>
+                      {product.price_ent || 0}
                     </span>
                   </div>
                 </div>

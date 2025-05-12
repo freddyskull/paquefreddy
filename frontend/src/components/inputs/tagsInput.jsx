@@ -1,59 +1,100 @@
-import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from 'react';
+import { useController } from 'react-hook-form';
 
-export const TagsInput = ({
-  slugs,
-  setSlugs,
-  placeholder = 'Add a tag...',
-}) => {
-  const [inputValue, setInputValue] = useState('');
+export const TagsInput = ({ name, control, slugs: externalSlugs = [], setSlugs, placeholder = 'Agregar palabras clave', label = 'Palabras clave' }) => {
+  const [internalSlugs, setInternalSlugs] = useState(externalSlugs || []);
+  
+  const { field } = useController({
+    name,
+    control,
+    defaultValue: externalSlugs || [],
+  });
+
+  // Sincronizar los slugs externos con el estado interno
+  useEffect(() => {
+    if (externalSlugs && Array.isArray(externalSlugs) && externalSlugs.length > 0) {
+      // Filtrar valores vacíos o nulos
+      const validSlugs = externalSlugs.filter(slug => slug && slug.trim() !== '');
+      if (JSON.stringify(validSlugs) !== JSON.stringify(internalSlugs)) {
+        setInternalSlugs(validSlugs);
+        field.onChange(validSlugs);
+        if (setSlugs) {
+          setSlugs(validSlugs);
+        }
+      }
+    } else if (internalSlugs.length > 0) {
+      // Si no hay slugs externos pero hay internos, limpiar
+      setInternalSlugs([]);
+      field.onChange([]);
+    }
+  }, [externalSlugs]);
+
+  const addTag = (value) => {
+    const trimmedValue = value.trim();
+    if (trimmedValue) {
+      const newSlugs = [...new Set([...internalSlugs, trimmedValue])];
+      setInternalSlugs(newSlugs);
+      field.onChange(newSlugs);
+      if (setSlugs) {
+        setSlugs(newSlugs);
+      }
+      return true;
+    }
+    return false;
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
-      const value = e.target.value.trim();
-      if (value) {
-        const newSlug = value.toLowerCase().replace(/\s+/g, '-');
-        setSlugs([...slugs, newSlug]);
-        setInputValue('');
+      const value = e.target.value;
+      if (addTag(value)) {
+        e.target.value = '';
       }
     }
   };
 
-  const handleRemoveTag = (index) => {
-    const newSlugs = [...slugs];
-    newSlugs.splice(index, 1);
-    setSlugs(newSlugs);
+  const handleBlur = (e) => {
+    const value = e.target.value;
+    if (value) {
+      if (addTag(value)) {
+        e.target.value = '';
+      }
+    }
+  };
+
+  const removeTag = (index) => {
+    const newSlugs = internalSlugs.filter((_, i) => i !== index);
+    setInternalSlugs(newSlugs);
+    field.onChange(newSlugs);
+    if (setSlugs) {
+      setSlugs(newSlugs);
+    }
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <Input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-      />
-      <div className="flex flex-wrap gap-2">
-        {slugs.map((slug, index) => (
-          <div
-            key={index}
-            className="dark:bg-secondary dark:text-primary-foreground bg-accent flex items-center rounded-full px-3 py-0! text-slate-600"
-          >
-            <span className="mt-1 text-[10px] uppercase">{slug}</span>
-            <Button
+    <div className="space-y-1">
+      {label && <label className="block text-sm font-medium">{label}</label>}
+      <div className="flex flex-wrap gap-2 rounded-md border border-input bg-secondary px-3 py-1">
+        {internalSlugs.map((tag, index) => (
+          <div key={index} className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-xs text-white">
+            {tag}
+            <button
               type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => handleRemoveTag(index)}
-              className="p-0! px-1!"
+              onClick={() => removeTag(index)}
+              className="ml-1 text-white/70 hover:text-white"
             >
-              x
-            </Button>
+              ×
+            </button>
           </div>
         ))}
+        <input
+          name={name}
+          type="text"
+          onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
+          placeholder={internalSlugs.length === 0 ? placeholder : ''}
+          className="flex-1 bg-transparent outline-none"
+        />
       </div>
     </div>
   );

@@ -52,27 +52,28 @@ model Suppliers {
 }
 
 model Products {
-  id          Int     @id @default(autoincrement())
-  name        String
-  stock       Int
-  status      Boolean? @default(true)
-  price       Float
-  price_ent   Float
-  slugs       String[] @default([])
-  slugs_url   String @unique
-  image       String?
-  brand       String?
-  bundle      Int?
-  expiration  DateTime? 
-  unity       String?
-  supplier_id Int?
-  categorie_id Int?
-  supplier    Suppliers? @relation(fields: [supplier_id], references: [id])
-  categorie   Categories? @relation(fields: [categorie_id], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  records     Records[]
-  purhases    Purhases[]
+  id            Int     @id @default(autoincrement())
+  name          String
+  stock         Int
+  status        Boolean? @default(true)
+  price         Float
+  price_ent     Float
+  slugs         String[] @default([])
+  slugs_url     String @unique
+  image         String?
+  brand         String?
+  bundle        Int?
+  expiration    DateTime? 
+  unity         String?
+  supplier_id   Int?
+  categorie_id  Int?
+  sell_unity    Boolean? @default(false)
+  supplier      Suppliers? @relation(fields: [supplier_id], references: [id])
+  categorie     Categories? @relation(fields: [categorie_id], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  records       Records[]
+  purhases      Purhases[]
 }
 
 model Records {

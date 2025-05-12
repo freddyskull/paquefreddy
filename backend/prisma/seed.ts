@@ -166,6 +166,20 @@ async function main() {
         unity: 'lt',
       },
       {
+        name: 'Queso de res',
+        stock: 20,
+        price: 6.5,
+        price_ent: 5,
+        slugs: ['queso', 'queso-de-res', 'queso-res'],
+        image:
+          'https://img.freepik.com/foto-gratis/queso-blanco-fresco-rodajas-leche-vaca-aislado-sobre-fondo-blanco-vista-superior_123827-27809.jpg',
+        slugs_url: 'queso-de-res',
+        brand: 'res',
+        categorie_id: 2,
+        sell_unity: true,
+        unity: 'kg',
+      },
+      {
         name: 'papel rosal plus 400h 4 rollos',
         stock: 20,
         price: 2.44,

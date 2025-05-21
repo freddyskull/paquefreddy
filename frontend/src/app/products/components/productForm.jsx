@@ -1,10 +1,10 @@
-import React from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { TagsInput } from '@/components/inputs/tagsInput';
-import { Form } from '@/components/ui/form';
-import { ChadCnFormInput } from '@/components/inputs/chadCnFormInput';
-import { ChadCnFormSelect } from '@/components/inputs/chadCnFormSelect';
-import { Button } from '@/components/ui/button';
+import React from 'react'
+import { Skeleton } from '@/components/ui/skeleton'
+import { TagsInput } from '@/components/inputs/tagsInput'
+import { Form } from '@/components/ui/form'
+import { ChadCnFormInput } from '@/components/inputs/chadCnFormInput'
+import { ChadCnFormSelect } from '@/components/inputs/chadCnFormSelect'
+import { Button } from '@/components/ui/button'
 import { Switch } from "@/components/ui/switch"
 
 export const ProductForm = ({
@@ -18,11 +18,11 @@ export const ProductForm = ({
   isLoadingCategories,
   isLoadingSuppliers,
 }) => {
-  const currency = localStorage.getItem('currency');
+  const currency = localStorage.getItem('currency')
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+        <div className="gap-4 grid grid-cols-2 md:grid-cols-3">
           <ChadCnFormInput
             control={form.control}
             name="name"
@@ -54,7 +54,7 @@ export const ProductForm = ({
           placeholder="URL de la imágen del producto"
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="gap-4 grid grid-cols-2">
           <ChadCnFormInput
             control={form.control}
             name="price_ent"
@@ -73,8 +73,8 @@ export const ProductForm = ({
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <div className="col-span-3 md:col-span-1 flex gap-2">
+        <div className="gap-4 grid grid-cols-3">
+          <div className="flex gap-2 col-span-3 md:col-span-1">
             <div className="w-full">
               <ChadCnFormSelect
                 control={form.control}
@@ -91,25 +91,25 @@ export const ProductForm = ({
                 placeholder="Ingrese la unidad del producto"
               />
             </div>
-            <div className="w-1/4 flex flex-col items-center">
-              <label htmlFor="unity" className="text-xs text-muted-foreground text-nowrap">
+            <div className="flex flex-col items-center w-1/2">
+              <label htmlFor="unity" className="text-muted-foreground text-xs text-nowrap">
                 Vender por <span className="font-bold">{form.watch('unity')}</span>
               </label>
               <Switch
-                className="mt-4"
+                className="data-[state=unchecked]:bg-gray-300 mt-4"
                 id="unity"
                 checked={form.watch('sell_unity')}
                 onCheckedChange={(value) => {
-                  form.setValue('sell_unity', value);
+                  form.setValue('sell_unity', value)
                 }}
               />
             </div>
           </div>
 
           {isLoadingCategories ? (
-            <div className="col-span-3 flex h-full flex-col justify-center md:col-span-1">
-              <Skeleton className="h-[10px] w-12 rounded-md" />
-              <Skeleton className="mt-2 h-[35px] w-full rounded-md" />
+            <div className="flex flex-col justify-center col-span-3 md:col-span-1 h-full">
+              <Skeleton className="rounded-md w-12 h-[10px]" />
+              <Skeleton className="mt-2 rounded-md w-full h-[35px]" />
             </div>
           ) : (
             <div className="col-span-3 md:col-span-1">
@@ -126,9 +126,9 @@ export const ProductForm = ({
           )}
 
           {isLoadingSuppliers ? (
-            <div className="col-span-3 flex h-full flex-col justify-center md:col-span-1">
-              <Skeleton className="h-[10px] w-12 rounded-md" />
-              <Skeleton className="mt-2 h-[35px] w-full rounded-md" />
+            <div className="flex flex-col justify-center col-span-3 md:col-span-1 h-full">
+              <Skeleton className="rounded-md w-12 h-[10px]" />
+              <Skeleton className="mt-2 rounded-md w-full h-[35px]" />
             </div>
           ) : (
             <div className="col-span-3 md:col-span-1">
@@ -143,7 +143,7 @@ export const ProductForm = ({
             </div>
           )}
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="gap-4 grid grid-cols-2">
           <ChadCnFormInput
             control={form.control}
             ClassName="col-span-2 md:col-span-1"
@@ -180,5 +180,5 @@ export const ProductForm = ({
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

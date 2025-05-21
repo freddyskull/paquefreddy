@@ -43,8 +43,7 @@ export const useProductStore = create((set, get) => ({
     try {
       const response = await axiosInstance.post('products', product)
       const newProduct = response.data.data
-      const { products } = get()
-      set({ products: [...products, newProduct] })
+      set({ products: [...newProduct] })
       toast("Producto creado exitosamente")
     } catch (error) {
       errorHandler.handleApiError(error)
@@ -80,9 +79,9 @@ export const useProductStore = create((set, get) => ({
       const response = await axiosInstance.patch(`products/${id}`, updates)
       const updatedProduct = response.data.data
       const { products } = get()
-      
+
       // Crear una nueva lista de productos actualizada
-      const newProducts = products.map((product) => 
+      const newProducts = products.map((product) =>
         product.id === id ? updatedProduct : product
       )
       set({ products: newProducts })

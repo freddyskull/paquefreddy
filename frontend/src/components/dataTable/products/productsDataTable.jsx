@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
-} from '@tanstack/react-table';
+} from '@tanstack/react-table'
 import { Card, CardContent } from "@/components/ui/card"
 import { ProductCard } from "@/components/cardProducts"
 import { useConfigStore } from '@/store/configStore'
@@ -13,10 +13,10 @@ import { useProductStore } from '@/store/productStore'
 import { FiltersTable } from '@/components/dataTable/products/filtersTable'
 
 export const ProductsDataTable = ({ data }) => {
-  const { categories } = useCategoriesStore();
-  const { patchProduct } = useProductStore();
+  const { categories } = useCategoriesStore()
+  const { patchProduct } = useProductStore()
 
-  const { config, currency, isLoading: isLoadingConfig } = useConfigStore();
+  const { config, currency, isLoading: isLoadingConfig } = useConfigStore()
   const columns = useMemo(() => [
     {
       accessorKey: 'name',
@@ -24,11 +24,11 @@ export const ProductsDataTable = ({ data }) => {
       filterFn: (row, columnId, value) => {
         return value
           ? row
-              .getValue(columnId)
-              .toString()
-              .toLowerCase()
-              .includes(value.toLowerCase())
-          : true;
+            .getValue(columnId)
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+          : true
       },
     },
     {
@@ -53,11 +53,11 @@ export const ProductsDataTable = ({ data }) => {
       filterFn: (row, columnId, value) => {
         return value
           ? row
-              .getValue(columnId)
-              .toString()
-              .toLowerCase()
-              .includes(value.toLowerCase())
-          : true;
+            .getValue(columnId)
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+          : true
       },
     },
     {
@@ -66,11 +66,11 @@ export const ProductsDataTable = ({ data }) => {
       filterFn: (row, columnId, value) => {
         return value
           ? row
-              .getValue(columnId)
-              .toString()
-              .toLowerCase()
-              .includes(value.toLowerCase())
-          : true;
+            .getValue(columnId)
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+          : true
       },
     },
     {
@@ -79,11 +79,11 @@ export const ProductsDataTable = ({ data }) => {
       filterFn: (row, columnId, value) => {
         return value
           ? row
-              .getValue(columnId)
-              .toString()
-              .toLowerCase()
-              .includes(value.toLowerCase())
-          : true;
+            .getValue(columnId)
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+          : true
       },
     },
     {
@@ -105,20 +105,24 @@ export const ProductsDataTable = ({ data }) => {
       accessorKey: 'createdAt',
       header: 'fecha creación',
     },
-  ], [config, currency]);
+  ], [])
 
-  const memoizedData = useMemo(() => data, [data]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const memoizedData = useMemo(() => data, [data])
+  const [searchTerm, setSearchTerm] = useState('')
   const [columnFilters, setColumnFilters] = useState([
     {
       id: "price",
       value: ["", ""]
     },
     {
+      id: "price_ent",
+      value: ""
+    },
+    {
       id: "categorie_slug",
       value: ""
     }
-  ]);
+  ])
 
   const table = useReactTable({
     data: memoizedData,
@@ -131,32 +135,32 @@ export const ProductsDataTable = ({ data }) => {
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
-  });
+  })
 
 
   const handleSearch = (value) => {
-    const normalizedValue = value.replace(',', '.');
-    setSearchTerm(value);
-    table.setGlobalFilter(normalizedValue);
-  };
+    const normalizedValue = value.replace(',', '.')
+    setSearchTerm(value)
+    table.setGlobalFilter(normalizedValue)
+  }
 
 
   const handleEdit = (label, value, productId) => {
-    let updatedProduct;
+    let updatedProduct
     if (label === 'price_ent' || label === 'price') {
       updatedProduct = {
         [label]: value,
         currency: currency,
-      };
+      }
     } else {
       updatedProduct = {
         [label]: value,
-      };
+      }
     }
     if (value !== "") {
-      patchProduct(productId, updatedProduct);
+      patchProduct(productId, updatedProduct)
     }
-  };
+  }
 
   return (
     <Card className="h-[88vh]">
@@ -172,14 +176,14 @@ export const ProductsDataTable = ({ data }) => {
         isLoadingConfig={isLoadingConfig}
       />
       <CardContent className="h-full overflow-y-auto">
-        <div className="xs:grid-cols-1 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+        <div className="gap-4 grid xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 xl:grid-cols-4 transition-all duration-500">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <ProductCard key={row.original.id} product={row.original} handleEdit={handleEdit}/>
+              <ProductCard key={row.original.id} product={row.original} handleEdit={handleEdit} />
             ))
           ) : (
-            <div className="col-span-full flex h-[80vh] w-full items-center justify-center">
-              <h1 className="text-center text-2xl font-bold uppercase">
+            <div className="flex justify-center items-center col-span-full w-full h-[80vh]">
+              <h1 className="font-bold text-2xl text-center uppercase">
                 No hay productos disponibles
               </h1>
             </div>
@@ -187,5 +191,5 @@ export const ProductsDataTable = ({ data }) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}

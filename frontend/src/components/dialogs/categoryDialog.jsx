@@ -1,36 +1,36 @@
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { DialogDescription } from '@radix-ui/react-dialog';
-import { useCategoriesStore } from '@/store/categoriesStore';
+import React, { useState } from 'react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { Input } from '../ui/input'
+import { Button } from '../ui/button'
+import { DialogDescription } from '@radix-ui/react-dialog'
+import { useCategoriesStore } from '@/store/categoriesStore'
 
 export const CategoryDialog = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [categoryName, setCategoryName] = useState('');
-  const { createCategory } = useCategoriesStore();
+  const [isOpen, setIsOpen] = useState(false)
+  const [categoryName, setCategoryName] = useState('')
+  const { createCategory } = useCategoriesStore()
 
   const handleCreateCategory = () => {
     if (categoryName.trim()) {
-      createCategory({ name: categoryName });
-      setCategoryName('');
-      setIsOpen(false);
+      createCategory({ name: categoryName })
+      setCategoryName('')
+      setIsOpen(false)
     }
-  };
+  }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault();
-      handleCreateCategory();
+      e.preventDefault()
+      handleCreateCategory()
     } else if (e.key === 'Escape') {
-      setIsOpen(false);
+      setIsOpen(false)
     }
-  };
-  
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="text-primary">
+        <Button variant="outline" className="bg-transparent border-slate-300 w-full font-light text-primary uppercase">
           Nueva categoría
         </Button>
       </DialogTrigger>
@@ -40,8 +40,8 @@ export const CategoryDialog = () => {
         <DialogHeader>
           <DialogTitle>Nueva Categoría</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
+        <div className="gap-4 grid py-4">
+          <div className="gap-2 grid">
             <Input
               id="categoryName"
               placeholder="Nombre de la categoría"
@@ -62,5 +62,5 @@ export const CategoryDialog = () => {
         </div>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

@@ -5,11 +5,11 @@ import {
   IsBoolean,
   IsArray,
   IsString,
-  IsDate,
   IsOptional,
   Min,
   MaxLength,
   IsIn,
+  Matches,
 } from 'class-validator';
 
 export class productDto {
@@ -91,12 +91,16 @@ export class productDto {
 
   @ApiProperty({
     description:
-      'Este campo hace referencia a la fecha de expiración del producto',
-    default: null
+      'Este campo hace referencia a la fecha de expiración del producto (formato: YYYY-MM-DD)',
+    default: null,
+    example: '2025-12-31'
   })
   @IsOptional()
-  @IsDate({ message: 'La fecha de expiración debe ser una fecha válida' })
-  expiration: Date;
+  @IsString({ message: 'La fecha de expiración debe ser una cadena de texto' })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'La fecha de expiración debe tener el formato YYYY-MM-DD',
+  })
+  expiration: string;
 
   @ApiProperty({
     description: 'Unidad de medida del producto',

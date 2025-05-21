@@ -12,13 +12,6 @@ export class ProductsService {
     this.prisma = new PrismaClient();
   }
 
-  private convertEmptyStringToNull<T>(value: T): T | null {
-    if (typeof value === 'string' && value.trim() === '') {
-      return null;
-    }
-    return value;
-  }
-
   private buildProductData(dto: productDto) {
     const productData = {
       name: dto.name,
@@ -29,7 +22,7 @@ export class ProductsService {
       image: dto.image?.trim() === '' ? null : dto.image,
       brand: dto.brand?.trim() === '' ? null : dto.brand,
       bundle: dto.bundle === 0 ? null : dto.bundle,
-      expiration: dto.expiration ? dto.expiration : null,
+      expiration: dto.expiration ? new Date(dto.expiration) : null,
       unity: dto.unity?.trim() === '' ? null : dto.unity,
       supplier_id: dto.supplier_id,
       categorie_id: dto.categorie_id,
@@ -81,18 +74,25 @@ export class ProductsService {
     }
   }
 
-  private convertPricesToUSD(dto: productDto, dolar: number, request?: any): productDto {
-    const keys = Object.keys(dto);
-    const hasPrice = keys.includes('price') || keys.includes('price_ent');
-    if (!hasPrice) return dto;
-    Object.keys(request).forEach(key => {
-      if (key === 'price' || key === 'price_ent') {
-        dto[key] = (parseFloat(request[key]) / dolar)
-      }
-    });
-    
-    return dto;
-    
+  private convertPricesToUSD(
+    dto: productDto,
+    dolar: number,
+    request?: any
+  ): productDto {
+    const result = { ...dto };
+    const hasPrice = 'price' in dto || 'price_ent' in dto;
+
+    if (!hasPrice || !dolar) return result;
+
+    if (request?.price) {
+      result.price = parseFloat(request.price) / dolar;
+    }
+
+    if (request?.price_ent) {
+      result.price_ent = parseFloat(request.price_ent) / dolar;
+    }
+
+    return result;
   }
 
   private validatePrices(price_ent: number, price: number): void {
@@ -107,17 +107,19 @@ export class ProductsService {
   async create(dto: productDto) {
     this.validatePrices(dto.price_ent, dto.price);
     await this.productExists('name', dto.name);
-
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;
     const productData =
       dto.currency === 'USD' || !dto.currency
         ? this.buildProductData(dto)
-        : this.buildProductData(this.convertPricesToUSD(dto, dolar));
-
+        : this.buildProductData(this.convertPricesToUSD(dto, dolar, dto));
     await this.prisma.products.create({ data: productData });
-
-    return { status: 'ok', message: 'Producto creado correctamente' };
+    const product = await this.findOne(productData.id);
+    return {
+      status: 'ok',
+      message: 'Producto creado correctamente',
+      data: product
+    };
   }
 
   findAll() {
@@ -192,7 +194,7 @@ export class ProductsService {
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;
     const newData = { ...product, ...dto };
-    
+
     const updatedData =
       dto.currency === 'USD' || !dto.currency
         ? this.buildProductData(newData)

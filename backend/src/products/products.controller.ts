@@ -55,7 +55,7 @@ export class ProductsController {
     const allProducts = await this.productsService.findAll();
     return {
       data: await Promise.all(allProducts.map(p => this.formatProductDates(p))),
-      product: await this.formatProductDates(product)
+      product: await this.formatProductDates(product.data)
     };
   }
 

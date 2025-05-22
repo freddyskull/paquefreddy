@@ -86,8 +86,13 @@ export class ProductsController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  update(@Param() params: any, @Body(new ValidationPipe()) dto: productDto) {
-    return this.productsService.update(parseInt(params.id), dto);
+  async update(@Param() params: any, @Body(new ValidationPipe()) dto: productDto) {
+    const update = await this.productsService.update(params.id, dto);
+    const response = {
+      ...update,
+      data: await this.formatProductDates(update.data)
+    };
+    return response;
   }
 
   @Delete(':id')

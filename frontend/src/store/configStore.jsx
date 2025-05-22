@@ -1,8 +1,9 @@
 import { create } from 'zustand'
 import { axiosInstance } from '../config/axios.config'
 import { errorHandler } from '../utils/errorHandler'
+import { toast } from "sonner"
 
-export const useConfigStore = create((set, get) => {
+export const useConfigStore = create((set) => {
   // Initialize currency in localStorage if it doesn't exist
   if (!localStorage.getItem('currency')) {
     localStorage.setItem('currency', 'BS')

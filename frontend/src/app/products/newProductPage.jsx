@@ -36,14 +36,16 @@ const productSchema = z
     path: ['price'],
   })
 
-export const NewProductPage = () => {
+export const NewProductPage = ({ product }) => {
   const navigate = useNavigate()
   const { categories, isLoading: isLoadingCategories } = useCategoriesStore()
-  const { config, currency } = useConfigStore()
+  const { config, currency, isLoading: isLoadingConfig } = useConfigStore()
+  
+  let dolar = isLoadingConfig ? 0 : config.dolar
   const { suppliers, isLoading: isLoadingSuppliers } = useSuppliersStore()
-  const { createProduct } = useProductStore()
+  const { createProduct, updateProduct } = useProductStore()
   // const [slugs, setSlugs] = useState(['caramelos', 'dulces', 'barato', 'nano'])
-  const [slugs, setSlugs] = useState([])
+  const [slugs, setSlugs] = useState(product?.slugs || [])
   const defaultCategory = categories.find(
     (category) => category.slug_url === config.default_categories_slug
   )
@@ -69,22 +71,22 @@ export const NewProductPage = () => {
 
   const form = useForm({
     resolver: zodResolver(productSchema),
-    defaultValues:
-    {
-      name: '',
-      stock: 0,
-      status: true,
-      price: 0,
-      price_ent: 0,
-      slugs: slugs,
-      image: '',
-      brand: '',
-      bundle: 0,
-      expiration: '',
-      unity: 'und',
-      supplier_id: undefined,
-      categorie_id: defaultCategoryId,
+    defaultValues: {
+      name: product?.name || '',
+      stock: product?.stock || 0,
+      status: product?.status || true,
+      price: currency === 'BS' ? parseFloat((product?.price * dolar).toFixed(2)) : product?.price || 0,
+      price_ent: currency === 'BS' ? parseFloat((product?.price_ent * dolar).toFixed(2)) : product?.price_ent || 0,
+      slugs: product?.slugs || [],
+      image: product?.image || '',
+      brand: product?.brand || '',
+      bundle: product?.bundle || 0,
+      expiration: product?.expiration ? new Date(product.expiration).toISOString().split('T')[0] : '',
+      unity: product?.unity || 'und',
+      supplier_id: product?.supplier_id || undefined,
+      categorie_id: product?.categorie_id || defaultCategoryId,
     },
+    mode: 'onChange',
     // {
     //   name: 'Oka loka',
     //   stock: 10,
@@ -105,6 +107,7 @@ export const NewProductPage = () => {
     // },
   })
 
+  
   useEffect(() => {
     if (slugs && slugs.length > 0) {
       form.setValue('slugs', slugs)
@@ -128,17 +131,19 @@ export const NewProductPage = () => {
         slugs: finalSlugs,
         currency: localStorage.getItem('currency'),
       }
-      createProduct(newProduct)
+      if (product?.id) {
+        updateProduct({ ...newProduct, id: product.id })
+      } else {
+        createProduct(newProduct)
+      }
       form.reset()
       setSlugs([])
-      setTimeout(() => {
-        navigate('/productos')
-      }, 300)
+      navigate('/productos')
     } catch (error) {
       console.error('Error submitting form:', error)
     }
   }
-  const product = form.watch()
+  const formProduct = form.watch()
   return (
     <Layout>
       <Card>
@@ -155,6 +160,8 @@ export const NewProductPage = () => {
                 setSlugs={setSlugs}
                 isLoadingCategories={isLoadingCategories}
                 isLoadingSuppliers={isLoadingSuppliers}
+                currency={currency}
+                product={product}
               />
             </div>
             <div className="hidden xl:flex flex-col items-center md:w-[40%] 2xl:w-1/4">
@@ -163,26 +170,26 @@ export const NewProductPage = () => {
               </h2>
               <Card
                 id="card-product"
-                className={`bg-white dark:bg-secondary  hover:shadow-primary/20 product-card relative flex min-h-[440px] w-full flex-col rounded-lg p-4 dark:text-white transition-shadow duration-500 hover:shadow-lg ${!isExpirationValid(product.expiration) && product.expiration !== "" ? 'border-2 border-amber-700' : 'border-gray-300 dark:border-gray-700'}`}
+                className={`bg-white dark:bg-secondary   product-card relative flex min-h-[440px] w-full flex-col rounded-lg p-4 dark:text-white  duration-500 ${!isExpirationValid(formProduct.expiration) && formProduct.expiration !== "" ? 'border-2 border-amber-700' : 'border-gray-300 dark:border-gray-700'}`}
               >
                 <div className="top-5 left-0 absolute flex justify-between gap-2 px-4 w-full">
                   <div className="-ml-2">
                     <DateBadge date={new Date().toISOString()} />
                   </div>
-                  <UnityBadge unity={product.unity} />
+                  <UnityBadge unity={formProduct.unity} />
                 </div>
                 <div
                   className="relative flex justify-center items-center bg-white bg-contain bg-no-repeat bg-center border-gray-500 border-b rounded-md w-full h-48 image"
                   style={{
-                    backgroundImage: `url(${product.image.length <= 3 ? defaultImage : product.image})`,
+                    backgroundImage: `url(${formProduct.image.length <= 3 ? defaultImage : formProduct.image})`,
                   }}
                 ></div>
                 <div className="flex flex-col items-center mt-4">
                   <span className="text-gray-400 text-xs uppercase line-clamp-1">
-                    {product.slugs.slice(0, 3).join(', ')}
+                    {formProduct.slugs.slice(0, 3).join(', ')}
                   </span>
                   <h3 className="mt-2 font-bold text-lg text-center uppercase">
-                    {product.name || 'Nombre del Producto'}
+                    {formProduct.name || 'Nombre del Producto'}
                   </h3>
                   <div className="flex gap-2 mt-2">
                     <div className="flex flex-col justify-center items-center text-center">
@@ -190,7 +197,7 @@ export const NewProductPage = () => {
                       <div
                         className={`mt-1 min-w-[40px] rounded-full p-1 px-2 text-[10px] text-white uppercase ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
                       >
-                        {product.brand || 'N/A'}
+                        {formProduct.brand || 'N/A'}
                       </div>
                     </div>
                     <div className="flex flex-col justify-center items-center text-center">
@@ -198,7 +205,7 @@ export const NewProductPage = () => {
                       <div
                         className={`mt-1 min-w-[40px] rounded-full p-1 px-2 text-[10px] text-white uppercase ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
                       >
-                        {suppliers.find((sup) => sup.id === product.supplier_id)
+                        {suppliers.find((sup) => sup.id === formProduct.supplier_id)
                           ?.name || 'N/A'}
                       </div>
                     </div>
@@ -208,7 +215,7 @@ export const NewProductPage = () => {
                         className={`mt-1 min-w-[40px] rounded-full p-1 px-2 text-[10px] text-white uppercase ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
                       >
                         {categories.find(
-                          (cat) => cat.id === product.categorie_id
+                          (cat) => cat.id === formProduct.categorie_id
                         )?.name || 'N/A'}
                       </div>
                     </div>
@@ -220,13 +227,13 @@ export const NewProductPage = () => {
                     <span
                       className={`text-lg font-bold ${currency === 'BS' ? 'text-primary' : 'text-usd'}`}
                     >
-                      {product.price || 0}
+                      {formProduct.price || 0}
                     </span>
                   </div>
                   <div className="text-right">
                     <span className="block text-gray-400 text-sm">Entrada</span>
                     <span className={`text-lg font-bold text-gray-400`}>
-                      {product.price_ent || 0}
+                      {formProduct.price_ent || 0}
                     </span>
                   </div>
                 </div>

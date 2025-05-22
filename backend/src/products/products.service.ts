@@ -157,28 +157,26 @@ export class ProductsService {
     return dato;
   }
 
-  async update(id: any, dto: productDto) {
-    const product = await this.prisma.products.findFirst({
-      where: { id: Number(id) }
-    });
-    if (!product) {
-      throw new HttpException('No existe el producto', HttpStatus.BAD_REQUEST);
-    }
-    this.validatePrices(dto.price_ent, dto.price);
-
+  async update(id: string, dto: productDto) {
+    const product = await this.findOne(id);
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;
-    const productData =
+    this.validatePrices(dto.price_ent, dto.price);
+    const newData = { ...product, ...dto };
+    const updatedData =
       dto.currency === 'USD' || !dto.currency
-        ? this.buildProductData(dto)
-        : this.buildProductData(this.convertPricesToUSD(dto, dolar));
+        ? this.buildProductData(newData)
+        : this.buildProductData(this.convertPricesToUSD(newData, dolar, dto));
     await this.prisma.products.update({
-      where: {
-        id: Number(id)
-      },
-      data: productData
+      where: { id: Number(id) },
+      data: updatedData
     });
-    return { status: 'ok', message: 'Producto actualizado correctamente' };
+    const data = await this.findOne(id);
+    return {
+      status: 'ok',
+      message: 'Producto actualizado correctamente',
+      data: data
+    };
   }
 
   async patch(id: number, dto: productDto) {

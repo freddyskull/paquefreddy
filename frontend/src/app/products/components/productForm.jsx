@@ -17,9 +17,11 @@ export const ProductForm = ({
   setSlugs,
   isLoadingCategories,
   isLoadingSuppliers,
+  currency,
+  product,
 }) => {
-  const currency = localStorage.getItem('currency')
   return (
+
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="gap-4 grid grid-cols-2 md:grid-cols-3">
@@ -59,7 +61,7 @@ export const ProductForm = ({
             control={form.control}
             name="price_ent"
             type="number"
-            label={`Precio de entrada por ${form.watch('unity')}`}
+            label={`Precio de entrada por ${currency}`}
             min={0}
             placeholder="Ingrese el precio de entrada del producto"
           />
@@ -67,7 +69,7 @@ export const ProductForm = ({
             control={form.control}
             name="price"
             type="number"
-            label={`Precio de venta por ${form.watch('unity')}`}
+            label={`Precio de venta por ${currency}`}
             min={0}
             placeholder="Ingrese el precio del producto"
           />
@@ -176,7 +178,7 @@ export const ProductForm = ({
           type="submit"
           className={`w-full uppercase ${currency === 'BS' ? 'bg-primary' : 'bg-usd hover:bg-usd/80'}`}
         >
-          Crear producto
+          {product?.id ? 'Actualizar producto' : 'Crear producto'}
         </Button>
       </form>
     </Form>

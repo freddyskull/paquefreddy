@@ -28,7 +28,7 @@ export const useProductStore = create((set, get) => ({
     set({ isLoading: true, error: null })
     try {
       const response = await axiosInstance.get(`products/${id}`)
-      set({ selectedProduct: response.data })
+      return response.data
     } catch (error) {
       errorHandler.handleApiError(error)
       set({ error: error.message })
@@ -58,7 +58,7 @@ export const useProductStore = create((set, get) => ({
     set({ isLoading: true, error: null })
     try {
       const response = await axiosInstance.put(`products/${product.id}`, product)
-      const updatedProduct = response.data
+      const updatedProduct = response.data.data
       const { products } = get()
       set({
         products: products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)),

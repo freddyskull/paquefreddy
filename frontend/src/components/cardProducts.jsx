@@ -1,23 +1,24 @@
-import React, { useMemo, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { DateBadge } from '@/components/dataTable/products/dateBadge'
-import { useConfigStore } from '@/store/configStore'
-import { useCategoriesStore } from '@/store/categoriesStore'
-import { EditableInput } from '@/components/inputs/EditableInput'
-import { EditableSelect } from '@/components/inputs/EditableSelect'
-import { formatPrice } from '@/utils/format'
-import { Button } from './ui/button'
-import { Pencil, Plus, Trash } from 'lucide-react'
-import { useProductStore } from '@/store/productStore'
-import { ConfirmationDialog } from '@/components/dialog/ConfirmationDialog'
+import React, { useMemo, useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { DateBadge } from '@/components/dataTable/products/dateBadge';
+import { useConfigStore } from '@/store/configStore';
+import { useCategoriesStore } from '@/store/categoriesStore';
+import { EditableInput } from '@/components/inputs/EditableInput';
+import { EditableSelect } from '@/components/inputs/EditableSelect';
+import { formatPrice } from '@/utils/format';
+import { Button } from './ui/button';
+import { Calculator, Pencil, Trash } from 'lucide-react';
+import { useProductStore } from '@/store/productStore';
+import { ConfirmationDialog } from '@/components/dialog/ConfirmationDialog';
+import { Link } from 'react-router-dom';
 
 export const ProductCard = ({ product, handleEdit }) => {
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
-  const { categories } = useCategoriesStore()
-  const { config, currency } = useConfigStore()
-  const { deleteProduct } = useProductStore()
-  const roundPrice = config?.roundPrice
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const { categories } = useCategoriesStore();
+  const { config, currency } = useConfigStore();
+  const { deleteProduct } = useProductStore();
+  const roundPrice = config?.roundPrice;
   const categoryOptions = useMemo(
     () =>
       categories.map((cat) => ({
@@ -25,54 +26,60 @@ export const ProductCard = ({ product, handleEdit }) => {
         label: cat.name,
       })),
     [categories]
-  )
+  );
 
   const handleDeleteConfirmation = (confirmed) => {
-    setIsConfirmDialogOpen(false)
+    setIsConfirmDialogOpen(false);
     if (confirmed) {
-      setIsDeleting(true)
-      deleteProduct(product.id)
+      setIsDeleting(true);
+      deleteProduct(product.id);
     }
-  }
+  };
 
   const onDeleteClick = () => {
-    setIsConfirmDialogOpen(true)
-  }
+    setIsConfirmDialogOpen(true);
+  };
 
   return (
     <Card
       key={product.id}
       id="card-product"
-      className={`group relative flex flex-col bg-white dark:bg-secondary hover:shadow-2xl hover:shadow-primary/10 p-4 min-h-[440px] product-card transition-opacity duration-400 ${isDeleting ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
+      className={`group dark:bg-secondary hover:shadow-primary/10 product-card relative flex min-h-[440px] flex-col bg-white p-4 transition-opacity duration-400 hover:shadow-2xl ${isDeleting ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}`}
     >
-      <div className="top-5 left-0 absolute flex justify-between gap-2 px-1 w-full">
+      <div className="absolute top-5 left-0 flex w-full justify-between gap-2 px-1">
         <DateBadge date={product.createdAt} />
-        <span className="z-10 bg-accent mr-4 p-1 px-3 rounded-full text-[8px] text-primary-foreground uppercase">
+        <span className="bg-accent text-primary-foreground z-10 mr-4 rounded-full p-1 px-3 text-[8px] uppercase">
           {product.unity}
         </span>
       </div>
       <div
-        className="relative flex justify-center items-center bg-white bg-contain bg-no-repeat bg-center rounded-md w-full h-48 image"
+        className="image relative flex h-48 w-full items-center justify-center rounded-md bg-white bg-contain bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${product.image})` }}
       >
         <div
-          className="top-0 left-0 z-10 absolute flex justify-center items-center opacity-0 group-hover:opacity-100 rounded-md w-full h-full transition-opacity duration-300"
+          className="absolute top-0 left-0 z-10 flex h-full w-full items-center justify-center rounded-md opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           id="card-acctions"
         >
-          <div className='flex justify-center items-center gap-4 bg-black/20 p-2 rounded-sm w-3/4'>
+          <div className="flex w-3/4 items-center justify-center gap-4 rounded-sm bg-black/20 p-2">
             <div>
-              <Button variant="outline" className="w-8 h-8">
-                <Pencil className="text-grey-300" />
-              </Button>
+              <Link to={`/productos/editar/${product.slugs_url}`}>
+                <Button variant="outline" className="h-8 w-8">
+                  <Pencil className="text-grey-300" />
+                </Button>
+              </Link>
             </div>
             <div>
-              <Button variant="outline" className="w-8 h-8" onClick={onDeleteClick}>
+              <Button
+                variant="outline"
+                className="h-8 w-8"
+                onClick={onDeleteClick}
+              >
                 <Trash className="text-grey-300" />
               </Button>
             </div>
             <div>
-              <Button variant="outline" className="w-8 h-8">
-                <Plus className="text-grey-300" />
+              <Button variant="outline" className="h-8 w-8">
+                <Calculator className="text-grey-300" />
               </Button>
             </div>
           </div>
@@ -85,7 +92,7 @@ export const ProductCard = ({ product, handleEdit }) => {
         description="Esta acción eliminará el producto permanentemente."
       />
       <div className="flex justify-center gap-2 text-center">
-        <span className="-mb-4 text-[8px] text-muted-foreground uppercase line-clamp-1">
+        <span className="text-muted-foreground -mb-4 line-clamp-1 text-[8px] uppercase">
           {product.slugs.slice(0, 3).join(', ')}
         </span>
       </div>
@@ -95,12 +102,12 @@ export const ProductCard = ({ product, handleEdit }) => {
             <div className="flex items-center gap-2">
               <div className="flex flex-col">
                 <span className="text-[10px] uppercase">Categoría</span>
-                <div className="bg-primary mt-1 p-1 px-2 rounded-full text-[10px] text-white uppercase">
+                <div className="bg-primary mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase">
                   <EditableSelect
                     value={product.categorie.name}
                     options={categoryOptions}
                     onBlur={(e) => {
-                      handleEdit('categorie_id', e, product.id)
+                      handleEdit('categorie_id', e, product.id);
                     }}
                     placeholder="Selecciona una categoría"
                   />
@@ -109,11 +116,11 @@ export const ProductCard = ({ product, handleEdit }) => {
               {product.brand === null && (
                 <div className="flex flex-col">
                   <span className="text-[10px] uppercase">Marca</span>
-                  <div className="bg-primary mt-1 p-1 px-2 rounded-full text-[10px] text-white uppercase">
+                  <div className="bg-primary mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase">
                     <EditableInput
                       value={'N/A'}
                       onBlur={(e) => {
-                        handleEdit('brand', e.target.value, product.id)
+                        handleEdit('brand', e.target.value, product.id);
                       }}
                     />
                   </div>
@@ -126,11 +133,11 @@ export const ProductCard = ({ product, handleEdit }) => {
           {product.brand && (
             <>
               <span className="text-[10px] uppercase">Marca</span>
-              <div className="bg-primary mt-1 p-1 px-2 rounded-full text-[10px] text-white uppercase">
+              <div className="bg-primary mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase">
                 <EditableInput
                   value={product.brand}
                   onBlur={(e) => {
-                    handleEdit('brand', e.target.value, product.id)
+                    handleEdit('brand', e.target.value, product.id);
                   }}
                 />
               </div>
@@ -138,17 +145,17 @@ export const ProductCard = ({ product, handleEdit }) => {
           )}
         </div>
       </div>
-      <span className="-mt-2 font-bold lg:text-md text-sm xl:text-lg text-center uppercase line-clamp-2 text-pretty whitespace-normal">
+      <span className="lg:text-md -mt-2 line-clamp-2 text-center text-sm font-bold text-pretty whitespace-normal uppercase xl:text-lg">
         <EditableInput
           value={product.name}
           onBlur={(e) => {
-            handleEdit('name', e.target.value, product.id)
+            handleEdit('name', e.target.value, product.id);
           }}
         />
       </span>
-      <div className="bottom-5 left-0 absolute gap-4 grid grid-cols-2 px-2 w-full">
+      <div className="absolute bottom-5 left-0 grid w-full grid-cols-2 gap-4 px-2">
         <div className="">
-          <p className="font-light text-[10px] uppercase">Venta</p>
+          <p className="text-[10px] font-light uppercase">Venta</p>
           <div
             className={`text-xl font-bold ${currency === 'USD' ? 'text-usd' : 'text-primary'}`}
           >
@@ -160,14 +167,14 @@ export const ProductCard = ({ product, handleEdit }) => {
               }
               type="number"
               onBlur={(e) => {
-                handleEdit('price', e.target.value, product.id)
+                handleEdit('price', e.target.value, product.id);
               }}
             />
           </div>
         </div>
         <div className="text-end">
-          <p className="font-light text-[10px] uppercase">Entrada</p>
-          <div className="font-bold text-xl">
+          <p className="text-[10px] font-light uppercase">Entrada</p>
+          <div className="text-xl font-bold">
             <EditableInput
               value={
                 currency === 'USD'
@@ -176,14 +183,14 @@ export const ProductCard = ({ product, handleEdit }) => {
               }
               type="number"
               onBlur={(e) => {
-                handleEdit('price_ent', e.target.value, product.id)
+                handleEdit('price_ent', e.target.value, product.id);
               }}
             />
           </div>
         </div>
       </div>
     </Card>
-  )
-}
+  );
+};
 
-export default ProductCard
+export default ProductCard;

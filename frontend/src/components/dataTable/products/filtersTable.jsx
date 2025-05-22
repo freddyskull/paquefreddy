@@ -125,7 +125,7 @@ export const FiltersTable = ({
           <label htmlFor="category" className="text-[10px] uppercase">
             Categoría
           </label>
-          <Select value={columnFilters[2].value} onValueChange={setSelectedCategory}>
+          <Select value={columnFilters[1].value} onValueChange={setSelectedCategory}>
             <SelectTrigger id="category" className="mt-2 w-full">
               <SelectValue
                 placeholder="Seleccionar categoría"

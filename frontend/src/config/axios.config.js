@@ -26,6 +26,10 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
+        // Evitar bucle infinito en la página de error
+        if (!error.response && window.location.pathname !== '/error-conexion') {
+            window.location.href = '/error-conexion';
+        }
         return Promise.reject(error);
     }
 );

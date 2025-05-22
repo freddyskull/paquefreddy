@@ -11,6 +11,7 @@ import { Calculator, Pencil, Trash } from 'lucide-react';
 import { useProductStore } from '@/store/productStore';
 import { ConfirmationDialog } from '@/components/dialog/ConfirmationDialog';
 import { Link } from 'react-router-dom';
+import { UnityBadge } from '@/components/dataTable/products/unityBadge';
 
 export const ProductCard = ({ product, handleEdit }) => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -48,8 +49,8 @@ export const ProductCard = ({ product, handleEdit }) => {
     >
       <div className="absolute top-5 left-0 flex w-full justify-between gap-2 px-1">
         <DateBadge date={product.createdAt} />
-        <span className="bg-accent text-primary-foreground z-10 mr-4 rounded-full p-1 px-3 text-[8px] uppercase">
-          {product.unity}
+        <span className="mr-2 -mt-1 z-10">
+          <UnityBadge unity={product.unity} />
         </span>
       </div>
       <div

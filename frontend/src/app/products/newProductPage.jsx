@@ -26,7 +26,7 @@ const productSchema = z
     brand: z.string().optional(),
     bundle: z.number().optional(),
     sell_unity: z.boolean().optional(),
-    expiration: z.string().optional(),
+    expiration: z.string().optional().default(null),
     unity: z.string().optional(),
     supplier_id: z.number().optional(),
     categorie_id: z.number().optional(),
@@ -45,7 +45,6 @@ export const NewProductPage = ({ product }) => {
   let dolar = isLoadingConfig ? 0 : config.dolar
   const { suppliers, isLoading: isLoadingSuppliers } = useSuppliersStore()
   const { createProduct, updateProduct } = useProductStore()
-  // const [slugs, setSlugs] = useState(['caramelos', 'dulces', 'barato', 'nano'])
   const [slugs, setSlugs] = useState(product?.slugs || [])
   const defaultCategory = categories.find(
     (category) => category.slug_url === config.default_categories_slug

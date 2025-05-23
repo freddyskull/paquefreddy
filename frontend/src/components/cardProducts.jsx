@@ -9,7 +9,7 @@ import { formatPrice } from '@/utils/format';
 import { Button } from './ui/button';
 import { Calculator, Pencil, Trash } from 'lucide-react';
 import { useProductStore } from '@/store/productStore';
-import { ConfirmationDialog } from '@/components/dialog/ConfirmationDialog';
+import { ConfirmationDialog } from '@/components/dialogs/ConfirmationDialog';
 import { Link } from 'react-router-dom';
 import { UnityBadge } from '@/components/dataTable/products/unityBadge';
 

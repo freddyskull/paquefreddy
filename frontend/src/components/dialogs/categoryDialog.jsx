@@ -30,7 +30,7 @@ export const CategoryDialog = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="bg-transparent border-slate-300 w-full font-light text-primary uppercase">
+        <Button variant="outline" className="bg-transparent border-slate-300 w-full font-light text-primary uppercase px-2!">
           Nueva categoría
         </Button>
       </DialogTrigger>

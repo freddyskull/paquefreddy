@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { axiosInstance } from '../config/axios.config'
 import { toast } from "sonner"
-import { errorHandler } from '../utils/errorHandler'
+import { handleError } from '../utils/errorHandler'
 
 export const useSuppliersStore = create((set, get) => ({
   suppliers: [],
@@ -16,7 +16,7 @@ export const useSuppliersStore = create((set, get) => ({
       const response = await axiosInstance.get('suppliers')
       set({ suppliers: response.data })
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })
@@ -30,7 +30,7 @@ export const useSuppliersStore = create((set, get) => ({
       const response = await axiosInstance.get(`suppliers/${id}`)
       set({ selectedSupplier: response.data })
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })
@@ -48,7 +48,7 @@ export const useSuppliersStore = create((set, get) => ({
       toast("Proveedor creado exitosamente")
       return newSupplier
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
       throw error
     } finally {
@@ -69,7 +69,7 @@ export const useSuppliersStore = create((set, get) => ({
       toast("Proveedor actualizado exitosamente")
       return updatedSupplier
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
       throw error
     } finally {
@@ -92,7 +92,7 @@ export const useSuppliersStore = create((set, get) => ({
       toast("Proveedor actualizado exitosamente")
       return updatedSupplier
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
       throw error
     } finally {
@@ -110,7 +110,7 @@ export const useSuppliersStore = create((set, get) => ({
       toast("Proveedor eliminado exitosamente")
       return true
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
       throw error
     } finally {

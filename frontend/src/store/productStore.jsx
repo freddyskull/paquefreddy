@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { axiosInstance } from '../config/axios.config'
 import { toast } from "sonner"
-import { errorHandler } from '../utils/errorHandler'
+import { handleError } from '../utils/errorHandler'
 
 export const useProductStore = create((set, get) => ({
   products: [],
@@ -16,7 +16,7 @@ export const useProductStore = create((set, get) => ({
       const response = await axiosInstance.get('products')
       set({ products: response.data })
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })
@@ -30,7 +30,7 @@ export const useProductStore = create((set, get) => ({
       const response = await axiosInstance.get(`products/${id}`)
       return response.data
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })
@@ -46,7 +46,7 @@ export const useProductStore = create((set, get) => ({
       set({ products: [...newProduct] })
       toast("Producto creado exitosamente")
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })
@@ -65,7 +65,7 @@ export const useProductStore = create((set, get) => ({
       })
       toast("Producto actualizado exitosamente")
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })
@@ -87,7 +87,7 @@ export const useProductStore = create((set, get) => ({
       set({ products: newProducts })
       toast("Producto actualizado exitosamente")
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })
@@ -103,7 +103,7 @@ export const useProductStore = create((set, get) => ({
       set({ products: products.filter((p) => p.id !== id) })
       toast("Producto eliminado exitosamente")
     } catch (error) {
-      errorHandler.handleApiError(error)
+      handleError(error)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })

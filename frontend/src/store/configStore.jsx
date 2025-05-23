@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { axiosInstance } from '../config/axios.config'
-import { errorHandler } from '../utils/errorHandler'
+import { handleError } from '../utils/errorHandler'
 import { toast } from "sonner"
 
 export const useConfigStore = create((set) => {
@@ -23,7 +23,7 @@ export const useConfigStore = create((set) => {
         const response = await axiosInstance.get('config')
         set({ config: response.data })
       } catch (error) {
-        errorHandler.handleApiError(error)
+        handleError(error)
         set({ error: error.message })
       } finally {
         set({ isLoading: false })
@@ -39,7 +39,7 @@ export const useConfigStore = create((set) => {
         set({ config: updatedConfig })
         toast("Configuración actualizada exitosamente")
       } catch (error) {
-        errorHandler.handleApiError(error)
+        handleError(error)
         set({ error: error.message })
       } finally {
         set({ isLoading: false })

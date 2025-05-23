@@ -19,13 +19,13 @@ const productSchema = z
     name: z.string().min(2, 'tener al menos 2 caracteres'),
     stock: z.number().min(0, 'debe ser mayor o igual a 0'),
     status: z.boolean().optional(),
-    sell_unity: z.boolean().optional(),
     price: z.number().min(0, 'debe ser mayor o igual a 0'),
     price_ent: z.number().min(0, 'debe ser mayor o igual a 0'),
     slugs: z.array(z.string()).default(null),
     image: z.string().optional(),
     brand: z.string().optional(),
     bundle: z.number().optional(),
+    sell_unity: z.boolean().optional(),
     expiration: z.string().optional(),
     unity: z.string().optional(),
     supplier_id: z.number().optional(),
@@ -37,6 +37,7 @@ const productSchema = z
   })
 
 export const NewProductPage = ({ product }) => {
+  
   const navigate = useNavigate()
   const { categories, isLoading: isLoadingCategories } = useCategoriesStore()
   const { config, currency, isLoading: isLoadingConfig } = useConfigStore()
@@ -81,30 +82,13 @@ export const NewProductPage = ({ product }) => {
       image: product?.image || '',
       brand: product?.brand || '',
       bundle: product?.bundle || 0,
+      sell_unity: product?.sell_unity || false,
       expiration: product?.expiration ? new Date(product.expiration).toISOString().split('T')[0] : '',
       unity: product?.unity || 'und',
       supplier_id: product?.supplier_id || undefined,
       categorie_id: product?.categorie_id || defaultCategoryId,
     },
     mode: 'onChange',
-    // {
-    //   name: 'Oka loka',
-    //   stock: 10,
-    //   status: true,
-    //   price: 25,
-    //   price_ent: 20,
-    //   slugs: [],
-    //   image:
-    //     'https://th.bing.com/th/id/OIP.7sXZgcmN0lAWSj6Czwt5igHaHd?rs=1&pid=ImgDetMain',
-    //   brand: 'Oka loka',
-    //   bundle: 12,
-    //   expiration: '2025-05-11',
-    //   unity: 'und',
-    //   supplier_id: 1,
-    //   categorie_id: 1,
-    //   sell_unity: false,
-    //   currency: 'BS',
-    // },
   })
 
   
@@ -136,7 +120,7 @@ export const NewProductPage = ({ product }) => {
       } else {
         createProduct(newProduct)
       }
-      form.reset()
+      
       setSlugs([])
       navigate('/productos')
     } catch (error) {

@@ -57,6 +57,7 @@ export const useProductStore = create((set, get) => ({
   updateProduct: async (product) => {
     set({ isLoading: true, error: null })
     try {
+      product.expiration == '' ? product.expiration = null : product.expiration 
       const response = await axiosInstance.put(`products/${product.id}`, product)
       const updatedProduct = response.data.data
       const { products } = get()

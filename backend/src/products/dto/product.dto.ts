@@ -110,6 +110,14 @@ export class productDto {
   @IsString({ message: 'La unidad debe ser una cadena de texto' })
   unity: string;
 
+  @ApiProperty({
+    description: 'Campo para determinar si el producto se vende por el tipo de unidad',
+    default: false
+  })
+  @IsOptional()
+  @IsBoolean({ message: 'La unidad debe ser un valor booleano' })
+  sell_unity: boolean;
+
   @ApiProperty()
   @IsOptional()
   @IsNumber({}, { message: 'El ID del proveedor debe ser un número' })

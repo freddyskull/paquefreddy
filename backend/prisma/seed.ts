@@ -136,6 +136,7 @@ async function main() {
         slugs_url: 'harina-pan',
         brand: 'polar',
         unity: 'kg',
+        sell_unity: false,
         categorie_id: defaultCategoryId,
         status: true
       },
@@ -144,6 +145,7 @@ async function main() {
         stock: 10,
         price: 2.5,
         price_ent: 1.95,
+        sell_unity: false,
         image:
           'https://www.alimentosmary.com/wp-content/uploads/2017/08/arroz-esmeralda-alimentos-mary.jpg',
         slugs: ['Mary', 'arroz', 'arroz-esmeralda', 'esmeralda'],
@@ -157,6 +159,7 @@ async function main() {
         stock: 20,
         price: 2.47,
         price_ent: 1.87,
+        sell_unity: false,
         slugs: ['Leche compreta', 'leche', 'leche-natulac'],
         image:
           'https://costazul.sigo.com.ve/images/thumbs/0021683_leche-entera-uht-natulac-946ml_450.jpeg',
@@ -170,13 +173,13 @@ async function main() {
         stock: 20,
         price: 6.5,
         price_ent: 5,
+        sell_unity: true,
         slugs: ['queso', 'queso-de-res', 'queso-res'],
         image:
           'https://img.freepik.com/foto-gratis/queso-blanco-fresco-rodajas-leche-vaca-aislado-sobre-fondo-blanco-vista-superior_123827-27809.jpg',
         slugs_url: 'queso-de-res',
         brand: 'res',
         categorie_id: 2,
-        sell_unity: true,
         unity: 'kg',
       },
       {
@@ -184,6 +187,7 @@ async function main() {
         stock: 20,
         price: 2.44,
         price_ent: 3.20,
+        sell_unity: false,
         slugs: ['papel', 'rosal', 'rosal-plus', '400h', '4 rollos'],
         image:
           'https://caraotamarket.com/6739-large_default/papel-rosal-plus-400-hojas-4rollos.jpg',
@@ -197,6 +201,7 @@ async function main() {
         stock: 20,
         price: 0.68,
         price_ent: 0.97,
+        sell_unity: false,
         slugs: ['jabon', 'baño', 'lemon'],
         image:
           'https://mercayahorra.com/wp-content/uploads/2020/06/Jab%C3%B2n-Lem%C3%B2n-x-130g.jpg',

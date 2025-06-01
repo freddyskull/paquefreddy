@@ -19,6 +19,10 @@ import {
 const data = {
   navMain: [
     {
+      title: "Home",
+      url: "/home",
+    },
+    {
       title: "Productos",
       url: "/productos",
       items: [

@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
+  getPaginationRowModel,
 } from '@tanstack/react-table'
 import { Card, CardContent } from "@/components/ui/card"
 import { ProductCard } from "@/components/cardProducts"
@@ -17,23 +18,6 @@ export const ProductsDataTable = ({ data }) => {
   const { patchProduct } = useProductStore()
 
   const { config, currency, isLoading: isLoadingConfig } = useConfigStore()
-  const [itemsPerPage] = useState(100)
-  const [visibleItems, setVisibleItems] = useState(itemsPerPage)
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
-
-  // Función para manejar el infinite scroll
-  const handleScroll = (event) => {
-    const { scrollTop, scrollHeight, clientHeight } = event.target;
-    if (scrollTop + clientHeight >= scrollHeight - 100 && visibleItems < data.length) {
-      setIsLoadingMore(true);
-      setVisibleItems(prev => {
-        const newVisibleItems = Math.min(prev + itemsPerPage, data.length);
-        // Simular un pequeño delay para mostrar el mensaje de carga
-        setTimeout(() => setIsLoadingMore(false), 500);
-        return newVisibleItems;
-      });
-    }
-  };
 
   const columns = useMemo(() => [
     {
@@ -125,7 +109,7 @@ export const ProductsDataTable = ({ data }) => {
     },
   ], [])
 
-  const memoizedData = useMemo(() => data.slice(0, visibleItems), [data, visibleItems])
+  const memoizedData = useMemo(() => data, [data])
   const [searchTerm, setSearchTerm] = useState('')
   const [columnFilters, setColumnFilters] = useState([
     {
@@ -142,6 +126,11 @@ export const ProductsDataTable = ({ data }) => {
     }
   ])
 
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 30,
+  })
+
   const table = useReactTable({
     data: memoizedData,
     columns,
@@ -149,10 +138,13 @@ export const ProductsDataTable = ({ data }) => {
     getCoreRowModel: getCoreRowModel(),
     state: {
       columnFilters,
+      pagination,
     },
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
   })
 
 
@@ -193,7 +185,7 @@ export const ProductsDataTable = ({ data }) => {
         config={config}
         isLoadingConfig={isLoadingConfig}
       />
-      <CardContent className="h-full overflow-y-auto" onScroll={handleScroll}>
+      <CardContent className="h-full overflow-y-auto">
         <div className="gap-4 grid xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 xl:grid-cols-4 transition-all duration-500">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
@@ -203,13 +195,6 @@ export const ProductsDataTable = ({ data }) => {
             <div className="flex justify-center items-center col-span-full w-full h-[80vh]">
               <h1 className="font-bold text-2xl text-center uppercase">
                 Cargando productos...
-              </h1>
-            </div>
-          )}
-          {isLoadingMore && (
-            <div className="flex justify-center items-center col-span-full w-full py-4">
-              <h1 className="text-xl text-center uppercase">
-                Cargando más productos...
               </h1>
             </div>
           )}

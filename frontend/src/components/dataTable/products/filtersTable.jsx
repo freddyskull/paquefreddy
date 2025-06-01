@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { PlusIcon, Calculator, BrushCleaningIcon, XIcon } from 'lucide-react'
 import { CategoryDialog } from '@/components/dialogs/categoryDialog'
 import { Link } from 'react-router-dom'
+import { CalculateProducts } from '../calculate/calculateProducts'
 
 export const FiltersTable = ({
   categories,
@@ -94,6 +95,12 @@ export const FiltersTable = ({
         value: ""
       }
     ])
+  }
+
+  const [open, setOpen] = useState(false)
+
+  const onOpenChange = (open) => {
+    setOpen(open)
   }
 
   return (
@@ -194,13 +201,11 @@ export const FiltersTable = ({
           </Button>
         )}
         <Link to="/productos/nuevo">
-          <Button variant="outline">
+          <Button variant="outline" className="cursor-pointer text-foreground/80 bg-background! p-2 px-3 border border-slate-200 dark:border-slate-700 hover:bg-primary/20! hover:text-foreground transition-all duration-300 rounded-md">
             <PlusIcon />
           </Button>
         </Link>
-        <Button variant="outline">
-          <Calculator />
-        </Button>
+        <CalculateProducts open={open} onOpenChange={onOpenChange} />
       </div>
     </div>
   )

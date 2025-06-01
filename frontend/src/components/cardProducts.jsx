@@ -18,7 +18,8 @@ export const ProductCard = ({ product, handleEdit }) => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const { categories } = useCategoriesStore();
   const { config, currency } = useConfigStore();
-  const { deleteProduct } = useProductStore();
+  const { deleteProduct, addSelectedProduct, selectedProducts } =
+    useProductStore();
   const roundPrice = config?.roundPrice;
   const categoryOptions = useMemo(
     () =>
@@ -41,6 +42,8 @@ export const ProductCard = ({ product, handleEdit }) => {
     setIsConfirmDialogOpen(true);
   };
 
+  const isProductSelected = selectedProducts.some((p) => p.id === product.id);
+
   return (
     <Card
       key={product.id}
@@ -49,7 +52,7 @@ export const ProductCard = ({ product, handleEdit }) => {
     >
       <div className="absolute top-5 left-0 flex w-full justify-between gap-2 px-1">
         <DateBadge date={product.createdAt} />
-        <span className="mr-2 -mt-1 z-10">
+        <span className="z-10 -mt-1 mr-2">
           <UnityBadge unity={product.unity} />
         </span>
       </div>
@@ -79,8 +82,12 @@ export const ProductCard = ({ product, handleEdit }) => {
               </Button>
             </div>
             <div>
-              <Button variant="outline" className="h-8 w-8">
-                <Calculator className="text-grey-300" />
+              <Button
+                variant="outline"
+                className={`h-8 w-8 ${isProductSelected ? 'bg-primary! text-white/80 hover:text-white' : ''}`}
+                onClick={() => addSelectedProduct(product)}
+              >
+                <Calculator className="text-grey-600" />
               </Button>
             </div>
           </div>

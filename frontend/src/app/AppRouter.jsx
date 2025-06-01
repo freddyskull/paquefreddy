@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { ProductPage } from './products/productPage'
 import { NewProductPage } from './products/newProductPage'
 import { EditProductPage } from './products/editProductPage'
@@ -13,6 +13,7 @@ export const AppRouter = () => {
         <Route path='/productos/nuevo' element={<NewProductPage />} />
         <Route path='/productos/editar/:id' element={<EditProductPage />} />
         <Route path='/error-conexion' element={<ErrorConexion />} />
+        <Route path='/productos/editar/' element={<Navigate to="/productos" />} />
       </Routes>
     </Router>
   )

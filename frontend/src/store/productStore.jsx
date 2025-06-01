@@ -8,6 +8,8 @@ export const useProductStore = create((set, get) => ({
   selectedProduct: null,
   isLoading: false,
   error: null,
+  selectedProducts: [],
+  calculateTotal: {totalBs: 0, totalDolar: 0},
 
   // Fetch all products
   fetchProducts: async () => {
@@ -53,6 +55,11 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
+  // Clear selected products
+  clearSelectedAllProducts: () => {
+    set({ selectedProducts: [], calculateTotal: {totalBs: 0, totalDolar: 0} })
+  },
+
   // Update a product completely
   updateProduct: async (product) => {
     set({ isLoading: true, error: null })
@@ -71,6 +78,45 @@ export const useProductStore = create((set, get) => ({
     } finally {
       set({ isLoading: false })
     }
+  },
+
+  // Add product to selectedProducts
+  addSelectedProduct: (product) => {
+    const newProduct = {...product, quantity: 1}
+    const { selectedProducts } = get()
+    if (!selectedProducts.some(p => p.id === product.id)) {
+      set({ selectedProducts: [...selectedProducts, newProduct] })
+    }
+    toast(`Se agregó "${product.name}" a la calculadora.`)
+  },
+
+  // toggle selected product
+  toggleSelectedProduct: (productId) => {
+    const { selectedProducts, products } = get()
+    if (selectedProducts.some(p => p.id === productId)) {
+      set({ selectedProducts: selectedProducts.filter(p => p.id !== productId) })
+    } else {
+      const product = products.find(p => p.id === productId)
+      const newProduct = {...product, quantity: 1}
+      if (product) {
+        set({ selectedProducts: [...selectedProducts, newProduct] })
+      }
+    }
+  },
+
+  // update selected product quantity
+  updateSelectedProductQuantity: (productId, quantity) => {
+    const { selectedProducts } = get()
+    const updatedProducts = selectedProducts.map(p =>
+      p.id === productId ? { ...p, quantity } : p
+    )
+    set({ selectedProducts: updatedProducts })
+  },
+
+  // Remove product from selectedProducts
+  removeSelectedProduct: (productId) => {
+    const { selectedProducts } = get()
+    set({ selectedProducts: selectedProducts.filter(p => p.id !== productId) })
   },
 
   // Partial update of a product

@@ -107,7 +107,7 @@ export const ProductsDataTable = ({ data }) => {
     },
   ], [])
 
-  const memoizedData = useMemo(() => data, [data])
+  const memoizedData = useMemo(() => data.slice(0, 30), [data])
   const [searchTerm, setSearchTerm] = useState('')
   const [columnFilters, setColumnFilters] = useState([
     {

@@ -39,7 +39,7 @@ export const NoImageProduct = ({ products }) => {
   };
 
   return (
-    <Card>
+    <Card className="bg-white dark:bg-secondary">
       <CardHeader>
         <CardTitle className="flex items-center justify-between gap-2 text-md font-bold uppercase">
           <h2>

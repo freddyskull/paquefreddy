@@ -18,7 +18,7 @@ export const SlideProducts = ({ products }) => {
     const autoplay = new Autoplay({ delay: 2000 })
 
   return (
-    <Card>
+    <Card className="bg-white dark:bg-secondary">
       <CardContent>
         <div className="flex gap-24 items-center justify-center xl:justify-between">
           <div className='xl:ml-6 w-[50%] hidden md:block'>

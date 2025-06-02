@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 export const LastProducts = ({ products }) => {
     return (    
-        <Card>
+        <Card className="bg-white dark:bg-secondary">
             <CardHeader>
                 <CardTitle className="text-md font-bold uppercase flex items-center gap-2 justify-between">
                     <h2>Subidos recientemente <span className="ml-1 text-xs text-foreground/50">(últimos 5)</span></h2>

@@ -19,7 +19,7 @@ export const Home = () => {
       <div className="flex gap-8 px-4 overflow-y-auto">
         <div className="flex w-full flex-col gap-8 2xl:w-[65%]">
           <div className="grid grid-cols-2 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="col-span-2 lg:col-span-1">
+            <Card className="col-span-2 lg:col-span-1 bg-white dark:bg-secondary">
               <CardContent>
                 <div className="flex flex-col items-center justify-center gap-2 2xl:flex-row 2xl:justify-between">
                   <div
@@ -44,7 +44,7 @@ export const Home = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="col-span-2 lg:col-span-1">
+            <Card className="col-span-2 lg:col-span-1 bg-white dark:bg-secondary">
               <CardContent>
                 <div className="flex flex-col items-center justify-center gap-2 2xl:flex-row 2xl:justify-between">
                   <div
@@ -69,7 +69,7 @@ export const Home = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="col-span-2 lg:col-span-1">
+            <Card className="col-span-2 lg:col-span-1 bg-white dark:bg-secondary">
               <CardContent>
                 <div className="flex flex-col items-center justify-center gap-2 2xl:flex-row 2xl:justify-between">
                   <div
@@ -104,7 +104,7 @@ export const Home = () => {
           </div>
         </div>
         <div className="hidden flex-col gap-8 2xl:flex 2xl:w-[35%]">
-          <Card>
+          <Card className="bg-white dark:bg-secondary">
             <CardHeader>
               <CardTitle className="text-2xl font-bold uppercase">
                 Proveedores
@@ -128,8 +128,7 @@ export const Home = () => {
                 aspernatur assumenda laborum eveniet, non pariatur unde ducimus
                 explicabo facere. Fuga quos necessitatibus perferendis numquam
                 commodi deserunt maiores expedita! Quo odio vel error laborum
-                aliquam esse accusantium cupiditate temporibus ut aliquid
-                expedita, perspiciatis, pariatur sequi maiores ipsum rerum
+                asdasasdasds
                 nulla, dolore quasi quos ducimus totam ullam iusto maxime? Quos,
                 iure! Asperiores numquam eligendi distinctio similique magnam.
                 Ipsa deserunt, vero fuga, eveniet veniam tempora cum velit
@@ -141,7 +140,7 @@ export const Home = () => {
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white dark:bg-secondary">
             <CardHeader>
               <CardTitle className="text-2xl font-bold uppercase">
                 Proveedores

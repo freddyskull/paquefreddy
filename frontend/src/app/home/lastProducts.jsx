@@ -8,8 +8,8 @@ export const LastProducts = ({ products }) => {
     return (    
         <Card>
             <CardHeader>
-                <CardTitle className="text-xl font-bold uppercase flex items-center gap-2 justify-between">
-                    <h2>Subidos recientemente <span className="text-xs text-foreground/50">(últimos 5)</span></h2>
+                <CardTitle className="text-md font-bold uppercase flex items-center gap-2 justify-between">
+                    <h2>Subidos recientemente <span className="ml-1 text-xs text-foreground/50">(últimos 5)</span></h2>
                     <Link to="/productos" className="text-xs text-foreground/50 transition-colors duration-200 hover:text-primary">Ver todos</Link>
                 </CardTitle>
             </CardHeader>
@@ -23,7 +23,7 @@ export const LastProducts = ({ products }) => {
                         `}
                     </style>
                     <div className="overflow-y-hidden flex flex-col gap-4">
-                    {products.slice(0, 5).map((product) => (
+                    {products.slice(5, 10).map((product) => (
                         <div key={product.id} className="flex items-center gap-6 w-full">
                             <img src={product.image} alt={product.name} className="w-18 bg-white h-18 object-cover rounded-full"/>
                             <div className="w-full">

@@ -26,9 +26,9 @@ export const SlideProducts = ({ products }) => {
             <p className="text-foreground text-md! mt-4 hidden xl:block">
             En esta sección se muestran los <b>últimos 5 productos</b> que se han agregado mas recientemente al stock, si deseas ver todos los productos puedes ir a la sección de productos, donde podras buscar y filtrar todos los productos.
             </p>
-            <div className="flex items-center gap-2 mt-4">
+            {/* <div className="flex items-center gap-2 mt-4">
               <span className="text-xs text-primary/80 uppercase mt-2">El ultimo producto fue agregado el {new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(products[0].createdAt))}</span>
-            </div>
+            </div> */}
             
             <Link to="/productos" className="mt-6">
               <Button className="mt-6 uppercase" size="lg">Ver todos</Button>

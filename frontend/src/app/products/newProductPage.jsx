@@ -145,6 +145,7 @@ export const NewProductPage = ({ product }) => {
                 isLoadingSuppliers={isLoadingSuppliers}
                 currency={currency}
                 product={product}
+                watch={formProduct}
               />
             </div>
             <div className="hidden xl:flex flex-col items-center md:w-[40%] 2xl:w-1/4">

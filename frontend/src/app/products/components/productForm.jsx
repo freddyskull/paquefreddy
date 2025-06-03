@@ -7,6 +7,8 @@ import { ChadCnFormSelect } from '@/components/inputs/chadCnFormSelect';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { CategoryDialog } from '@/components/dialogs/categoryDialog';
+import { Link2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const ProductForm = ({
   form,
@@ -20,7 +22,16 @@ export const ProductForm = ({
   isLoadingSuppliers,
   currency,
   product,
+  watch,
 }) => {
+  const handleSetPrice = (percentage) => {
+    const price_ent = form.watch('price_ent');
+    const price = price_ent + (price_ent * percentage) / 100;
+    form.setValue('price', price);
+  };
+
+  const badgeClass = `cursor-pointer rounded-full border transition-colors duration-200 border-slate-300 hover:text-white px-2 py-1 text-xs ${currency === 'BS' ? 'hover:bg-primary hover:border-primary' : 'hover:bg-usd hover:border-usd'}`;
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -47,25 +58,70 @@ export const ProductForm = ({
             placeholder="Cantidad por caja"
           />
         </div>
-
-        <ChadCnFormInput
-          control={form.control}
-          name="image"
-          type="url"
-          label="Imágen"
-          placeholder="URL de la imágen del producto"
-        />
-
+        <div className="flex items-center gap-4">
+          <div className="w-full">
+            <ChadCnFormInput
+              control={form.control}
+              name="image"
+              type="url"
+              label="Imágen"
+              placeholder="URL de la imágen del producto"
+            />
+          </div>
+          <div className="flex w-32 flex-col items-start justify-center gap-2">
+            <p>Buscar imágen</p>
+            <Link
+              className="cursor-pointer"
+              size={15}
+              onClick={() =>
+                window.open(
+                  `https://www.bing.com/images/search?q=${encodeURIComponent(
+                    watch.name
+                  )}`,
+                  '_blank'
+                )
+              }
+            >
+              {watch.name.length > 0 &&
+                (currency === 'BS' ? (
+                  <Link2 className="text-primary" />
+                ) : (
+                  <Link2 className="text-usd" />
+                ))}
+            </Link>
+          </div>
+        </div>
         <div className="grid grid-cols-2 gap-4">
-          <ChadCnFormInput
-            control={form.control}
-            name="price_ent"
-            type="number"
-            step={0.01}
-            label={`Precio de entrada por ${currency}`}
-            min={0}
-            placeholder="Ingrese el precio de entrada del producto"
-          />
+          <div className="w-full">
+            <ChadCnFormInput
+              control={form.control}
+              name="price_ent"
+              type="number"
+              step={0.01}
+              label={`Precio de entrada por ${currency}`}
+              min={0}
+              placeholder="Ingrese el precio de entrada del producto"
+            />
+            <div
+              className={`mt-2 flex items-center gap-1 transition-opacity duration-200 ${watch.price_ent > 0 ? 'opacity-100' : 'opacity-0'}`}
+            >
+              <span className={badgeClass} onClick={() => handleSetPrice(5)}>
+                5%
+              </span>
+              <span className={badgeClass} onClick={() => handleSetPrice(10)}>
+                10%
+              </span>
+              <span className={badgeClass} onClick={() => handleSetPrice(20)}>
+                20%
+              </span>
+              <span className={badgeClass} onClick={() => handleSetPrice(30)}>
+                30%
+              </span>
+              <span className="text-xs font-bold">
+                Establecer porcentaje de ganancia
+              </span>
+            </div>
+          </div>
           <ChadCnFormInput
             control={form.control}
             name="price"
@@ -122,7 +178,7 @@ export const ProductForm = ({
           ) : (
             <div className="col-span-3 md:col-span-1">
               <div className="flex gap-2">
-                <div className='w-full'>
+                <div className="w-full">
                   <ChadCnFormSelect
                     control={form.control}
                     name="categorie_id"

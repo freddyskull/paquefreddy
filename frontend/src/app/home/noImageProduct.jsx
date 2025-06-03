@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import defaultImage from '/mood.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Pencil, Save, Search } from 'lucide-react';
+import { CopyIcon, Link2, Pencil, Save, Search } from 'lucide-react';
 import { useProductStore } from '@/store/productStore';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
@@ -77,10 +77,25 @@ export const NoImageProduct = ({ products }) => {
                     <div className="w-full">
                       <div className="flex w-full items-center justify-between gap-2">
                         <h2
-                          className="line-clamp-1 cursor-pointer text-base font-bold"
+                          className="line-clamp-1 cursor-pointer text-base font-bold flex items-center gap-2"
                           onClick={() => handleCopyName(product.name)}
                         >
-                          {product.name}
+                          {product.name} 
+                          <CopyIcon className="ml-2 cursor-pointer" size={15} onClick={() => handleCopyName(product.name)} />
+                          <Link
+                            className="ml-2 cursor-pointer"
+                            size={15}
+                            onClick={() =>
+                              window.open(
+                                `https://www.bing.com/images/search?q=${encodeURIComponent(
+                                  product.name
+                                )}`,
+                                '_blank'
+                              )
+                            }
+                          >
+                            <Link2 />
+                          </Link>
                         </h2>
                       </div>
                       <p className="text-base font-bold text-foreground/50 mt-1">{product.categorie.name}</p>

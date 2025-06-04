@@ -73,21 +73,21 @@ export const ProductCard = ({ product, handleEdit }) => {
               </Link>
             </div>
             <div>
-              <Button
-                variant="outline"
-                className="h-8 w-8"
-                onClick={onDeleteClick}
-              >
-                <Trash className="text-grey-300" />
-              </Button>
-            </div>
-            <div>
-              <Button
+            <Button
                 variant="outline"
                 className={`h-8 w-8 ${isProductSelected ? 'bg-primary! text-white/80 hover:text-white' : ''}`}
                 onClick={() => addSelectedProduct(product)}
               >
                 <Calculator className="text-grey-600" />
+              </Button>
+            </div>
+            <div>
+            <Button
+                variant="outline"
+                className="h-8 w-8"
+                onClick={onDeleteClick}
+              >
+                <Trash className="text-grey-300" />
               </Button>
             </div>
           </div>

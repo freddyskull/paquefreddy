@@ -9,7 +9,7 @@ export const useProductStore = create((set, get) => ({
   isLoading: false,
   error: null,
   selectedProducts: [],
-  calculateTotal: {totalBs: 0, totalDolar: 0},
+  calculateTotal: {totalBs: 0, totalDolar: 0, totalProfits: 0},
 
   // Fetch all products
   fetchProducts: async () => {
@@ -57,8 +57,10 @@ export const useProductStore = create((set, get) => ({
 
   // Clear selected products
   clearSelectedAllProducts: () => {
-    set({ selectedProducts: [], calculateTotal: {totalBs: 0, totalDolar: 0} })
+    set({ selectedProducts: [], calculateTotal: {totalBs: 0, totalDolar: 0, totalProfits: 0} })
   },
+
+  
 
   // Update a product completely
   updateProduct: async (product) => {
@@ -88,6 +90,21 @@ export const useProductStore = create((set, get) => ({
       set({ selectedProducts: [...selectedProducts, newProduct] })
     }
     toast(`Se agregó "${product.name}" a la calculadora.`)
+    get().calculateTotalProducts()
+  },
+
+  // calculate total
+  calculateTotalProducts: () => {
+    const { selectedProducts } = get()
+    let totalBs = 0;
+    let totalUsd = 0;
+    let totalProfits = 0;
+    selectedProducts.map(item => {
+      totalBs += item.price_bs * item.quantity;
+      totalUsd += item.price * item.quantity;
+      totalProfits += item.profit * item.quantity;
+    })
+    set({ calculateTotal: {totalBs, totalDolar: totalUsd, totalProfits} })
   },
 
   // toggle selected product
@@ -103,6 +120,7 @@ export const useProductStore = create((set, get) => ({
       }
     }
   },
+
 
   // update selected product quantity
   updateSelectedProductQuantity: (productId, quantity) => {

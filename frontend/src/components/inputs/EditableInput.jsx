@@ -42,7 +42,7 @@ export const EditableInput = ({
     <div className="flex items-center gap-2">
       <div className="flex-1">
         <div
-          className={`cursor-pointer ${isEditing ? 'hidden' : ''}`}
+          className={`cursor-pointer line-clamp-2 ${isEditing ? 'hidden' : ''}`}
           onDoubleClick={handleDoubleClick}
         >
           {value || placeholder}
@@ -50,7 +50,6 @@ export const EditableInput = ({
         <Input
           type={type}
           value={isEditing ? localValue : type === 'number' ? (value || '').toString().replace(',', '.') : value || ''}
-          
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={(e) => {

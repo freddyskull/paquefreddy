@@ -26,6 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { TotalCalculate } from './totalCalculate';
 
 export const CalculateProducts = ({ open, onOpenChange }) => {
   const {
@@ -74,7 +75,7 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
   }, [clearSelectedAllProducts]);
 
   useEffect(() => {
-    console.log(selectedProducts);
+    // console.log(selectedProducts);
   }, [selectedProducts]);
 
   useEffect(() => {
@@ -185,7 +186,8 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
               </Button>
             )}
           </div>
-          <div className="mt-2 flex max-h-[calc(100vh-20rem)] flex-col gap-2 overflow-auto">
+          {/* buscador  */}
+          <div className="mt-2 flex max-h-[30vh] flex-col gap-2 overflow-auto">
             {products.length > 0 &&
               searchTerm.length > 2 &&
               products
@@ -211,6 +213,7 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
                   </div>
                 ))}
           </div>
+          {/* lista de productos seleccionados */}
           <div className="dark:bg-secondary mt-2 h-[calc(100vh-13rem)] overflow-auto rounded-md bg-white p-4 dark:text-slate-200">
             {selectedProducts.length > 0 ? (
               <div className="flex flex-col gap-4">
@@ -239,6 +242,9 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
               </div>
             )}
           </div>
+          {/* Calculo de totales */}
+          <TotalCalculate selectedProducts={selectedProducts} />
+          {/* Dialogo de confirmacion */}
           <ConfirmationDialog
             isOpen={isConfirmDialogOpen}
             onClose={handleDeleteConfirmation}

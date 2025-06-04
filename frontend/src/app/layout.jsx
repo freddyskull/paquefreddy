@@ -24,7 +24,7 @@ export default function Layout({ children }) {
     const items = [];
     let currentPath = '';
     
-    pathSegments.forEach((segment, index) => {
+    pathSegments.forEach((segment) => {
       currentPath += `/${segment}`;
       items.push({
         label: segment.charAt(0).toUpperCase() + segment.slice(1),

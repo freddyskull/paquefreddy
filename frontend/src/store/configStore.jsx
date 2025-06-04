@@ -46,6 +46,21 @@ export const useConfigStore = create((set) => {
       }
     },
 
+    updateDolarPrice: async (dataDolar) => {
+      set({ isLoading: true, error: null })
+      try {
+        const response = await axiosInstance.patch('config', dataDolar)
+        const updatedConfig = response.data.data
+        set({ config: updatedConfig })
+        toast("Precio del dólar actualizado exitosamente")
+      } catch (error) {
+        handleError(error)
+        set({ error: error.message })
+      } finally {
+        set({ isLoading: false })
+      }
+    },
+
     // Set currency
     setCurrency: (currency) => {
       if (['USD', 'BS'].includes(currency)) {
@@ -53,6 +68,7 @@ export const useConfigStore = create((set) => {
         set({ currency })
       }
     },
+
 
     // Clear state
     clearState: () => {

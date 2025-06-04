@@ -19,7 +19,7 @@ export class ConfigService {
     return dato;
   }
 
-  async update(dto: any) {
+  async patch(dto: any) {
     const config = await this.findAll();
     const updatedConfig = await this.prisma.config.update({
       where: { id: 1 },

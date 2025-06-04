@@ -21,6 +21,10 @@ export class ConfigService {
 
   async patch(dto: any) {
     const config = await this.findAll();
+
+    if (dto.dolar !== undefined) {
+      dto.dolar = parseFloat(dto.dolar);
+    }
     const updatedConfig = await this.prisma.config.update({
       where: { id: 1 },
       data: { ...config, ...dto }

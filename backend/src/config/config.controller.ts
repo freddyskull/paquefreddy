@@ -15,6 +15,6 @@ export class ConfigController {
 
   @Patch()
   update(@Body() dto: ConfigDto) {
-    return this.configService.update(dto);
+    return this.configService.patch(dto);
   }
 }

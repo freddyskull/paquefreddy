@@ -9,7 +9,7 @@ export const useConfigStore = create((set) => {
     localStorage.setItem('currency', 'BS')
   }
   const defaultCurrency = localStorage.getItem('currency')
-  
+
   return {
     config: null,
     isLoading: true,

@@ -4,29 +4,32 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
-import { useProductStore } from '@/store/productStore';
+} from '@/components/ui/sheet'
+import { useProductStore } from '@/store/productStore'
 import {
   BrushCleaning,
   Calculator,
   CalculatorIcon,
   MessageCircleQuestionIcon,
   Search,
+  ShoppingBasket,
   X,
-} from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { ProductsList } from './productsList';
-import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { ConfirmationDialog } from '@/components/dialogs/ConfirmationDialog';
-import { SelectedProduct } from './selectedProduct';
+} from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { ProductsList } from './productsList'
+import { useEffect, useRef, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { ConfirmationDialog } from '@/components/dialogs/ConfirmationDialog'
+import { SelectedProduct } from './selectedProduct'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { TotalCalculate } from './totalCalculate';
+} from '@/components/ui/tooltip'
+import { TotalCalculate } from './totalCalculate'
+import { buttonVariants } from "@/components/ui/button"
+
 
 export const CalculateProducts = ({ open, onOpenChange }) => {
   const {
@@ -35,65 +38,78 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
     toggleSelectedProduct,
     updateSelectedProductQuantity,
     clearSelectedAllProducts,
-  } = useProductStore();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const [description, setDescription] = useState('');
+  } = useProductStore()
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
+  const [description, setDescription] = useState('')
+  const [titleConfirmation, setTitleConfirmation] = useState('Confirmar eliminación')
+  const [actionConfirm, setActionConfirm] = useState('')
 
-  const inputRef = useRef(null);
+  const inputRef = useRef(null)
 
-  const handleDeleteConfirmation = () => {
-    setIsConfirmDialogOpen(false);
-    clearSelectedAllProducts();
-  };
+  const handleDeleteConfirmation = (e) => {
+    setIsConfirmDialogOpen(false)
+    if (e) {
+      clearSelectedAllProducts()
+    }
+  }
+
+  const handleRecordConfirmation = (e) => {
+    setIsConfirmDialogOpen(false)
+    if (e) {
+
+      console.log('Productos seleccionados para la venta:', selectedProducts)
+      clearSelectedAllProducts()
+    }
+  }
 
   useEffect(() => {
     const handleKeydown = (event) => {
       if (event.ctrlKey && event.key === 'Backspace') {
-        setSearchTerm('');
+        setSearchTerm('')
       }
-    };
-    document.addEventListener('keydown', handleKeydown);
+    }
+    document.addEventListener('keydown', handleKeydown)
     return () => {
-      document.removeEventListener('keydown', handleKeydown);
-    };
-  }, []);
+      document.removeEventListener('keydown', handleKeydown)
+    }
+  }, [])
 
   useEffect(() => {
     const handleKeydown = (event) => {
       if (event.ctrlKey && event.shiftKey && event.key === 'Backspace') {
-        setIsConfirmDialogOpen(true);
+        setIsConfirmDialogOpen(true)
         setDescription(
           'todos los productos dentro de la calculadora serán eliminados.'
-        );
+        )
       }
-    };
-    document.addEventListener('keydown', handleKeydown);
+    }
+    document.addEventListener('keydown', handleKeydown)
     return () => {
-      document.removeEventListener('keydown', handleKeydown);
-    };
-  }, [clearSelectedAllProducts]);
+      document.removeEventListener('keydown', handleKeydown)
+    }
+  }, [clearSelectedAllProducts])
 
   useEffect(() => {
     // console.log(selectedProducts);
-  }, [selectedProducts]);
+  }, [selectedProducts])
 
   useEffect(() => {
     const handleKeydown = (event) => {
       if (event.altKey && event.key === 'Enter') {
-        inputRef.current.focus();
+        inputRef.current.focus()
       }
-    };
-    document.addEventListener('keydown', handleKeydown);
+    }
+    document.addEventListener('keydown', handleKeydown)
     return () => {
-      document.removeEventListener('keydown', handleKeydown);
-    };
-  }, []);
+      document.removeEventListener('keydown', handleKeydown)
+    }
+  }, [])
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger>
-        <div className="text-foreground/80 bg-background hover:bg-primary/20 hover:text-foreground relative cursor-pointer rounded-md border border-slate-200 p-2 px-3 transition-all duration-300 dark:border-slate-700">
+        <div className="relative bg-background hover:bg-primary/20 p-2 px-3 border border-slate-200 dark:border-slate-700 rounded-md text-foreground/80 hover:text-foreground transition-all duration-300 cursor-pointer">
           <Calculator size={18} />
           <div
             className={
@@ -107,54 +123,77 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
         </div>
       </SheetTrigger>
       <SheetContent>
-        <SheetHeader>
-          <div className="relative mt-8 -mb-6 flex items-center justify-between">
-            <SheetTitle>
+        <SheetHeader className="px-0!">
+          <div className="relative flex justify-between items-center mt-8 -mb-6">
+            <SheetTitle className="ml-3">
               Calcular precios
               {selectedProducts.length > 0 && (
-                <span className="ml-2 text-xs text-slate-400">
+                <span className="ml-2 text-slate-400 text-xs">
                   seleccionados: {selectedProducts.length}
                 </span>
               )}
             </SheetTitle>
-            {selectedProducts.length > 0 && (
-              <div className="absolute -top-2 right-2">
-                <Button
-                  variant="outline"
-                  className="bg-white text-slate-400"
-                  size="icon"
-                  onClick={() => {
-                    setIsConfirmDialogOpen(true);
-                    setDescription(
-                      'todos los productos dentro de la calculadora serán eliminados.'
-                    );
-                  }}
-                >
-                  <BrushCleaning size={12} />
-                </Button>
-              </div>
-            )}
+
+            <div className="-top-2 right-2 absolute">
+              <TooltipProvider >
+                <Tooltip >
+                  <TooltipTrigger>
+                    <div
+                      className={buttonVariants({
+                        variant: 'outline',
+                        size: 'icon',
+                        className: `bg-white dark:bg-primary/20 hover:bg-primary/30 dark:shadow-primary/40! shadow-xl! hover:shadow-primary/80! text-primary hover:text-primary transition-shadow hover:border-primary duration-200 ${selectedProducts.length === 0 ? ' bg-slate-300! text-slate-400 pointer-events-none cursor-not-allowed' : ''}`,
+                      })}
+                      onClick={() => {
+                        if (selectedProducts.length === 0) return
+                        setTitleConfirmation('Realizar venta')
+                        setDescription(
+                          'Se creará una venta con los productos seleccionados, y se eliminarán de la calculadora.'
+                        )
+                        setActionConfirm('sell')
+                        setIsConfirmDialogOpen(true)
+                      }}
+                      size="icon"
+                      aria-disabled={selectedProducts.length === 0}
+                      tabIndex={selectedProducts.length === 0 ? -1 : 0}
+                    >
+                      <ShoppingBasket size={12} />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent >
+                    <p className="font-bold text-center uppercase">
+                      {
+                        selectedProducts.length > 0
+                          ? `Crear venta (${selectedProducts.length})`
+                          : (<span className="text-slate-200">No hay productos seleccionados</span>)
+                      }
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+
           </div>
 
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <div className="absolute top-[18px] left-4">
+                <div className="top-[18px] left-4 absolute">
                   <MessageCircleQuestionIcon size={18} />
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p className="text-center font-bold uppercase">
+                <p className="font-bold text-center uppercase">
                   Atajos del teclado
                 </p>
                 <ul className="mt-2 list-disc">
-                  <li className="flex items-center justify-between gap-2">
+                  <li className="flex justify-between items-center gap-2">
                     <b>* Alt + Enter</b> <span>Enfocar campo de busqueda</span>
                   </li>
-                  <li className="flex items-center justify-between gap-2">
+                  <li className="flex justify-between items-center gap-2">
                     <b>* Ctrl + Backspace</b> <span>Limpiar busqueda</span>
                   </li>
-                  <li className="flex items-center justify-between gap-2">
+                  <li className="flex justify-between items-center gap-2">
                     <b>* Ctrl + Shift + Backspace</b>{' '}
                     <span>Limpiar todos los productos</span>
                   </li>
@@ -162,32 +201,55 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+
         </SheetHeader>
         <div className="px-2">
+          {/* input buscador */}
           <div className="relative">
-            <Input
-              placeholder="Buscar producto"
-              className="pl-8"
-              ref={inputRef}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <div className="absolute top-[10px] left-3 h-[35px] p-0! text-slate-400">
-              <Search size={15} />
-            </div>
-            {searchTerm.length > 2 && (
+            <div className='flex items-center gap-2'>
+              <div className="relative w-full">
+                <Input
+                  placeholder="Buscar producto"
+                  className="pl-8"
+                  ref={inputRef}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <div className="top-[10px] left-3 absolute p-0! h-[35px] text-slate-400">
+                  <Search size={15} />
+                </div>
+                {searchTerm.length > 2 && (
+                  <Button
+                    variant="ghost"
+                    className="top-[3px] right-[5px] absolute p-0! rounded-full w-[30px] h-[30px] text-slate-400"
+                    size="icon"
+                    onClick={() => setSearchTerm('')}
+                  >
+                    <X />
+                  </Button>
+                )}
+              </div>
+
               <Button
-                variant="ghost"
-                className="absolute top-[3px] right-[5px] h-[30px] w-[30px] rounded-full p-0! text-slate-400"
+                variant="outline"
+                className="bg-white text-slate-500"
                 size="icon"
-                onClick={() => setSearchTerm('')}
+                disabled={selectedProducts.length === 0}
+                onClick={() => {
+                  setTitleConfirmation('Eliminar productos')
+                  setDescription(
+                    'todos los productos dentro de la calculadora serán eliminados.'
+                  )
+                  setActionConfirm('delete')
+                  setIsConfirmDialogOpen(true)
+                }}
               >
-                <X />
+                <BrushCleaning size={12} />
               </Button>
-            )}
+            </div>
           </div>
-          {/* buscador  */}
-          <div className="mt-2 flex max-h-[30vh] flex-col gap-2 overflow-auto">
+          {/* lista del buscador  */}
+          <div className="flex flex-col gap-2 mt-2 max-h-[30vh] overflow-auto">
             {products.length > 0 &&
               searchTerm.length > 2 &&
               products
@@ -204,7 +266,7 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
                     )
                 )
                 .map((product) => (
-                  <div className="rounded-md bg-white dark:bg-accent/50 dark:text-slate-200" key={product.id}>
+                  <div className="bg-white dark:bg-accent/50 rounded-md dark:text-slate-200" key={product.id}>
                     <ProductsList
                       product={product}
                       selectedProducts={selectedProducts}
@@ -214,11 +276,11 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
                 ))}
           </div>
           {/* lista de productos seleccionados */}
-          <div className="dark:bg-secondary mt-2 h-[calc(100vh-13rem)] overflow-auto rounded-md bg-white p-4 dark:text-slate-200">
+          <div className="bg-white dark:bg-secondary mt-2 p-4 rounded-md h-[calc(100vh-13rem)] overflow-auto dark:text-slate-200">
             {selectedProducts.length > 0 ? (
               <div className="flex flex-col gap-4">
                 {selectedProducts.map((product) => (
-                  <div key={product.id} className="border-b-2 pb-4">
+                  <div key={product.id} className="pb-4 border-b-2">
                     <SelectedProduct
                       product={product}
                       updateSelectedProductQuantity={
@@ -229,14 +291,14 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
                 ))}
               </div>
             ) : (
-              <div className="flex h-full flex-col items-center justify-center text-center text-slate-400 opacity-80">
-                <div className="mb-4 flex items-center justify-center rounded-full">
+              <div className="flex flex-col justify-center items-center opacity-80 h-full text-slate-400 text-center">
+                <div className="flex justify-center items-center mb-4 rounded-full">
                   <CalculatorIcon size={80} strokeWidth={1} />
                 </div>
-                <h2 className="text-md font-bold uppercase">
+                <h2 className="font-bold text-md uppercase">
                   No hay productos seleccionados
                 </h2>
-                <p className="mt-1 text-sm text-slate-400">
+                <p className="mt-1 text-slate-400 text-sm">
                   Seleccione al menos un producto para continuar
                 </p>
               </div>
@@ -247,12 +309,12 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
           {/* Dialogo de confirmacion */}
           <ConfirmationDialog
             isOpen={isConfirmDialogOpen}
-            onClose={handleDeleteConfirmation}
-            title="¿Estás seguro?"
+            onClose={(e) => actionConfirm == 'delete' ? handleDeleteConfirmation(e) : handleRecordConfirmation(e)}
+            title={titleConfirmation}
             description={description}
           />
         </div>
       </SheetContent>
     </Sheet>
-  );
-};
+  )
+}

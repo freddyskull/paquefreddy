@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { axiosInstance } from '../config/axios.config'
 import { toast } from "sonner"
 import { handleError } from '../utils/errorHandler'
+import { useConfigStore } from './configStore'
 
 export const useProductStore = create((set, get) => ({
   products: [],
@@ -9,7 +10,7 @@ export const useProductStore = create((set, get) => ({
   isLoading: false,
   error: null,
   selectedProducts: [],
-  calculateTotal: {totalBs: 0, totalDolar: 0, totalProfits: 0},
+  calculateTotal: { totalBs: 0, totalDolar: 0, totalProfits: { bs: 0, usd: 0 } },
 
   // Fetch all products
   fetchProducts: async () => {
@@ -57,16 +58,14 @@ export const useProductStore = create((set, get) => ({
 
   // Clear selected products
   clearSelectedAllProducts: () => {
-    set({ selectedProducts: [], calculateTotal: {totalBs: 0, totalDolar: 0, totalProfits: 0} })
+    set({ selectedProducts: [], calculateTotal: { totalBs: 0, totalDolar: 0, totalProfits: { bs: 0, usd: 0 } } })
   },
-
-  
 
   // Update a product completely
   updateProduct: async (product) => {
     set({ isLoading: true, error: null })
     try {
-      product.expiration == '' ? product.expiration = null : product.expiration 
+      product.expiration == '' ? product.expiration = null : product.expiration
       const response = await axiosInstance.put(`products/${product.id}`, product)
       const updatedProduct = response.data.data
       const { products } = get()
@@ -84,7 +83,7 @@ export const useProductStore = create((set, get) => ({
 
   // Add product to selectedProducts
   addSelectedProduct: (product) => {
-    const newProduct = {...product, quantity: 1}
+    const newProduct = { ...product, quantity: 1 }
     const { selectedProducts } = get()
     if (!selectedProducts.some(p => p.id === product.id)) {
       set({ selectedProducts: [...selectedProducts, newProduct] })
@@ -96,15 +95,18 @@ export const useProductStore = create((set, get) => ({
   // calculate total
   calculateTotalProducts: () => {
     const { selectedProducts } = get()
-    let totalBs = 0;
-    let totalUsd = 0;
-    let totalProfits = 0;
+    const { config } = useConfigStore.getState()
+    const dolarPrice = config?.dolar || 0
+    let totalBs = 0
+    let totalUsd = 0
+    let totalProfits = 0
     selectedProducts.map(item => {
-      totalBs += item.price_bs * item.quantity;
-      totalUsd += item.price * item.quantity;
-      totalProfits += item.profit * item.quantity;
+      totalBs += item.price_bs * item.quantity
+      totalUsd += item.price * item.quantity
+      totalProfits += (item.price * item.quantity) - (item.price_ent * item.quantity)
     })
-    set({ calculateTotal: {totalBs, totalDolar: totalUsd, totalProfits} })
+
+    set({ calculateTotal: { totalBs, totalDolar: totalUsd, totalProfits: { bs: totalProfits * dolarPrice, usd: totalProfits } } })
   },
 
   // toggle selected product
@@ -114,7 +116,7 @@ export const useProductStore = create((set, get) => ({
       set({ selectedProducts: selectedProducts.filter(p => p.id !== productId) })
     } else {
       const product = products.find(p => p.id === productId)
-      const newProduct = {...product, quantity: 1}
+      const newProduct = { ...product, quantity: 1 }
       if (product) {
         set({ selectedProducts: [...selectedProducts, newProduct] })
       }
@@ -185,6 +187,8 @@ export const useProductStore = create((set, get) => ({
   clearState: () => set({
     products: [],
     selectedProduct: null,
+    selectedProducts: [],
+    calculateTotal: { totalBs: 0, totalDolar: 0, totalProfits: { bs: 0, usd: 0 } },
     isLoading: false,
     error: null,
   }),

@@ -115,7 +115,7 @@ export default function Layout({ children }) {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <div className="flex items-center gap-2 font-bold text-slate-500 dark:text-white/80 text-sm">
               <span className="text-xs">Precios dolares: </span>
-              <span className={98 <= externalDolar[0]?.promedio ? "text-red-500" : "text-primary"}>Bs. {dolar.toFixed(2)}</span>
+              <span className={dolar <= externalDolar[0]?.promedio ? "text-red-500" : "text-primary"}>Bs. {dolar.toFixed(2)}</span>
               <span className="text-[5px]"> | </span>
               <a href="https://www.bcv.org.ve/" target="_blank" rel="noopener noreferrer">
                 <span className="flex items-center gap-1 text-xs" >

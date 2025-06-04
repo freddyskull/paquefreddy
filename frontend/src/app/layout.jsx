@@ -18,13 +18,15 @@ import { useProductStore } from "@/store/productStore"
 import { useConfigStore } from "@/store/configStore"
 import { useEffect, useState, useMemo } from "react"
 import axios from "axios"
+import { TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip } from "@radix-ui/react-tooltip"
+import { DolarPriceDialog } from "./components/dolarPriceDilaog"
 
 
 export default function Layout({ children }) {
   const location = useLocation()
   const pathSegments = location.pathname.split('/').filter(Boolean)
   const { selectedProducts: selectedProductsRaw, calculateTotal: calculateTotalRaw } = useProductStore()
-  // Memorizar selectedProducts y calculateTotal
   const selectedProducts = useMemo(() => selectedProductsRaw, [selectedProductsRaw])
   const calculateTotal = useMemo(() => calculateTotalRaw, [calculateTotalRaw])
   const { config } = useConfigStore()
@@ -45,6 +47,7 @@ export default function Layout({ children }) {
     return items
   }
   const [externalDolarRaw, setExternalDolar] = useState({})
+  const [openDialogDolar, setOpenDialogDolar] = useState(false)
   const externalDolar = useMemo(() => externalDolarRaw, [externalDolarRaw])
   useEffect(() => {
     const fetchDolar = () => {
@@ -60,6 +63,7 @@ export default function Layout({ children }) {
     const interval = setInterval(fetchDolar, 2 * 60 * 60 * 1000) // 2 horas
     return () => clearInterval(interval)
   }, [])
+
 
 
 
@@ -115,10 +119,12 @@ export default function Layout({ children }) {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <div className="flex items-center gap-2 font-bold text-slate-500 dark:text-white/80 text-sm">
               <span className="text-xs">Precios dolares: </span>
-              <span className={dolar <= externalDolar[0]?.promedio ? "text-red-500" : "text-primary"}>Bs. {dolar.toFixed(2)}</span>
+              <DolarPriceDialog open={openDialogDolar} onOpenChange={setOpenDialogDolar} priceDolar={dolar} >
+                <span className={`hover:underline cursor-pointer ${dolar <= externalDolar[0]?.promedio ? "text-red-500" : "text-primary"}`}>Bs. {dolar.toFixed(2)}</span>
+              </DolarPriceDialog>
               <span className="text-[5px]"> | </span>
               <a href="https://www.bcv.org.ve/" target="_blank" rel="noopener noreferrer">
-                <span className="flex items-center gap-1 text-xs" >
+                <span className="flex items-center gap-1 text-xs hover:underline" >
                   {/* BCV image: light/dark */}
                   <img
                     src="/bcv.png"
@@ -137,7 +143,7 @@ export default function Layout({ children }) {
               </a>
               <span className="text-[5px]"> | </span>
               <a href="https://www.instagram.com/monitordollarvzlar/" target="_blank" rel="noopener noreferrer">
-                <span className="flex items-center gap-1 text-xs">
+                <span className="flex items-center gap-1 text-xs hover:underline">
                   {/* DolarToday image: light/dark */}
                   <img
                     src="/dolartoday.png"
@@ -164,6 +170,7 @@ export default function Layout({ children }) {
         </div>
       </SidebarInset>
       <Toaster />
+
     </SidebarProvider>
   )
 }

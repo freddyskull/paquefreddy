@@ -1,27 +1,27 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Pencil, X } from 'lucide-react';
-import React, { useEffect } from 'react';
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Pencil, X } from 'lucide-react'
+import React, { useEffect } from 'react'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { useProductStore } from '@/store/productStore';
+} from '@/components/ui/tooltip'
+import { useProductStore } from '@/store/productStore'
 
 export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
-  const { removeSelectedProduct } = useProductStore();
+  const { removeSelectedProduct } = useProductStore()
   useEffect(() => {
     if (product.quantity < 0 || isNaN(product.quantity)) {
-      updateSelectedProductQuantity(product.id, null);
+      updateSelectedProductQuantity(product.id, null)
     }
-  }, [product.quantity, product.id, updateSelectedProductQuantity]);
-  
+  }, [product.quantity, product.id, updateSelectedProductQuantity])
+
   return (
-    <div className="flex w-full! justify-around gap-4">
+    <div className="flex justify-around gap-4 w-full!">
       <div
-        className="h-16! w-16! rounded-md! bg-white"
+        className="bg-white rounded-md! w-16! h-16!"
         style={{
           backgroundImage: `url(${product.image})`,
           backgroundRepeat: 'no-repeat',
@@ -30,25 +30,25 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
         }}
       />
       <div>
-        <div className="flex items-center justify-between">
+        <div className="flex justify-between items-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <h3 className="line-clamp-1 w-[195px] text-left font-bold">
+                <h3 className="w-[195px] font-bold text-left line-clamp-1">
                   {product.name}
                 </h3>
               </TooltipTrigger>
-              <TooltipContent className="dark:bg-secondary dark:text-slate-200 max-w-[200px]">
-                <p className="font-bold text-wrap dark:text-slate-200">{product.name}</p>
-                <p className="text-xs text-wrap text-white/70 dark:text-slate-400">
+              <TooltipContent className="dark:bg-secondary max-w-[200px] dark:text-slate-200">
+                <p className="font-bold dark:text-slate-200 text-wrap">{product.name}</p>
+                <p className="text-white/70 dark:text-slate-400 text-xs text-wrap">
                   {product.slugs.join(', ')}
                 </p>
-                <div className="mt-2 flex items-center justify-between gap-2">
-                  <p className="text-xs font-bold dark:text-white">
+                <div className="flex justify-between items-center gap-2 mt-2">
+                  <p className="font-bold dark:text-white text-xs">
                     Bs {product.price_bs.toFixed(2)}
                   </p>
-                  <span className="text-xs text-slate-200">|</span>
-                  <p className="text-xs font-bold text-white">
+                  <span className="text-slate-200 text-xs">|</span>
+                  <p className="font-bold text-white text-xs">
                     USD {product.price.toFixed(2)}
                   </p>
                 </div>
@@ -59,7 +59,7 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-6! w-6!"
+              className="w-6! h-6!"
               onClick={() => updateSelectedProductQuantity(product.id, null)}
             >
               <Pencil />
@@ -67,28 +67,28 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-6! w-6!"
+              className="w-6! h-6!"
               onClick={() => removeSelectedProduct(product.id)}
             >
               <X />
             </Button>
           </div>
         </div>
-        <p className="text-xs text-slate-400">Cantidad: {product.quantity}</p>
-        <div className="flex items-center justify-between gap-2">
+        <p className="text-slate-400 text-xs">Cantidad: {product.quantity}</p>
+        <div className="flex justify-between items-center gap-2">
           <div className="flex items-center gap-2">
-            <p className="text-primary font-bold">
+            <p className="font-bold text-primary">
               {(product.price_bs * product.quantity).toFixed(2)}
             </p>
-            <span className="text-xs text-slate-400">|</span>
-            <p className="text-usd font-bold">
+            <span className="text-slate-400 text-xs">|</span>
+            <p className="font-bold text-usd">
               {(product.price * product.quantity).toFixed(2)}
             </p>
           </div>
           <div className="flex items-center gap-1">
             <Button
               variant="ghost"
-              className="h-6! w-6!"
+              className="w-6! h-6!"
               size="icon"
               onClick={() =>
                 updateSelectedProductQuantity(
@@ -106,14 +106,14 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
               min={0}
               max={100}
               onChange={(e) => {
-                const value = Math.max(0, parseInt(e.target.value, 10));
-                updateSelectedProductQuantity(product.id, value);
+                const value = Math.max(0, parseInt(e.target.value, 10))
+                updateSelectedProductQuantity(product.id, value)
               }}
             />
             <Button
               variant="ghost"
               size="icon"
-              className="h-6! w-6!"
+              className="w-6! h-6!"
               onClick={() =>
                 updateSelectedProductQuantity(product.id, product.quantity + 1)
               }
@@ -153,5 +153,5 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
         </button>
       </div> */}
     </div>
-  );
-};
+  )
+}

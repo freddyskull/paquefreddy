@@ -229,6 +229,26 @@ export class ProductsService {
     return { status: 'ok', message: 'Producto eliminado correctamente' };
   }
 
+  async updateStock(id: number, quantityChange: number) {
+    const product = await this.findOne(id);
+    const newStock = product.stock - quantityChange;
+    if (newStock < 0) {
+      throw new HttpException(
+        'No hay suficiente stock disponible',
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    await this.prisma.products.update({
+      where: { id: Number(id) },
+      data: { stock: newStock }
+    });
+    return {
+      status: 'ok',
+      message: 'Stock actualizado correctamente',
+      data: await this.findOne(id)
+    };
+  }
+
   async searchProduct(query: string) {
     return this.prisma.products.findMany({
       where: {

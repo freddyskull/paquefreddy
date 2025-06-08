@@ -1,18 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  ValidationPipe
+} from '@nestjs/common';
 import { RecordsService } from './records.service';
-import { CreateRecordDto } from './dto/create-record.dto';
-import { UpdateRecordDto } from './dto/update-record.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { recordsDto } from './dto/record.dto';
 
 @Controller('records')
+@ApiTags('Records')
 export class RecordsController {
   constructor(private readonly recordsService: RecordsService) {}
 
   @Post()
-  create(@Body() createRecordDto: CreateRecordDto) {
-    return this.recordsService.create(createRecordDto);
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body(new ValidationPipe()) dto: recordsDto) {
+    return this.recordsService.create(dto);
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll() {
     return this.recordsService.findAll();
   }
@@ -23,8 +37,8 @@ export class RecordsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecordDto: UpdateRecordDto) {
-    return this.recordsService.update(+id, updateRecordDto);
+  update(@Param('id') id: string, @Body() dto: recordsDto) {
+    return this.recordsService.update(+id, dto);
   }
 
   @Delete(':id')

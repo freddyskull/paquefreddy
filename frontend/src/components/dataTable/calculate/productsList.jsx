@@ -1,21 +1,21 @@
-import React from 'react';
+import React from 'react'
 
 export const ProductsList = ({ product, selectedProducts, toggleSelectedProduct }) => {
 
-    const handleToggleProduct = (product) => {
-        toggleSelectedProduct(product.id)
-        
-    }
+  const handleToggleProduct = (product) => {
+    toggleSelectedProduct(product.id)
 
-    const isProductSelected = selectedProducts.some(p => p.id === product.id);
+  }
 
+  const isProductSelected = selectedProducts.some(p => p.id === product.id)
+  console.log(selectedProducts)
   return (
-    <div 
+    <div
       className={`flex w-full items-center gap-2 cursor-pointer transition-colors hover:bg-primary/20 p-2 rounded-md ${isProductSelected ? 'bg-primary/40' : ''}`}
       onClick={() => handleToggleProduct(product)}
     >
       <div
-        className="h-16 w-16 rounded-md! bg-white"
+        className="bg-white rounded-md! w-16 h-16"
         style={{
           backgroundImage: `url(${product.image})`,
           backgroundRepeat: 'no-repeat',
@@ -24,15 +24,15 @@ export const ProductsList = ({ product, selectedProducts, toggleSelectedProduct 
         }}
       />
       <div className="w-full">
-        <h1 className="line-clamp-1 font-bold">{product.name}</h1>
+        <h1 className="font-bold line-clamp-1">{product.name}</h1>
         <div className="flex justify-between gap-2">
-          <p className="text-primary font-bold">
+          <p className="font-bold text-primary">
             {product.price_bs.toFixed(2)}
           </p>
-          <p className="text-usd font-bold">{product.price.toFixed(2)}</p>
+          <p className="font-bold text-usd">{product.price.toFixed(2)}</p>
         </div>
       </div>
-      
+
     </div>
-  );
-};
+  )
+}

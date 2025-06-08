@@ -68,14 +68,29 @@ CREATE TABLE "Products" (
 -- CreateTable
 CREATE TABLE "Records" (
     "id" SERIAL NOT NULL,
+    "productList" JSONB NOT NULL,
+    "dolar_price" DECIMAL(65,30) NOT NULL,
+    "status" BOOLEAN NOT NULL DEFAULT false,
+    "totals" JSONB NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "user_id" TEXT,
-    "product_id" INTEGER,
-    "quantity" INTEGER NOT NULL,
-    "status" BOOLEAN DEFAULT true,
+    "black_list_user_id" INTEGER,
+
+    CONSTRAINT "Records_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "black_list" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "total" DECIMAL(65,30) NOT NULL,
+    "record_id" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Records_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "black_list_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -115,14 +130,6 @@ CREATE TABLE "Config" (
 );
 
 -- CreateTable
-CREATE TABLE "_ProductsToRecords" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-
-    CONSTRAINT "_ProductsToRecords_AB_pkey" PRIMARY KEY ("A","B")
-);
-
--- CreateTable
 CREATE TABLE "_ProductsToPurhases" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL,
@@ -140,9 +147,6 @@ CREATE UNIQUE INDEX "Categories_slug_url_key" ON "Categories"("slug_url");
 CREATE UNIQUE INDEX "Products_slugs_url_key" ON "Products"("slugs_url");
 
 -- CreateIndex
-CREATE INDEX "_ProductsToRecords_B_index" ON "_ProductsToRecords"("B");
-
--- CreateIndex
 CREATE INDEX "_ProductsToPurhases_B_index" ON "_ProductsToPurhases"("B");
 
 -- AddForeignKey
@@ -155,13 +159,10 @@ ALTER TABLE "Products" ADD CONSTRAINT "Products_categorie_id_fkey" FOREIGN KEY (
 ALTER TABLE "Records" ADD CONSTRAINT "Records_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Records" ADD CONSTRAINT "Records_black_list_user_id_fkey" FOREIGN KEY ("black_list_user_id") REFERENCES "black_list"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Purhases" ADD CONSTRAINT "Purhases_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ProductsToRecords" ADD CONSTRAINT "_ProductsToRecords_A_fkey" FOREIGN KEY ("A") REFERENCES "Products"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_ProductsToRecords" ADD CONSTRAINT "_ProductsToRecords_B_fkey" FOREIGN KEY ("B") REFERENCES "Records"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ProductsToPurhases" ADD CONSTRAINT "_ProductsToPurhases_A_fkey" FOREIGN KEY ("A") REFERENCES "Products"("id") ON DELETE CASCADE ON UPDATE CASCADE;

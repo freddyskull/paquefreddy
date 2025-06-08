@@ -6,5 +6,6 @@ RUN npm install # Instala dependencias de desarrollo
 COPY . .
 # RUN npx prisma migrate dev --name init
 # RUN npm run seed
+RUN npm install -g @nestjs/cli
 RUN npx prisma generate
 CMD ["npm", "run", "start:dev"]

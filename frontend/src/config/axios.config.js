@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-    baseURL: "http://localhost:4000/api/v1/",
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
+  baseURL: 'http://localhost:3001/api/v1/',
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
 });
 
 // Request interceptor
@@ -24,14 +24,14 @@ export const axiosInstance = axios.create({
 
 // Response interceptor
 axiosInstance.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        // Evitar bucle infinito en la página de error
-        if (!error.response && window.location.pathname !== '/error-conexion') {
-            window.location.href = '/error-conexion';
-        }
-        return Promise.reject(error);
+  (response) => response,
+  (error) => {
+    // Evitar bucle infinito en la página de error
+    if (!error.response && window.location.pathname !== '/error-conexion') {
+      window.location.href = '/error-conexion';
     }
+    return Promise.reject(error);
+  }
 );
 
 export default axiosInstance;

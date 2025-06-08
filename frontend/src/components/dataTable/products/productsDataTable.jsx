@@ -11,7 +11,9 @@ import { ProductCard } from "@/components/cardProducts"
 import { useConfigStore } from '@/store/configStore'
 import { useCategoriesStore } from '@/store/categoriesStore'
 import { useProductStore } from '@/store/productStore'
+
 import { FiltersTable } from '@/components/dataTable/products/filtersTable'
+import { PaginationProducts } from './paginationProducts'
 
 export const ProductsDataTable = ({ data }) => {
   const { categories } = useCategoriesStore()
@@ -199,6 +201,8 @@ export const ProductsDataTable = ({ data }) => {
             </div>
           )}
         </div>
+        {/* Paginación chadcn + TanStack extraída a componente */}
+        <PaginationProducts table={table} />
       </CardContent>
     </Card>
   )

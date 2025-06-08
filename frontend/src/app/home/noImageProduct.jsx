@@ -45,23 +45,17 @@ export const NoImageProduct = ({ products }) => {
           <div>
             <CardHeader>
               <CardTitle className="flex justify-between items-center gap-2 font-bold text-md uppercase">
-                <h2>
+                <h2 className='flex xl:flex-row md:flex-col xl:items-end'>
                   Productos sin imagen
-                  <span className="ml-2 text-foreground/50 text-xs">
+                  <span className="xl:ml-2 text-foreground/50 text-xs">
                     Productos sin imagen: {noImageProducts.length}
                   </span>
                 </h2>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="group flex flex-col gap-4 w-full h-[140px]">
-                <style jsx global>
-                  {`
-              .group:hover > div {
-                overflow-y: auto;
-              }
-            `}
-                </style>
+              <div className="group flex flex-col gap-4 w-full h-[170px] overflow-x-hidden!">
+
                 <div className="flex flex-col gap-4 px-2 overflow-y-hidden">
                   {noImageProducts.slice(0, 5).map((product) => (
                     <div key={product.id} className="flex items-center gap-6 w-full">
@@ -73,17 +67,19 @@ export const NoImageProduct = ({ products }) => {
                               : defaultImage
                             : defaultImage
                         }
-                        className="rounded-full w-18 h-18 object-cover"
+                        className="rounded-full w-14 xl:w-18 h-14 xl:h-18 object-cover"
                       />
-                      <div className="flex justify-between items-center gap-2 w-full">
+                      <div className="flex xl:flex-row flex-col xl:justify-between xl:items-center gap-4 w-full">
                         {editingProduct != product.id && (
                           <div className="w-full">
                             <div className="flex justify-between items-center gap-2 w-full">
                               <h2
-                                className="flex items-center gap-2 font-bold text-base line-clamp-1 cursor-pointer"
+                                className="gap-2 font-bold text-base line-clamp-1 text-nowrap cursor-pointer"
                                 onClick={() => handleCopyName(product.name)}
                               >
                                 {product.name}
+                              </h2>
+                              <div className='flex items-center'>
                                 <CopyIcon className="ml-2 cursor-pointer" size={15} onClick={() => handleCopyName(product.name)} />
                                 <Link
                                   className="ml-2 cursor-pointer"
@@ -99,12 +95,12 @@ export const NoImageProduct = ({ products }) => {
                                 >
                                   <Link2 />
                                 </Link>
-                              </h2>
+                              </div>
                             </div>
-                            <p className="mt-1 font-bold text-foreground/50 text-base">{product.categorie.name}</p>
+                            <p className="hidden xl:block mt-1 font-bold text-foreground/50 text-base">{product.categorie.name}</p>
                           </div>
                         )}
-                        <div className="flex justify-end items-center gap-2 w-full">
+                        <div className={`${editingProduct === product.id ? 'w-full!' : ''} flex xl:justify-end items-start gap-2`}>
                           {editingProduct === product.id ? (
                             <div className="flex items-end gap-2 w-full">
                               <div className="flex flex-col gap-2 w-full">
@@ -163,7 +159,6 @@ export const NoImageProduct = ({ products }) => {
             <CardContent className="flex flex-col justify-center items-center h-full text-center">
               <p className="font-bold text-foreground text-xl uppercase">No hay productos sin imagen</p>
               <p className='mt-2'>En esta sección aparecerán los productos que tengan algún problema con su imágen destacada y pordrás editarlas directamente.</p>
-
             </CardContent>
           </div>
         )

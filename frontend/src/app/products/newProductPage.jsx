@@ -37,11 +37,11 @@ const productSchema = z
   })
 
 export const NewProductPage = ({ product }) => {
-  
+
   const navigate = useNavigate()
   const { categories, isLoading: isLoadingCategories } = useCategoriesStore()
   const { config, currency, isLoading: isLoadingConfig } = useConfigStore()
-  
+
   let dolar = isLoadingConfig ? 0 : config.dolar
   const { suppliers, isLoading: isLoadingSuppliers } = useSuppliersStore()
   const { createProduct, updateProduct } = useProductStore()
@@ -90,7 +90,7 @@ export const NewProductPage = ({ product }) => {
     mode: 'onChange',
   })
 
-  
+
   useEffect(() => {
     if (slugs && slugs.length > 0) {
       form.setValue('slugs', slugs)
@@ -119,7 +119,7 @@ export const NewProductPage = ({ product }) => {
       } else {
         createProduct(newProduct)
       }
-      
+
       setSlugs([])
       navigate('/productos')
     } catch (error) {
@@ -129,7 +129,7 @@ export const NewProductPage = ({ product }) => {
   const formProduct = form.watch()
   return (
     <Layout>
-      <Card>
+      <Card className="mb-12 w-full xl:max-h-[72vh]">
         <CardContent>
           <div className="flex gap-4">
             <div className="w-full">

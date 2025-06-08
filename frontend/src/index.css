@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -45,31 +45,30 @@
 }
 
 body {
-  overflow: hidden;
+  overflow: hidden !important;
 }
-
+/* 
 @media (max-width: 768px) {
   body {
     overflow: auto;
   }
-}
-
+} */
 
 :root {
   --radius: 0.625rem;
-  --background: #E2E8F1;
+  --background: #e2e8f1;
   --foreground: #707070;
-  --card: #F1F5F9;
+  --card: #f1f5f9;
   --card-foreground: var(--foreground);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #526BD8;
+  --primary: #526bd8;
   --primary-foreground: #fff;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --usd: #21912A;
+  --usd: #21912a;
   --usd-foreground: #fff;
-  --muted: #DCDEFF;
+  --muted: #dcdeff;
   --muted-foreground: #666666;
   --accent: #cbdaef;
   --accent-foreground: #779aca;
@@ -100,26 +99,25 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
   }
-  input[type="date"]::-webkit-calendar-picker-indicator {
+  input[type='date']::-webkit-calendar-picker-indicator {
     filter: brightness(0) invert(1);
   }
-  input[type="date"]::-webkit-datetime-edit {
+  input[type='date']::-webkit-datetime-edit {
     color: var(--foreground);
   }
-  input[type="date"]::-webkit-datetime-edit-text {
+  input[type='date']::-webkit-datetime-edit-text {
     color: var(--foreground);
   }
-  input[type="date"]::-webkit-datetime-edit-month-field {
+  input[type='date']::-webkit-datetime-edit-month-field {
     color: var(--foreground);
   }
-  input[type="date"]::-webkit-datetime-edit-day-field {
+  input[type='date']::-webkit-datetime-edit-day-field {
     color: var(--foreground);
   }
-  input[type="date"]::-webkit-datetime-edit-year-field {
+  input[type='date']::-webkit-datetime-edit-year-field {
     color: var(--foreground);
   }
 }
-
 
 .dark {
   --background: #15151f;
@@ -128,11 +126,11 @@ body {
   --card-foreground: var(--foreground);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary:  #7A88DF;
+  --primary: #7a88df;
   --primary-foreground: #fff;
   --secondary: #21202b;
   --secondary-foreground: oklch(0.985 0 0);
-  --usd: #21912A;
+  --usd: #21912a;
   --usd-foreground: #fff;
   --muted: #706da2;
   --muted-foreground: #acacac;
@@ -140,7 +138,7 @@ body {
   --accent-foreground: #a39cff;
   --destructive: oklch(0.704 0.191 22.216);
   --border: #3e3e4d;
-  --input: #21202B;
+  --input: #21202b;
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -169,35 +167,35 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
   }
-  input[type="date"]::-webkit-calendar-picker-indicator {
+  input[type='date']::-webkit-calendar-picker-indicator {
     filter: brightness(0) invert(1);
   }
-  input[type="date"]::-webkit-datetime-edit {
+  input[type='date']::-webkit-datetime-edit {
     color: var(--foreground);
   }
-  input[type="date"]::-webkit-datetime-edit-text {
+  input[type='date']::-webkit-datetime-edit-text {
     color: var(--foreground);
   }
-  input[type="date"]::-webkit-datetime-edit-month-field {
+  input[type='date']::-webkit-datetime-edit-month-field {
     color: var(--foreground);
   }
-  input[type="date"]::-webkit-datetime-edit-day-field {
+  input[type='date']::-webkit-datetime-edit-day-field {
     color: var(--foreground);
   }
-  input[type="date"]::-webkit-datetime-edit-year-field {
+  input[type='date']::-webkit-datetime-edit-year-field {
     color: var(--foreground);
   }
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
   background: #15151f;
   color: #3e3e4d;
 }
 
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -210,7 +208,6 @@ input[type="number"] {
   }
 }
 
-
 .product-card .image {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: scale(1);
@@ -222,4 +219,3 @@ input[type="number"] {
   opacity: 0.95;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
-

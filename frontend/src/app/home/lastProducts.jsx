@@ -5,16 +5,16 @@ import { Link } from 'react-router-dom'
 
 
 export const LastProducts = ({ products }) => {
-    return (    
+    return (
         <Card className="bg-white dark:bg-secondary">
             <CardHeader>
-                <CardTitle className="text-md font-bold uppercase flex items-center gap-2 justify-between">
-                    <h2>Subidos recientemente <span className="ml-1 text-xs text-foreground/50">(últimos 5)</span></h2>
-                    <Link to="/productos" className="text-xs text-foreground/50 transition-colors duration-200 hover:text-primary">Ver todos</Link>
+                <CardTitle className="flex xl:flex-row flex-col xl:justify-between xl:items-center gap-2 font-bold text-md uppercase">
+                    <h2>Subidos recientemente <span className="ml-1 text-foreground/50 text-xs">(últimos 5)</span></h2>
+                    <Link to="/productos" className="text-foreground/50 hover:text-primary text-xs transition-colors duration-200">Ver todos</Link>
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="flex flex-col gap-4 h-[140px] w-full group">
+                <div className="group flex flex-col gap-4 w-full h-[140px]">
                     <style jsx global>
                         {`
                             .group:hover > div {
@@ -22,21 +22,21 @@ export const LastProducts = ({ products }) => {
                             }
                         `}
                     </style>
-                    <div className="overflow-y-hidden flex flex-col gap-4">
-                    {products.slice(5, 10).map((product) => (
-                        <div key={product.id} className="flex items-center gap-6 w-full">
-                            <img src={product.image} alt={product.name} className="w-18 bg-white h-18 object-cover rounded-full"/>
-                            <div className="w-full">
-                                <div className="flex items-center gap-2 justify-between w-full">
-                                    <h2 className="text-base font-bold line-clamp-1">{product.name}</h2>
-                                    <div className="text-end">
-                                        <DateBadge date={product.createdAt} />
+                    <div className="flex flex-col gap-4 overflow-y-hidden">
+                        {products.slice(5, 10).map((product) => (
+                            <div key={product.id} className="flex items-center gap-6 w-full">
+                                <img src={product.image} alt={product.name} className="bg-white rounded-full w-18 h-18 object-cover" />
+                                <div className="w-full">
+                                    <div className="flex justify-between items-center gap-2 w-full">
+                                        <h2 className="font-bold text-base line-clamp-1">{product.name}</h2>
+                                        <div className="text-end">
+                                            <DateBadge date={product.createdAt} />
+                                        </div>
                                     </div>
+                                    <p className="mt-1 font-bold text-foreground/50 text-base">BS {product.price_bs.toFixed(2)} | USD {product.price.toFixed(2)}</p>
                                 </div>
-                                <p className="text-base font-bold text-foreground/50 mt-1">BS {product.price_bs.toFixed(2)} | USD {product.price.toFixed(2)}</p>
                             </div>
-                        </div>
-                    ))}
+                        ))}
                     </div>
                 </div>
             </CardContent>

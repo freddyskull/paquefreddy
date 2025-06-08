@@ -12,18 +12,20 @@ import {
 import ProductCard from '@/components/cardProducts'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { useConfigStore } from '@/store/configStore'
 
 export const SlideProducts = ({ products }) => {
 
   const autoplay = new Autoplay({ delay: 2000 })
+  const { currency } = useConfigStore()
 
   return (
-    <Card className="bg-white dark:bg-secondary">
+    <Card className="bg-white dark:bg-secondary py-6 xl:py-2">
       <CardContent>
         <div className="flex justify-center xl:justify-between items-center gap-24">
-          <div className='hidden md:block xl:ml-6 w-[50%]'>
+          <div className='hidden md:block xl:ml-6 2xl:w-[50%]'>
             <h2 className="font-bold text-2xl xl:text-4xl uppercase">Ultimos productos agregados</h2>
-            <p className="hidden xl:block mt-4 text-foreground text-md!">
+            <p className="hidden md:block mt-4 text-foreground text-md!">
               En esta sección se muestran los <b>últimos 5 productos</b> que se han agregado mas recientemente al stock, si deseas ver todos los productos puedes ir a la sección de productos, donde podras buscar y filtrar todos los productos.
             </p>
             {/* <div className="flex items-center gap-2 mt-4">
@@ -31,10 +33,10 @@ export const SlideProducts = ({ products }) => {
             </div> */}
 
             <Link to="/productos" className="mt-6">
-              <Button className="mt-6 uppercase" size="lg">Ver todos</Button>
+              <Button className={`${currency === 'BS' ? 'bg-primary hover:bg-primary/90' : 'bg-usd hover:bg-usd/90'} mt-6 uppercase`} size="lg">Ver todos</Button>
             </Link>
           </div>
-          <Carousel className="mr-12 w-full max-w-xs" plugins={[autoplay]}>
+          <Carousel className="2xl:mr-12 w-[40%] max-w-xs" plugins={[autoplay]}>
             <CarouselContent>
               {products.slice(0, 5).map((product) => (
                 <CarouselItem key={product.id}>

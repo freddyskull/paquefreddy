@@ -1,34 +1,34 @@
-import React from 'react';
-import Layout from '../layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useProductStore } from '@/store/productStore';
-import { useCategoriesStore } from '@/store/categoriesStore';
-import { LastProducts } from './lastProducts';
-import { NoImageProduct } from './noImageProduct';
-import { BoxIcon, ListCheck, TruckIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { SlideProducts } from './slideProducts';
+import React from 'react'
+import Layout from '../layout'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useProductStore } from '@/store/productStore'
+import { useCategoriesStore } from '@/store/categoriesStore'
+import { LastProducts } from './lastProducts'
+import { NoImageProduct } from './noImageProduct'
+import { BoxIcon, ListCheck, TruckIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { SlideProducts } from './slideProducts'
 
 export const Home = () => {
-  const { products } = useProductStore();
-  const { categories } = useCategoriesStore();
-  const currency = localStorage.getItem('currency');
+  const { products } = useProductStore()
+  const { categories } = useCategoriesStore()
+  const currency = localStorage.getItem('currency')
 
   return (
     <Layout>
-      <div className="flex gap-8 px-4 overflow-y-auto">
-        <div className="flex w-full flex-col gap-8 2xl:w-[65%]">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="flex gap-4">
+        <div className="flex flex-col gap-4 w-full 2xl:w-[65%]">
+          <div className="gap-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
             <Card className="col-span-2 lg:col-span-1 bg-white dark:bg-secondary">
               <CardContent>
-                <div className="flex flex-col items-center justify-center gap-2 2xl:flex-row 2xl:justify-between">
+                <div className="flex 2xl:flex-row flex-col justify-center 2xl:justify-between items-center gap-2">
                   <div
                     className={`h-12 w-12 rounded-full p-3 ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
                   >
                     <BoxIcon className="text-white" />
                   </div>
                   <div className="flex flex-col items-center">
-                    <h2 className="text-md font-bold uppercase">Productos</h2>
+                    <h2 className="font-bold text-md uppercase">Productos</h2>
                     <Link
                       to="/productos"
                       className="text-foreground/50 hover:text-primary text-xs transition-colors duration-200"
@@ -41,19 +41,19 @@ export const Home = () => {
                   >
                     {products.length}
                   </span>{' '}
-                </div>
-              </CardContent>
-            </Card>
+                </div >
+              </CardContent >
+            </Card >
             <Card className="col-span-2 lg:col-span-1 bg-white dark:bg-secondary">
               <CardContent>
-                <div className="flex flex-col items-center justify-center gap-2 2xl:flex-row 2xl:justify-between">
+                <div className="flex 2xl:flex-row flex-col justify-center 2xl:justify-between items-center gap-2">
                   <div
                     className={`h-12 w-12 rounded-full p-3 ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
                   >
                     <ListCheck className="text-white" />
                   </div>
                   <div className="flex flex-col items-center">
-                    <h2 className="text-md font-bold uppercase">Categorías</h2>
+                    <h2 className="font-bold text-md uppercase">Categorías</h2>
                     <Link
                       to="/categorias"
                       className="text-foreground/50 hover:text-primary text-xs transition-colors duration-200"
@@ -71,14 +71,14 @@ export const Home = () => {
             </Card>
             <Card className="col-span-2 lg:col-span-1 bg-white dark:bg-secondary">
               <CardContent>
-                <div className="flex flex-col items-center justify-center gap-2 2xl:flex-row 2xl:justify-between">
+                <div className="flex 2xl:flex-row flex-col justify-center 2xl:justify-between items-center gap-2">
                   <div
                     className={`h-12 w-12 rounded-full p-3 ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
                   >
                     <TruckIcon className="text-white" />
                   </div>
                   <div className="flex flex-col items-center">
-                    <h2 className="text-md font-bold uppercase">Proveedores</h2>
+                    <h2 className="font-bold text-md uppercase">Proveedores</h2>
                     <Link
                       to="/proveedores"
                       className="text-foreground/50 hover:text-primary text-xs transition-colors duration-200"
@@ -94,19 +94,19 @@ export const Home = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
-          <div>
+          </div >
+          <div className=''>
             <SlideProducts products={products} />
           </div>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mb-8 xl:mb-0">
             <LastProducts products={products} />
             <NoImageProduct products={products} />
           </div>
-        </div>
-        <div className="hidden flex-col gap-8 2xl:flex 2xl:w-[35%]">
-          <Card className="bg-white dark:bg-secondary">
+        </div >
+        <div className="hidden 2xl:flex flex-col gap-4 2xl:w-[35%]">
+          <Card className="bg-white dark:bg-secondary h-[61.5vh]">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold uppercase">
+              <CardTitle className="font-bold text-2xl uppercase">
                 Proveedores
               </CardTitle>
             </CardHeader>
@@ -118,17 +118,10 @@ export const Home = () => {
                 distinctio hic quidem inventore suscipit? Iste cupiditate saepe
                 mollitia amet? Quasi unde sed inventore neque fugit, iste
                 molestiae maxime dolorem earum voluptates? Error exercitationem
-                doloremque ut dolorum? Reiciendis necessitatibus totam corrupti
-                nisi ducimus? Magni, veritatis? Ratione dolorum, praesentium
-                reiciendis aliquid eaque ipsa, aperiam corrupti recusandae
-                asperiores quod numquam dolor omnis rerum facere! Laborum,
-                veritatis debitis! Iusto officia deserunt magnam dolorum ipsa,
-                quod facilis ullam nobis! Numquam debitis minima reiciendis
-                expedita impedit consequuntur maiores et nesciunt quae
-                aspernatur assumenda laborum eveniet, non pariatur unde ducimus
-                explicabo facere. Fuga quos necessitatibus perferendis numquam
-                commodi deserunt maiores expedita! Quo odio vel error laborum
-                asdasasdasds
+
+                mollitia amet? Quasi unde sed inventore neque fugit, iste
+                molestiae maxime dolorem earum voluptates? Error exercitationem
+
                 nulla, dolore quasi quos ducimus totam ullam iusto maxime? Quos,
                 iure! Asperiores numquam eligendi distinctio similique magnam.
                 Ipsa deserunt, vero fuga, eveniet veniam tempora cum velit
@@ -140,9 +133,9 @@ export const Home = () => {
               </p>
             </CardContent>
           </Card>
-          <Card className="bg-white dark:bg-secondary">
+          <Card className="flex flex-row flex-wrap bg-white dark:bg-secondary h-[27vh] overflow-x-hidden overflow-y-auto">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold uppercase">
+              <CardTitle className="font-bold text-2xl uppercase">
                 Proveedores
               </CardTitle>
             </CardHeader>
@@ -160,7 +153,7 @@ export const Home = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
-    </Layout>
-  );
-};
+      </div >
+    </Layout >
+  )
+}

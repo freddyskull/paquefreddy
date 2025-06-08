@@ -70,8 +70,8 @@ export default function Layout({ children }) {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset className="">
+      <AppSidebar className="overflow-x-hidden" />
+      <SidebarInset>
         <header className="flex justify-between items-center gap-2 bg-sidebar border-b h-16 shrink-0">
           <div className="flex items-center gap-2 px-3">
             <SidebarTrigger />
@@ -165,8 +165,10 @@ export default function Layout({ children }) {
             <CurrencySelector />
           </div>
         </header>
-        <div className="p-4">
+        <div className='flex flex-wrap p-4 h-[95vh] overflow-y-auto'>
+
           {children}
+
         </div>
       </SidebarInset>
       <Toaster />

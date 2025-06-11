@@ -46,6 +46,7 @@ export class ProductsService {
     image: true,
     brand: true,
     bundle: true,
+    categorie_id: true,
     sell_unity: true,
     expiration: true,
     unity: true,

@@ -175,7 +175,7 @@ export const ProductsDataTable = ({ data }) => {
   }
 
   return (
-    <Card className="h-[88vh]">
+    <Card className="flex h-[88vh]">
       <FiltersTable
         categories={categories}
         searchTerm={searchTerm}
@@ -187,14 +187,14 @@ export const ProductsDataTable = ({ data }) => {
         config={config}
         isLoadingConfig={isLoadingConfig}
       />
-      <CardContent className="h-full overflow-y-auto">
+      <CardContent className="w-full overflow-y-auto">
         <div className="gap-4 grid xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 xl:grid-cols-4 transition-all duration-500">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <ProductCard key={row.original.id} product={row.original} handleEdit={handleEdit} />
             ))
           ) : (
-            <div className="flex justify-center items-center col-span-full w-full h-[80vh]">
+            <div className="flex justify-center items-center col-span-full w-[82vw] h-[80vh]">
               <h1 className="font-bold text-2xl text-center uppercase">
                 Cargando productos...
               </h1>

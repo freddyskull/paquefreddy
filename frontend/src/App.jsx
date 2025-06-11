@@ -4,6 +4,7 @@ import { useConfigStore } from "./store/configStore"
 import { useCategoriesStore } from "./store/categoriesStore"
 import { useSuppliersStore } from "./store/suppliersStore"
 import { useEffect } from "react"
+import { useRecordsStore } from "./store/recordsStore"
 
 function App() {
 
@@ -11,13 +12,14 @@ function App() {
   const { fetchConfig } = useConfigStore()
   const { fetchCategories } = useCategoriesStore()
   const { fetchSuppliers } = useSuppliersStore()
-
+  const { fetchRecords } = useRecordsStore()
 
   useEffect(() => {
     fetchProducts()
     fetchConfig()
     fetchCategories()
     fetchSuppliers()
+    fetchRecords()
   }, [])
 
   return (

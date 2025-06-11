@@ -9,7 +9,7 @@ export const TotalCalculate = ({ selectedProducts }) => {
   }, [selectedProducts, calculateTotalProducts])
 
   return (
-    <div className='flex justify-between gap-2 mt-4'>
+    <div className='flex justify-between gap-2 mt-2'>
       <div>
         <p className='text-slate-500 dark:text-white/80 text-xs uppercase'>Total Bs</p>
         <h4 className='mt-1 font-bold text-primary text-2xl'>{calculateTotal.totalBs.toFixed(2)}</h4>

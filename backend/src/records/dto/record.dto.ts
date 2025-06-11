@@ -40,15 +40,6 @@ export class recordsDto {
   })
   productList: any;
 
-  // @ApiProperty({
-  //   description: 'Precio del dolar el dia de la venta',
-  //   example: 99
-  // })
-  // @IsNotEmpty({
-  //   message: 'DOLAR_PRICE: el campo precio del dolar es requerido'
-  // })
-  // dolar_price: Decimal;
-
   @ApiProperty({
     description:
       'Estatus de la venta si pertenece a la lista negra y aún no está paga etonces estará activa',
@@ -72,4 +63,15 @@ export class recordsDto {
     description: 'Usuario dentro de la lista negra'
   })
   black_list_user_id: number;
+  @ApiProperty({
+    description: 'Fecha de creación'
+  })
+  @IsOptional()
+  createdAt: Date;
+
+  @ApiProperty({
+    description: 'Fecha de actualización'
+  })
+  @IsOptional()
+  updatedAt: Date;
 }

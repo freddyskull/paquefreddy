@@ -165,7 +165,7 @@ export default function Layout({ children }) {
             <CurrencySelector />
           </div>
         </header>
-        <div className='flex flex-wrap p-4 h-[95vh] overflow-y-auto'>
+        <div className='flex flex-wrap p-4 h-[95vh] overflow-y-auto w-full'>
 
           {children}
 

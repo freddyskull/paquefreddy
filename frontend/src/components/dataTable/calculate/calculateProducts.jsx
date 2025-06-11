@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/tooltip'
 import { TotalCalculate } from './totalCalculate'
 import { buttonVariants } from "@/components/ui/button"
+import { useRecordsStore } from '@/store/recordsStore'
 
 
 export const CalculateProducts = ({ open, onOpenChange }) => {
@@ -38,7 +39,12 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
     toggleSelectedProduct,
     updateSelectedProductQuantity,
     clearSelectedAllProducts,
+    calculateTotal
   } = useProductStore()
+
+  const { createRecord } = useRecordsStore()
+
+
   const [searchTerm, setSearchTerm] = useState('')
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
   const [description, setDescription] = useState('')
@@ -54,12 +60,17 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
     }
   }
 
-  const handleRecordConfirmation = (e) => {
+  const handleRecordConfirmation = async (e) => {
     setIsConfirmDialogOpen(false)
     if (e) {
-
-      console.log('Productos seleccionados para la venta:', selectedProducts)
-      clearSelectedAllProducts()
+      const record = {
+        "productList": [...selectedProducts],
+        "totals": calculateTotal
+      }
+      const resp = await createRecord(record)
+      if (resp === 'success') {
+        clearSelectedAllProducts()
+      }
     }
   }
 

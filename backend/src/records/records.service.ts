@@ -108,7 +108,26 @@ export class RecordsService {
     return `This action updates a #${id} record`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} record`;
+  async remove(id: number) {
+    const record = await this.prisma.records.findFirst({
+      where: { id: Number(id) }
+    });
+    if (!record) {
+      throw new HttpException(
+        'No existe la venta con el ID ' + id,
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    await this.prisma.records.delete({
+      where: { id },
+      select: this.formatedData
+    });
+    const data = await this.findAll();
+    return {
+      status: 'ok',
+      title: 'Registro eliminado',
+      message: `El registro con ID ${id} ha sido eliminado correctamente.`,
+      data
+    };
   }
 }

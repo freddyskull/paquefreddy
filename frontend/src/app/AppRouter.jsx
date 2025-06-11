@@ -5,6 +5,7 @@ import { NewProductPage } from './products/newProductPage'
 import { EditProductPage } from './products/editProductPage'
 import { ErrorConexion } from '../error-conexion'
 import { Home } from './home/home'
+import { RecordPage } from './records/recordPage'
 export const AppRouter = () => {
   return (
     <Router>
@@ -16,6 +17,7 @@ export const AppRouter = () => {
         <Route path='/productos/editar/:id' element={<EditProductPage />} />
         <Route path='/error-conexion' element={<ErrorConexion />} />
         <Route path='/productos/editar/' element={<Navigate to="/productos" />} />
+        <Route path='ventas' element={<RecordPage />} />
       </Routes>
     </Router>
   )

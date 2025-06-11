@@ -74,7 +74,7 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
             </Button>
           </div>
         </div>
-        <p className="text-slate-400 text-xs">Cantidad: {product.quantity}</p>
+        <div className="flex gap-2 text-slate-400 text-xs">Cantidad: {product.quantity} | <span className={`text-xs font-bold ${product.stock - product.quantity < 0 ? 'text-red-500' : product.stock - product.quantity === 0 ? 'text-yellow-500' : ''}`}>stock {product.stock - product.quantity}</span></div>
         <div className="flex justify-between items-center gap-2">
           <div className="flex items-center gap-2">
             <p className="font-bold text-primary">
@@ -123,35 +123,6 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
           </div>
         </div>
       </div>
-      {/* <div className="flex gap-2">
-        <button
-          onClick={() =>
-            updateSelectedProductQuantity(
-              product.id,
-              product.quantity + 1
-            )
-          }
-        >
-          +
-        </button>
-        <input
-          type="number"
-          value={product.quantity}
-          onChange={(e) =>
-            updateSelectedProductQuantity(product.id, e.target.value)
-          }
-        />
-        <button
-          onClick={() =>
-            updateSelectedProductQuantity(
-              product.id,
-              product.quantity - 1
-            )
-          }
-        >
-          -
-        </button>
-      </div> */}
     </div>
   )
 }

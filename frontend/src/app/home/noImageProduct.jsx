@@ -22,6 +22,19 @@ export const NoImageProduct = ({ products }) => {
     setImage({ url: e.target.value, id: productId })
   }
 
+
+  const isValidImageUrl = (url) => {
+    return (
+      !!url &&
+      typeof url === "string" &&
+      (url.startsWith("http") ||
+        url.startsWith("https") ||
+        url.startsWith("data:image") ||
+        url.startsWith("https://encrypted")) ||
+      url.startsWith("https://www")
+    )
+  }
+
   const handleSaveImage = () => {
     patchProduct(image.id, { image: image.url })
     setEditingProduct(null)
@@ -31,6 +44,7 @@ export const NoImageProduct = ({ products }) => {
   useEffect(() => {
     const noImageProducts = products.filter((product) => !product.image)
     setNoImageProducts(noImageProducts)
+
   }, [products])
 
   const handleCopyName = (name) => {

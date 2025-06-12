@@ -70,6 +70,16 @@ export class recordsDto {
   createdAt: Date;
 
   @ApiProperty({
+    description: 'Indica si la venta se realizó sin stock',
+    default: false
+  })
+  @IsBoolean({
+    message: 'SELL_WITHOUT_STOCK: Este campo debe ser verdadero o falso'
+  })
+  @IsOptional()
+  sell_without_stock: boolean;
+
+  @ApiProperty({
     description: 'Fecha de actualización'
   })
   @IsOptional()

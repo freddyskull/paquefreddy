@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migrate": "npx prisma migrate dev && npx prisma generate",
-    "seed": "npx prisma migrate reset --force && ts-node prisma/seed.ts"
+    "seed": "npx prisma migrate reset --force && ts-node prisma/seed.ts",
+    "docker:seed": "docker compose exec backend npm run seed"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

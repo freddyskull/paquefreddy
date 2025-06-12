@@ -81,6 +81,7 @@ model Records {
   productList        Json
   dolar_price        Decimal
   status             Boolean     @default(false)
+  sell_without_stock Boolean?    @default(false)
   totals             Json
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
@@ -95,6 +96,10 @@ model black_list {
   name        String
   description String
   total       Decimal
+  phone       String?
+  email       String?
+  address     String?
+  city        String?
   record_id   Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

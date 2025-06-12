@@ -2,10 +2,11 @@
 FROM node:20-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm install # Instala dependencias de desarrollo
+RUN npm install --legacy-peer-deps
 COPY . .
-# RUN npx prisma migrate dev --name init
+
 # RUN npm run seed
 RUN npm install -g @nestjs/cli
 RUN npx prisma generate
+RUN npx prisma migrate dev --name init
 CMD ["npm", "run", "start:dev"]

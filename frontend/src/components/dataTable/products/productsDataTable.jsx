@@ -201,7 +201,6 @@ export const ProductsDataTable = ({ data }) => {
             </div>
           )}
         </div>
-        {/* Paginación chadcn + TanStack extraída a componente */}
         <PaginationProducts table={table} />
       </CardContent>
     </Card>

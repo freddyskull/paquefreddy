@@ -16,7 +16,7 @@ export const RecordPage = () => {
     {
       accessorKey: 'productList',
       header: 'Num productos',
-      cell: ({ row }) => row.original.productList.length,
+      cell: ({ row }) => row.original?.productList.length || 0,
     },
     {
       accessorKey: 'dolar_price',

@@ -23,6 +23,7 @@ const productSchema = z
     price_ent: z.number().min(0, 'debe ser mayor o igual a 0'),
     slugs: z.array(z.string()).default(null),
     image: z.string().optional(),
+    slugs_url: z.string().optional(),
     brand: z.string().optional(),
     bundle: z.number().optional(),
     sell_unity: z.boolean().optional(),
@@ -59,6 +60,8 @@ export const NewProductPage = ({ product }) => {
     label: supplier.name,
   }))
 
+
+
   const today = new Date()
   const options = { timeZone: 'America/Caracas' }
   const venezuelaDate = today.toLocaleDateString('en-CA', options) // 'en-CA' da formato YYYY-MM-DD
@@ -86,6 +89,7 @@ export const NewProductPage = ({ product }) => {
       unity: product?.unity || 'und',
       supplier_id: product?.supplier_id || undefined,
       categorie_id: product?.categorie_id || defaultCategoryId,
+      slugs_url: product?.slugs_url || '',
     },
     mode: 'onChange',
   })
@@ -112,19 +116,29 @@ export const NewProductPage = ({ product }) => {
       const newProduct = {
         ...data,
         slugs: finalSlugs,
+        expiration: data.expiration ? new Date(data.expiration).toISOString() : null,
         currency: localStorage.getItem('currency'),
       }
       if (product?.id) {
-        updateProduct({ ...newProduct, id: product.id })
+        const resp = updateProduct({ ...newProduct, id: product.id })
+        if (resp) {
+          handleSuccess()
+        }
       } else {
-        createProduct(newProduct)
-      }
 
-      setSlugs([])
-      navigate('/productos')
+        const resp = await createProduct(newProduct)
+        if (resp) {
+          handleSuccess()
+        }
+      }
     } catch (error) {
       console.error('Error submitting form:', error)
     }
+  }
+
+  const handleSuccess = () => {
+    setSlugs([])
+    navigate('/productos')
   }
   const formProduct = form.watch()
   return (

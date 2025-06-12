@@ -9,7 +9,7 @@ import {
   Min,
   MaxLength,
   IsIn,
-  Matches,
+  Matches
 } from 'class-validator';
 
 export class productDto {
@@ -66,6 +66,16 @@ export class productDto {
   @IsString({ each: true, message: 'Cada slug debe ser una cadena de texto' })
   slugs: string[];
 
+  @ApiProperty({
+    description: 'Campo para facilitar la búsqueda del producto en la app',
+    default: false
+  })
+  @IsOptional()
+  @IsString({
+    message: 'El slug debe ser una cadena de texto y no debe tener espacios'
+  })
+  slugs_url: string;
+
   @ApiProperty()
   @IsOptional()
   @IsString({ message: 'Las imágenes deben ser una cadena de texto' })
@@ -98,7 +108,7 @@ export class productDto {
   @IsOptional()
   @IsString({ message: 'La fecha de expiración debe ser una cadena de texto' })
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
-    message: 'La fecha de expiración debe tener el formato YYYY-MM-DD',
+    message: 'La fecha de expiración debe tener el formato YYYY-MM-DD'
   })
   expiration: string;
 
@@ -111,7 +121,8 @@ export class productDto {
   unity: string;
 
   @ApiProperty({
-    description: 'Campo para determinar si el producto se vende por el tipo de unidad',
+    description:
+      'Campo para determinar si el producto se vende por el tipo de unidad',
     default: false
   })
   @IsOptional()

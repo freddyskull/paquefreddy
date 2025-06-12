@@ -22,7 +22,12 @@ export class ProductsService {
       image: dto.image?.trim() === '' ? null : dto.image,
       brand: dto.brand?.trim() === '' ? null : dto.brand,
       bundle: dto.bundle === 0 ? null : dto.bundle,
-      expiration: dto.expiration ? new Date(dto.expiration) : null,
+      expiration:
+        dto.expiration === ''
+          ? null
+          : dto.expiration
+            ? new Date(dto.expiration)
+            : null,
       unity: dto.unity?.trim() === '' ? null : dto.unity,
       sell_unity: dto.sell_unity,
       supplier_id: dto.supplier_id,
@@ -110,6 +115,13 @@ export class ProductsService {
   async create(dto: productDto) {
     this.validatePrices(dto.price_ent, dto.price);
     await this.productExists('name', dto.name);
+    // Validar que el slugs_url sea único
+    const slugUrl = slugify(dto.name);
+    await this.productExists(
+      'slugs_url',
+      slugUrl,
+      'La URL generada ya existe, por favor elige otro nombre'
+    );
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;
     const productData =

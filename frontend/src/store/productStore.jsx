@@ -48,8 +48,16 @@ export const useProductStore = create((set, get) => ({
       const newProduct = response.data.data
       set({ products: [...newProduct] })
       toast.success("Producto creado exitosamente")
+      return true
     } catch (error) {
       handleError(error)
+
+      const message =
+        Array.isArray(error?.response?.data?.message)
+          ? error.response.data.message.join(', ')
+          : error?.response?.data?.message || "Error al crear el producto"
+      console.log(message)
+      toast.error(message)
       set({ error: error.message })
     } finally {
       set({ isLoading: false })

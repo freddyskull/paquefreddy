@@ -153,7 +153,7 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
                       className={buttonVariants({
                         variant: 'outline',
                         size: 'icon',
-                        className: `bg-white dark:bg-primary/20 hover:bg-primary/30 dark:shadow-primary/40! shadow-xl! hover:shadow-primary/80! text-primary hover:text-primary transition-shadow hover:border-primary duration-200 ${selectedProducts.length === 0 ? ' bg-slate-300! text-slate-400 pointer-events-none cursor-not-allowed' : ''}`,
+                        className: `bg-white dark:bg-primary/20 hover:bg-primary/30 dark:shadow-primary/40! shadow-xl! hover:shadow-primary/80! text-primary hover:text-primary transition-shadow hover:border-primary duration-200 ${selectedProducts.length === 0 ? ' bg-slate-300! opacity-50 text-slate-500 pointer-events-none cursor-not-allowed' : ''}`,
                       })}
                       onClick={() => {
                         if (selectedProducts.length === 0) return

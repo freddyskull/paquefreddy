@@ -47,7 +47,7 @@ export const useProductStore = create((set, get) => ({
       const response = await axiosInstance.post('products', product)
       const newProduct = response.data.data
       set({ products: [...newProduct] })
-      toast("Producto creado exitosamente")
+      toast.success("Producto creado exitosamente")
     } catch (error) {
       handleError(error)
       set({ error: error.message })
@@ -72,8 +72,9 @@ export const useProductStore = create((set, get) => ({
       set({
         products: products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)),
       })
-      toast("Producto actualizado exitosamente")
+      toast.success("Producto actualizado exitosamente")
     } catch (error) {
+      toast.error("Error al actualizar el producto")
       handleError(error)
       set({ error: error.message })
     } finally {
@@ -88,8 +89,13 @@ export const useProductStore = create((set, get) => ({
     if (!selectedProducts.some(p => p.id === product.id)) {
       set({ selectedProducts: [...selectedProducts, newProduct] })
     }
-    toast(`Se agregó "${product.name}" a la calculadora.`)
+    toast.success(`Se agregó "${product.name}" a la calculadora.`)
     get().calculateTotalProducts()
+  },
+
+  // update all Selected Products
+  updateSelectedProducts: (products) => {
+    set({ selectedProducts: [...products] })
   },
 
   // calculate total
@@ -133,6 +139,7 @@ export const useProductStore = create((set, get) => ({
     set({ selectedProducts: updatedProducts })
   },
 
+
   // Remove product from selectedProducts
   removeSelectedProduct: (productId) => {
     const { selectedProducts } = get()
@@ -152,7 +159,7 @@ export const useProductStore = create((set, get) => ({
         product.id === id ? updatedProduct : product
       )
       set({ products: newProducts })
-      toast("Producto actualizado exitosamente")
+      toast.success("Producto actualizado exitosamente")
     } catch (error) {
       handleError(error)
       set({ error: error.message })
@@ -168,7 +175,7 @@ export const useProductStore = create((set, get) => ({
       await axiosInstance.delete(`products/${id}`)
       const { products } = get()
       set({ products: products.filter((p) => p.id !== id) })
-      toast("Producto eliminado exitosamente")
+      toast.success("Producto eliminado exitosamente")
     } catch (error) {
       handleError(error)
       set({ error: error.message })

@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useProductStore } from '@/store/productStore'
+import { EditStockAndPrice } from '@/components/dialogs/editStockAndPrice'
 
 export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
   const { removeSelectedProduct } = useProductStore()
@@ -56,14 +57,15 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
             </Tooltip>
           </TooltipProvider>
           <div className="flex items-center">
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               className="w-6! h-6!"
               onClick={() => updateSelectedProductQuantity(product.id, null)}
             >
               <Pencil />
-            </Button>
+            </Button> */}
+            <EditStockAndPrice product={product} />
             <Button
               variant="ghost"
               size="icon"

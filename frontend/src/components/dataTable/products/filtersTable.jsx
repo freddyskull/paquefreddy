@@ -201,7 +201,7 @@ export const FiltersTable = ({
           </Button>
         )}
         <Link to="/productos/nuevo">
-          <Button variant="outline" className="cursor-pointer text-foreground/80 bg-background! p-2 px-3 border border-slate-200 dark:border-slate-700 hover:bg-primary/20! hover:text-foreground transition-all duration-300 rounded-md">
+          <Button variant="outline" className="bg-background! hover:bg-primary/20! p-2 px-3 border border-slate-200 dark:border-slate-700 rounded-md text-foreground/80 hover:text-foreground transition-all duration-300 cursor-pointer">
             <PlusIcon />
           </Button>
         </Link>

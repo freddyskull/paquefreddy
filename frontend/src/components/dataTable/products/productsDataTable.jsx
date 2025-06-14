@@ -175,7 +175,7 @@ export const ProductsDataTable = ({ data }) => {
   }
 
   return (
-    <Card className="flex h-[88vh]">
+    <Card className="flex md:h-[88vh]">
       <FiltersTable
         categories={categories}
         searchTerm={searchTerm}

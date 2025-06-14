@@ -46,7 +46,7 @@ export const PaginationProducts = ({ table }) => {
   const pageSizeOptions = [10, 20, 30, 50, 100]
 
   return (
-    <div className="flex justify-between items-center mt-4 w-full">
+    <div className="flex xl:flex-row flex-col xl:justify-between items-center gap-4 mt-4 mb-12 xl:mb-0 w-full">
       {/* Paginación a la izquierda */}
       <div>
         <Pagination>

@@ -116,7 +116,11 @@ export class ProductsService {
     this.validatePrices(dto.price_ent, dto.price);
     await this.productExists('name', dto.name);
     // Validar que el slugs_url sea único
-    const slugUrl = slugify(dto.name);
+    // Generar slug eliminando paréntesis, comillas y caracteres especiales
+    const slugUrl = slugify(
+      dto.name.replace(/[()"'`´!¡¿?.,:;[\]{}<>@#$%^&*+=~|\\/]/g, ''),
+      { lower: true, strict: true }
+    );
     await this.productExists(
       'slugs_url',
       slugUrl,
@@ -177,6 +181,11 @@ export class ProductsService {
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;
     this.validatePrices(dto.price_ent, dto.price);
+    await this.productExists(
+      'slugs_url',
+      dto.slugs_url,
+      'La "URL del producto" ya existe, por favor elige otro nombre'
+    );
     const newData = { ...product, ...dto };
     const updatedData =
       dto.currency === 'USD' || !dto.currency
@@ -195,13 +204,17 @@ export class ProductsService {
   }
 
   async patch(id: number, dto: productDto) {
-    console.log(dto);
     const product = await this.prisma.products.findFirst({
       where: { id: Number(id) }
     });
     if (!product) {
       throw new HttpException('No existe el producto', HttpStatus.BAD_REQUEST);
     }
+    await this.productExists(
+      'slugs_url',
+      dto.slugs_url,
+      'La "URL del producto" ya existe, por favor elige otro nombre'
+    );
     if (dto.price_ent && dto.price) {
       this.validatePrices(dto.price_ent, dto.price);
     }

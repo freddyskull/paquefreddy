@@ -96,28 +96,30 @@ export default function Layout({ children }) {
             </nav>
           </div>
           <div className="flex items-center gap-2 px-3">
-            {
-              selectedProducts.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <p>Tienes <span className="">{selectedProducts.length}</span> en la calculadora</p>
-                  {
-                    calculateTotal.totalDolar > 0 && (
-                      <div className="flex items-center gap-2">
-                        <p className="text-slate-500 dark:text-white/80 text-sm">
-                          <span className="font-bold">Bs {calculateTotal.totalBs.toFixed(2)}</span>
-                        </p>
-                        <span className="text-xs"> | </span>
-                        <p className="text-slate-500 dark:text-white/80 text-sm">
-                          <span className="font-bold">${calculateTotal.totalDolar.toFixed(2)}</span>
-                        </p>
-                      </div>
-                    )
-                  }
-                </div>
-              )
-            }
+            <div className="hidden xl:block">
+              {
+                selectedProducts.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <p>Tienes <span className="">{selectedProducts.length}</span> en la calculadora</p>
+                    {
+                      calculateTotal.totalDolar > 0 && (
+                        <div className="flex items-center gap-2">
+                          <p className="text-slate-500 dark:text-white/80 text-sm">
+                            <span className="font-bold">Bs {calculateTotal.totalBs.toFixed(2)}</span>
+                          </p>
+                          <span className="text-xs"> | </span>
+                          <p className="text-slate-500 dark:text-white/80 text-sm">
+                            <span className="font-bold">${calculateTotal.totalDolar.toFixed(2)}</span>
+                          </p>
+                        </div>
+                      )
+                    }
+                  </div>
+                )
+              }
+            </div>
             <Separator orientation="vertical" className="mr-2 h-4" />
-            <div className="flex items-center gap-2 font-bold text-slate-500 dark:text-white/80 text-sm">
+            <div className="hidden md:flex items-center gap-2 font-bold text-slate-500 dark:text-white/80 text-sm">
               <span className="text-xs">Precios dolares: </span>
               <DolarPriceDialog open={openDialogDolar} onOpenChange={setOpenDialogDolar} priceDolar={dolar} >
                 <span className={`hover:underline cursor-pointer ${dolar <= externalDolar[0]?.promedio ? "text-red-500" : "text-primary"}`}>Bs. {dolar.toFixed(2)}</span>
@@ -165,7 +167,7 @@ export default function Layout({ children }) {
             <CurrencySelector />
           </div>
         </header>
-        <div className='flex flex-wrap p-4 h-[95vh] overflow-y-auto w-full'>
+        <div className='flex flex-wrap p-4 w-full h-[95vh] overflow-y-auto'>
 
           {children}
 

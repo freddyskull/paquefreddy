@@ -56,7 +56,6 @@ export const useProductStore = create((set, get) => ({
         Array.isArray(error?.response?.data?.message)
           ? error.response.data.message.join(', ')
           : error?.response?.data?.message || "Error al crear el producto"
-      console.log(message)
       toast.error(message)
       set({ error: error.message })
     } finally {
@@ -82,7 +81,11 @@ export const useProductStore = create((set, get) => ({
       })
       toast.success("Producto actualizado exitosamente")
     } catch (error) {
-      toast.error("Error al actualizar el producto")
+      const message =
+        Array.isArray(error?.response?.data?.message)
+          ? error.response.data.message.join(', ')
+          : error?.response?.data?.message || "Error al editar el producto"
+      toast.error(message)
       handleError(error)
       set({ error: error.message })
     } finally {
@@ -102,8 +105,14 @@ export const useProductStore = create((set, get) => ({
   },
 
   // update all Selected Products
-  updateSelectedProducts: (products) => {
-    set({ selectedProducts: [...products] })
+  updateSelectedProducts: (selectedProductIds) => {
+    const { products } = get()
+    const updatedSelectedProducts = selectedProductIds
+      .map(id => products.find(p => p.id === id))
+      .filter(Boolean)
+      .map(product => ({ ...product, quantity: 1 }))
+    set({ selectedProducts: updatedSelectedProducts })
+    get().calculateTotalProducts()
   },
 
   // calculate total
@@ -119,7 +128,6 @@ export const useProductStore = create((set, get) => ({
       totalUsd += item.price * item.quantity
       totalProfits += (item.price * item.quantity) - (item.price_ent * item.quantity)
     })
-
     set({ calculateTotal: { totalBs, totalDolar: totalUsd, totalProfits: { bs: totalProfits * dolarPrice, usd: totalProfits } } })
   },
 
@@ -168,7 +176,13 @@ export const useProductStore = create((set, get) => ({
       )
       set({ products: newProducts })
       toast.success("Producto actualizado exitosamente")
+      return true
     } catch (error) {
+      const message =
+        Array.isArray(error?.response?.data?.message)
+          ? error.response.data.message.join(', ')
+          : error?.response?.data?.message || "Error al editar el producto"
+      toast.error(message)
       handleError(error)
       set({ error: error.message })
     } finally {

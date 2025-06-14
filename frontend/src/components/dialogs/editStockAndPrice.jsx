@@ -8,9 +8,8 @@ import { CurrencySelector } from '@/app/currencySelector'
 import { useProductStore } from '@/store/productStore'
 
 export const EditStockAndPrice = ({ product }) => {
-  const { currency, config } = useConfigStore()
-  const dolar = config.dolar
-  const { updateProduct, selectedProducts, updateSelectedProducts } = useProductStore()
+  const { currency } = useConfigStore()
+  const { patchProduct, selectedProducts, updateSelectedProducts } = useProductStore()
   const [open, setOpen] = useState(false)
   const [stock, setStock] = useState(product.stock)
   const [price, setPrice] = useState(currency === 'USD' ? parseFloat(product.price).toFixed(2) : parseFloat(product.price_bs).toFixed(2))
@@ -19,29 +18,19 @@ export const EditStockAndPrice = ({ product }) => {
     setPrice(currency === 'USD' ? parseFloat(product.price).toFixed(2) : parseFloat(product.price_bs).toFixed(2))
   }, [product, currency])
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const updatedSelectedProduct = {
-      ...product,
       stock: stock ? parseInt(stock, 10) : product.stock,
-      price: currency === 'USD'
-        ? (price ? parseFloat(price) : product.price)
-        : (price ? parseFloat(price) / dolar : product.price / dolar),
-      price_bs: currency !== 'USD'
-        ? (price ? parseFloat(price) : product.price_bs)
-        : (price ? parseFloat(price) * dolar : product.price_bs),
+      price: parseFloat(price),
       currency: currency,
     }
-    const index = selectedProducts.findIndex(p => p.id === updatedSelectedProduct.id)
-    const updatedSelectedProducts = [
-      ...selectedProducts.slice(0, index),
-      updatedSelectedProduct,
-      ...selectedProducts.slice(index + 1)
-    ]
-    updateSelectedProducts(updatedSelectedProducts)
-    updateProduct(updatedSelectedProduct)
-    setOpen(false)
+    const response = await patchProduct(product.id, updatedSelectedProduct)
+    if (response) {
+      const selectedProductIds = selectedProducts.map(p => p.id)
+      updateSelectedProducts(selectedProductIds)
+      setOpen(false)
+    }
   }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

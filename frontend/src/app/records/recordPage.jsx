@@ -11,7 +11,6 @@ export const RecordPage = () => {
   const navigate = useNavigate()
   const { records } = useRecordsStore()
   const recordsMemo = useMemo(() => records, [records])
-  console.log(records)
   const columns = [
     {
       accessorKey: 'productList',

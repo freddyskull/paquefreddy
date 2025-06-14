@@ -42,11 +42,11 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
               <TooltipContent className="dark:bg-secondary max-w-[200px] dark:text-slate-200">
                 <p className="font-bold dark:text-slate-200 text-wrap">{product.name}</p>
                 <p className="text-white/70 dark:text-slate-400 text-xs text-wrap">
-                  {product.slugs.join(', ')}
+                  {/* {product.slugs.join(', ')} */}
                 </p>
                 <div className="flex justify-between items-center gap-2 mt-2">
                   <p className="font-bold dark:text-white text-xs">
-                    Bs {product.price_bs.toFixed(2)}
+                    {/* Bs {product.price_bs.toFixed(2)} */}
                   </p>
                   <span className="text-slate-200 text-xs">|</span>
                   <p className="font-bold text-white text-xs">

@@ -120,7 +120,7 @@ export class ProductsService {
     await this.productExists(
       'slugs_url',
       slugUrl,
-      'La URL generada ya existe, por favor elige otro nombre'
+      'La "URL del producto" ya existe, por favor elige otro nombre'
     );
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;
@@ -195,6 +195,7 @@ export class ProductsService {
   }
 
   async patch(id: number, dto: productDto) {
+    console.log(dto);
     const product = await this.prisma.products.findFirst({
       where: { id: Number(id) }
     });
@@ -208,10 +209,36 @@ export class ProductsService {
     const dolar = config?.dolar || 0;
     const newData = { ...product, ...dto };
 
-    const updatedData =
-      dto.currency === 'USD' || !dto.currency
-        ? this.buildProductData(newData)
-        : this.buildProductData(this.convertPricesToUSD(newData, dolar, dto));
+    // Si no se recibe currency, price ni price_bs, no modificar precios
+    const shouldUpdatePrices =
+      'currency' in dto ||
+      'price' in dto ||
+      'price_bs' in dto ||
+      'price_ent' in dto;
+
+    let updatedData;
+    if (shouldUpdatePrices) {
+      updatedData =
+        dto.currency === 'USD' || !dto.currency
+          ? this.buildProductData(newData)
+          : this.buildProductData(this.convertPricesToUSD(newData, dolar, dto));
+    } else {
+      // No modificar precios
+      const dtoObj = JSON.parse(JSON.stringify(dto));
+      delete dtoObj.price;
+      delete dtoObj.price_ent;
+      delete dtoObj.price_bs;
+      const merged = { ...product, ...dtoObj };
+      updatedData = this.buildProductData(merged);
+      // Mantener los precios originales
+      updatedData.price = product.price;
+      updatedData.price_ent = product.price_ent;
+    }
+
+    // Eliminar slugs_url para no actualizarlo
+    if ('slugs_url' in updatedData) {
+      delete updatedData.slugs_url;
+    }
 
     await this.prisma.products.update({
       where: { id: Number(id) },
@@ -251,10 +278,13 @@ export class ProductsService {
         HttpStatus.BAD_REQUEST
       );
     }
+
+    // AQUI HACER COMO EL PATCH
     await this.prisma.products.update({
       where: { id: Number(id) },
       data: { stock: newStock }
     });
+
     return {
       status: 'ok',
       message: 'Stock actualizado correctamente',
@@ -263,12 +293,25 @@ export class ProductsService {
   }
 
   async searchProduct(query: string) {
+    if (!query || query.trim() === '') {
+      throw new HttpException(
+        'La consulta de búsqueda no puede estar vacía',
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    query = query.trim();
+    if (query.length < 2) {
+      throw new HttpException(
+        'La consulta de búsqueda debe tener al menos 2 caracteres',
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
     return this.prisma.products.findMany({
       where: {
         OR: [
           { name: { contains: query, mode: 'insensitive' } },
-          { slugs_url: { contains: query, mode: 'insensitive' } },
-          { slugs: { has: query } }, // Adjusted to handle array of strings
+          { slugs: { has: query } },
           { brand: { contains: query, mode: 'insensitive' } }
         ]
       },
@@ -277,5 +320,24 @@ export class ProductsService {
         createdAt: 'desc'
       }
     });
+  }
+
+  async productsPagination(page: number = 1, limit: number = 20) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.products.findMany({
+        skip,
+        take: limit,
+        select: this.formatedData,
+        orderBy: { createdAt: 'desc' }
+      }),
+      this.prisma.products.count()
+    ]);
+    return {
+      data,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit)
+    };
   }
 }

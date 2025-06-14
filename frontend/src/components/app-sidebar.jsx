@@ -27,12 +27,16 @@ const data = {
       url: "/productos",
       items: [
         {
-          title: "Nuevo producto",
+          title: "Lista de productos",
+          url: "/productos",
+        },
+        {
+          title: "Agregar productos",
           url: "/productos/nuevo",
         },
         {
-          title: "Nuevo categoría",
-          url: "/categorias/nuevo",
+          title: "Sin stock",
+          url: "/productos/sin-stock",
         },
       ],
     },

@@ -7,6 +7,7 @@ import { ErrorConexion } from '../error-conexion'
 import { Home } from './home/home'
 import { RecordPage } from './records/recordPage'
 import { NoRouteUrl } from './no-exist/noRouteUrl'
+import { SinStockPage } from './sin-stock/sinStockPage'
 export const AppRouter = () => {
   return (
     <Router>
@@ -17,6 +18,7 @@ export const AppRouter = () => {
         <Route path='/productos' element={<ProductPage />} />
         <Route path='/productos/nuevo' element={<NewProductPage />} />
         <Route path='/productos/editar/:id' element={<EditProductPage />} />
+        <Route path='/productos/sin-stock' element={<SinStockPage />} />
         <Route path='/error-conexion' element={<ErrorConexion />} />
         <Route path='/productos/editar/' element={<Navigate to="/productos" />} />
         <Route path='ventas' element={<RecordPage />} />

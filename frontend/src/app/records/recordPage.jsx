@@ -61,6 +61,7 @@ export const RecordPage = () => {
     {
       accessorKey: 'user',
       header: () => <div className="text-center">Usuario</div>,
+      enableSorting: false,
       cell: ({ row }) => (
         <span className="flex justify-center items-center font-bold text-center">
           {row.original.user != null ? row.original.user : 'N/A'}
@@ -69,6 +70,7 @@ export const RecordPage = () => {
     },
     {
       accessorKey: 'blackList',
+      enableSorting: false,
       header: () => <div className="text-center">Lista negra</div>,
       cell: ({ row }) => (
         <span className="flex justify-center items-center font-bold text-center">
@@ -103,6 +105,7 @@ export const RecordPage = () => {
 
     {
       accessorKey: 'Acciones',
+      enableSorting: false,
       header: () => <div className="text-center">Acciones</div>,
       cell: ({ row }) => (
         <div className="flex justify-center items-center gap-2">

@@ -14,6 +14,8 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useProductStore } from "@/store/productStore"
+import { useConfigStore } from "@/store/configStore"
 
 // This is sample data.
 const data = {
@@ -35,9 +37,14 @@ const data = {
           url: "/productos/nuevo",
         },
         {
+          title: "Sin imágen",
+          url: "/productos/sin-imagen",
+        },
+        {
           title: "Sin stock",
           url: "/productos/sin-stock",
         },
+
       ],
     },
 
@@ -68,6 +75,20 @@ const data = {
 export function AppSidebar({
   ...props
 }) {
+  const { isLoading, getProductsWithIssues } = useProductStore()
+  const { currency } = useConfigStore()
+  const [sinStockCount, setSinStockCount] = React.useState(0)
+  const [sinImagenCount, setSinImagenCount] = React.useState(0)
+
+  React.useEffect(() => {
+    if (!isLoading) {
+      const issues = getProductsWithIssues()
+      setSinStockCount(issues.productsWithoutStock.count)
+      setSinImagenCount(issues.productsWithoutImage.count)
+    }
+  }, [isLoading])
+
+  console.log()
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -103,7 +124,22 @@ export function AppSidebar({
                     {item.items.map((item) => (
                       <SidebarMenuSubItem key={item.title}>
                         <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <Link to={item.url}>{item.title}</Link>
+                          <Link className="" to={item.url}>
+                            <span className="flex items-center gap-1">
+                              {item.title}
+                              {item.title === "Sin stock" && sinStockCount > 0 && (
+                                <span className={`text-[8px] ${currency === 'USD' ? 'bg-usd' : 'bg-primary'} py-[2px] px-[4px] rounded-full text-white font-bold  `}>
+                                  {sinStockCount}
+                                </span>
+                              )}
+                              {item.title === "Sin imágen" && sinImagenCount > 0 && (
+                                <span className={`text-[8px] ${currency === 'USD' ? 'bg-usd' : 'bg-primary'} py-[2px] px-[4px] rounded-full text-white font-bold  `}>
+                                  {sinImagenCount}
+                                </span>
+                              )}
+                            </span>
+
+                          </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

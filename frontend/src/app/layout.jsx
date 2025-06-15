@@ -73,7 +73,6 @@ export default function Layout({ children }) {
       <Toaster position="top-center" richColors />
       <SidebarProvider>
         <AppSidebar className="overflow-x-hidden" />
-
         <SidebarInset>
           <header className="flex justify-between items-center gap-2 bg-sidebar border-b h-16 shrink-0">
             <div className="flex items-center gap-2 px-3">

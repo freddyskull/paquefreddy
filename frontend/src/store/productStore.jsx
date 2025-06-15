@@ -7,7 +7,7 @@ import { useConfigStore } from './configStore'
 export const useProductStore = create((set, get) => ({
   products: [],
   selectedProduct: null,
-  isLoading: false,
+  isLoading: true,
   error: null,
   selectedProducts: [],
   calculateTotal: { totalBs: 0, totalDolar: 0, totalProfits: { bs: 0, usd: 0 } },
@@ -221,4 +221,32 @@ export const useProductStore = create((set, get) => ({
     isLoading: false,
     error: null,
   }),
+
+  // Obtener productos con problemas de imagen o falta de stock
+  getProductsWithIssues: () => {
+    const { products } = get()
+    // Considera que la propiedad de imagen puede llamarse 'image', 'img', o estar en un array 'images'
+    const isImageInvalid = (product) => {
+      if (Array.isArray(product.images)) {
+        return !product.images.length || product.images.every(img => !img || img === '' || img === 'default-img.jpg')
+      }
+      return !product.image || product.image === '' || product.image === 'default-img.jpg'
+    }
+    const isStockInvalid = (product) => {
+      // Cambia el umbral si lo necesitas
+      return !product.stock || product.stock <= 0
+    }
+    const productsWithoutImage = products.filter(isImageInvalid)
+    const productsWithoutStock = products.filter(isStockInvalid)
+    return {
+      productsWithoutImage: {
+        list: productsWithoutImage,
+        count: productsWithoutImage.length
+      },
+      productsWithoutStock: {
+        list: productsWithoutStock,
+        count: productsWithoutStock.length
+      }
+    }
+  },
 }))

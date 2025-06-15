@@ -44,40 +44,48 @@ export const DefaultDatatable = ({ columns, data, pageSize: initialPageSize = 10
               <TableHeader>
                 {table.getHeaderGroups().map(headerGroup => (
                   <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map(header => (
-                      <TableHead
-                        key={header.id}
-                        onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
-                        className={
-                          header.column.getCanSort()
-                            ? 'cursor-pointer select-none relative hover:text-primary transition-colors font-bold'
-                            : 'relative'
-                        }
-                      >
-                        <div className='flex items-center gap-1'>
-                          {header.column.getCanSort() && (
-                            <span className="">
-                              {header.column.getIsSorted() === 'asc' ? '▲' : header.column.getIsSorted() === 'desc' ? '▼' : ''}
-                            </span>
-                          )}
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {
-                            header.column.getCanSort() && <ListCollapseIcon className="w-4 h-4 text-gray-500" />
+                    {headerGroup.headers.map(header => {
+                      // Detectar si la columna tiene center: true
+                      const isCentered = header.column.columnDef.center
+                      return (
+                        <TableHead
+                          key={header.id}
+                          onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
+                          className={
+                            (header.column.getCanSort()
+                              ? 'cursor-pointer select-none relative hover:text-primary transition-colors font-bold'
+                              : 'relative') +
+                            (isCentered ? ' text-center' : '')
                           }
-                        </div>
-                      </TableHead>
-                    ))}
+                        >
+                          <div className={'flex items-center gap-1' + (isCentered ? ' justify-center' : '')}>
+                            {header.column.getCanSort() && (
+                              <span className="">
+                                {header.column.getIsSorted() === 'asc' ? '▲' : header.column.getIsSorted() === 'desc' ? '▼' : ''}
+                              </span>
+                            )}
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                            {
+                              header.column.getCanSort() && <ListCollapseIcon className="w-4 h-4 text-gray-500" />
+                            }
+                          </div>
+                        </TableHead>
+                      )
+                    })}
                   </TableRow>
                 ))}
               </TableHeader>
               <TableBody>
                 {paginatedRows.map(row => (
                   <TableRow key={row.id}>
-                    {row.getVisibleCells().map(cell => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
+                    {row.getVisibleCells().map(cell => {
+                      const isCentered = cell.column.columnDef.center
+                      return (
+                        <TableCell key={cell.id} className={isCentered ? 'text-center' : ''}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      )
+                    })}
                   </TableRow>
                 ))}
               </TableBody>

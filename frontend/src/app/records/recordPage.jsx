@@ -16,6 +16,7 @@ export const RecordPage = () => {
     {
       accessorKey: 'productList',
       header: 'Num productos',
+      center: true,
       cell: ({ row }) => (
         <div className='text-center'>
           <span className="bg-slate-300 px-3 py-1 rounded-md font-bold text-slate-500 text-xs text-center">
@@ -27,6 +28,7 @@ export const RecordPage = () => {
     {
       accessorKey: 'dolar_price',
       header: () => <div className="text-center">Dolar de la venta</div>,
+      center: true,
       cell: ({ row }) => (
         <div className="flex justify-center items-center gap-2">
           <span className="bg-slate-300 px-2 py-1 rounded-md font-bold text-slate-500 text-xs text-center">
@@ -37,6 +39,7 @@ export const RecordPage = () => {
     },
     {
       accessorKey: 'Totales',
+      center: true,
       header: () => <div className="flex justify-center items-center">Totales</div>,
       cell: ({ row }) => (
         <div className="flex justify-center items-center gap-4">
@@ -52,6 +55,7 @@ export const RecordPage = () => {
     },
     {
       accessorKey: 'Ganancias',
+      center: true,
       header: () => <div className="text-center">Ganacias</div>,
       cell: ({ row }) => (
         <div className="flex justify-center items-center gap-4">
@@ -67,6 +71,7 @@ export const RecordPage = () => {
     },
     {
       accessorKey: 'user',
+      center: true,
       header: () => <div className="text-center">Usuario</div>,
       enableSorting: false,
       cell: ({ row }) => (
@@ -77,6 +82,7 @@ export const RecordPage = () => {
     },
     {
       accessorKey: 'blackList',
+      center: true,
       enableSorting: false,
       header: () => <div className="text-center">Lista negra</div>,
       cell: ({ row }) => (
@@ -87,6 +93,7 @@ export const RecordPage = () => {
     },
     {
       accessorKey: 'createdAt',
+      center: true,
       header: () => <div className="text-center">Fecha</div>,
       cell: ({ row }) => {
         if (row.original.createdAt) {
@@ -112,6 +119,7 @@ export const RecordPage = () => {
 
     {
       accessorKey: 'Acciones',
+      center: true,
       enableSorting: false,
       header: () => <div className="text-center">Acciones</div>,
       cell: ({ row }) => (

@@ -100,7 +100,7 @@ export const useProductStore = create((set, get) => ({
     if (!selectedProducts.some(p => p.id === product.id)) {
       set({ selectedProducts: [...selectedProducts, newProduct] })
     }
-    toast.success(`Se agregó "${product.name}" a la calculadora.`)
+    toast(`Se agregó "${product.name}" a la calculadora.`)
     get().calculateTotalProducts()
   },
 

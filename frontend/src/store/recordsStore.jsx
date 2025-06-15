@@ -44,7 +44,12 @@ export const useRecordsStore = create((set, get) => ({
       const response = await axiosInstance.post('records', record)
       const newRecord = response.data
       set({ records: [...get().records, newRecord] })
-      toast.success("La venta fue realizada puede ver los detalles en el historial de ventas")
+      toast.success("La venta fue realizada puede ver los detalles en el historial de ventas", {
+        action: {
+          label: 'Ver ventas',
+          onClick: () => window.location.href = '/ventas'
+        },
+      })
       return 'success'
     } catch (error) {
       handleError(error)

@@ -106,11 +106,15 @@ export const useProductStore = create((set, get) => ({
 
   // update all Selected Products
   updateSelectedProducts: (selectedProductIds) => {
-    const { products } = get()
+    const { products, selectedProducts } = get()
     const updatedSelectedProducts = selectedProductIds
-      .map(id => products.find(p => p.id === id))
+      .map(id => {
+        const product = products.find(p => p.id === id)
+        if (!product) return null
+        const existing = selectedProducts.find(p => p.id === id)
+        return { ...product, quantity: existing ? existing.quantity : 1 }
+      })
       .filter(Boolean)
-      .map(product => ({ ...product, quantity: 1 }))
     set({ selectedProducts: updatedSelectedProducts })
     get().calculateTotalProducts()
   },

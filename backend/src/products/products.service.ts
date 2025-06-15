@@ -181,11 +181,11 @@ export class ProductsService {
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;
     this.validatePrices(dto.price_ent, dto.price);
-    await this.productExists(
-      'slugs_url',
-      dto.slugs_url,
-      'La "URL del producto" ya existe, por favor elige otro nombre'
-    );
+    // await this.productExists(
+    //   'slugs_url',
+    //   dto.slugs_url,
+    //   'La "URL del producto" ya existe, por favor elige otro nombre'
+    // );
     const newData = { ...product, ...dto };
     const updatedData =
       dto.currency === 'USD' || !dto.currency
@@ -210,11 +210,11 @@ export class ProductsService {
     if (!product) {
       throw new HttpException('No existe el producto', HttpStatus.BAD_REQUEST);
     }
-    await this.productExists(
-      'slugs_url',
-      dto.slugs_url,
-      'La "URL del producto" ya existe, por favor elige otro nombre'
-    );
+    // await this.productExists(
+    //   'slugs_url',
+    //   dto.slugs_url,
+    //   'La "URL del producto" ya existe, por favor elige otro nombre'
+    // );
     if (dto.price_ent && dto.price) {
       this.validatePrices(dto.price_ent, dto.price);
     }

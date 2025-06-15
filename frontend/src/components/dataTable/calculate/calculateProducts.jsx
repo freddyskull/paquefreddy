@@ -117,6 +117,40 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
     }
   }, [])
 
+  // Función para filtrar productos por searchTerm (name, slugs, brand)
+  function filterProductsBySearchTerm(products, searchTerm) {
+    if (!products || searchTerm.length <= 2) return []
+    const normalizedSearch = searchTerm
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+    return products.filter((product) => {
+      // Buscar en name
+      const nameMatch = product.name
+        ?.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .includes(normalizedSearch)
+      // Buscar en slugs (arreglo de strings)
+      const slugsMatch = Array.isArray(product.slugs)
+        ? product.slugs.some(slug =>
+          slug
+            ?.toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .includes(normalizedSearch)
+        )
+        : false
+      // Buscar en brand
+      const brandMatch = product.brand
+        ?.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .includes(normalizedSearch)
+      return nameMatch || slugsMatch || brandMatch
+    })
+  }
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger>
@@ -263,19 +297,7 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
           <div className="flex flex-col gap-2 mt-2 max-h-[30vh] overflow-auto">
             {products.length > 0 &&
               searchTerm.length > 2 &&
-              products
-                .filter((product) =>
-                  product.name
-                    .toLowerCase()
-                    .normalize('NFD')
-                    .replace(/[\u0300-\u036f]/g, '')
-                    .includes(
-                      searchTerm
-                        .toLowerCase()
-                        .normalize('NFD')
-                        .replace(/[\u0300-\u036f]/g, '')
-                    )
-                )
+              filterProductsBySearchTerm(products, searchTerm)
                 .map((product) => (
                   <div className="bg-white dark:bg-accent/50 rounded-md dark:text-slate-200" key={product.id}>
                     <ProductsList

@@ -6,9 +6,7 @@ export const ProductsList = ({ product, selectedProducts, toggleSelectedProduct 
     toggleSelectedProduct(product.id)
 
   }
-
   const isProductSelected = selectedProducts.some(p => p.id === product.id)
-  console.log(selectedProducts)
   return (
     <div
       className={`flex w-full items-center gap-2 cursor-pointer transition-colors hover:bg-primary/20 p-2 rounded-md ${isProductSelected ? 'bg-primary/40' : ''}`}

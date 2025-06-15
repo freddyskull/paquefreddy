@@ -99,24 +99,6 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
   }
-  input[type='date']::-webkit-calendar-picker-indicator {
-    filter: brightness(0) invert(1);
-  }
-  input[type='date']::-webkit-datetime-edit {
-    color: var(--foreground);
-  }
-  input[type='date']::-webkit-datetime-edit-text {
-    color: var(--foreground);
-  }
-  input[type='date']::-webkit-datetime-edit-month-field {
-    color: var(--foreground);
-  }
-  input[type='date']::-webkit-datetime-edit-day-field {
-    color: var(--foreground);
-  }
-  input[type='date']::-webkit-datetime-edit-year-field {
-    color: var(--foreground);
-  }
 }
 
 .dark {

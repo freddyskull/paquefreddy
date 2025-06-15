@@ -57,14 +57,6 @@ export const SelectedProduct = ({ product, updateSelectedProductQuantity }) => {
             </Tooltip>
           </TooltipProvider>
           <div className="flex items-center">
-            {/* <Button
-              variant="ghost"
-              size="icon"
-              className="w-6! h-6!"
-              onClick={() => updateSelectedProductQuantity(product.id, null)}
-            >
-              <Pencil />
-            </Button> */}
             <EditStockAndPrice product={product} />
             <Button
               variant="ghost"

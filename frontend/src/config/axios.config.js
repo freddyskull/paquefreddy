@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'no-rute';
+
 export const axiosInstance = axios.create({
-  baseURL: 'http://192.168.0.204:3001/api/v1/',
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',

@@ -133,6 +133,20 @@ export const ProductsDataTable = ({ data }) => {
     pageSize: 30,
   })
 
+  // Función de filtro global personalizada
+  const globalFilterFn = (row, columnId, filterValue) => {
+    if (!filterValue) return true
+    const value = filterValue.toLowerCase()
+    const { name, slugs, brand } = row.original
+    // Buscar en name
+    if (name && name.toLowerCase().includes(value)) return true
+    // Buscar en slugs (arreglo de strings)
+    if (Array.isArray(slugs) && slugs.some(slug => slug.toLowerCase().includes(value))) return true
+    // Buscar en brand
+    if (brand && brand.toLowerCase().includes(value)) return true
+    return false
+  }
+
   const table = useReactTable({
     data: memoizedData,
     columns,
@@ -141,7 +155,9 @@ export const ProductsDataTable = ({ data }) => {
     state: {
       columnFilters,
       pagination,
+      globalFilter: searchTerm,
     },
+    globalFilterFn, // <-- Añadido aquí
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,

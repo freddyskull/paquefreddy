@@ -8,5 +8,5 @@ COPY . .
 # RUN npm run seed
 RUN npm install -g @nestjs/cli
 RUN npx prisma generate
-RUN npx prisma migrate dev --name init
+# RUN npx prisma migrate dev --name init
 CMD ["npm", "run", "start:dev"]

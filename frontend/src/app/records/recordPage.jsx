@@ -7,12 +7,32 @@ import { Eye } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useRecordsStore } from '@/store/recordsStore'
 import { Input } from '@/components/ui/input'
+import { toast } from 'sonner'
 
 export const RecordPage = () => {
   const navigate = useNavigate()
   const { records } = useRecordsStore()
   const recordsMemo = useMemo(() => records, [records])
   const columns = [
+    {
+      accessorKey: 'id',
+      header: 'ID',
+      center: true,
+      cell: ({ row }) => (
+        <div className='text-center'>
+          <button
+            className="bg-slate-300 hover:bg-slate-400 px-3 py-1 rounded-md font-bold text-slate-500 text-xs text-center transition"
+            onClick={() => {
+              navigator.clipboard.writeText(row.original.id)
+              toast('ID copiado al portapapeles')
+            }}
+            type="button"
+          >
+            {row.original.id}
+          </button>
+        </div>
+      )
+    },
     {
       accessorKey: 'productList',
       header: 'Num productos',

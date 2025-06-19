@@ -109,6 +109,10 @@ export const ProductsDataTable = ({ data }) => {
       accessorKey: 'createdAt',
       header: 'fecha creación',
     },
+    {
+      accessorKey: 'updatedAt',
+      header: 'fecha actualización',
+    },
   ], [])
 
   const memoizedData = useMemo(() => data, [data])
@@ -126,6 +130,10 @@ export const ProductsDataTable = ({ data }) => {
       id: "categorie_slug",
       value: ""
     }
+  ])
+  const [sorting, setSorting] = useState([
+    { id: 'createdAt', desc: true },
+    { id: 'updatedAt', desc: true },
   ])
 
   const [pagination, setPagination] = useState({
@@ -156,13 +164,15 @@ export const ProductsDataTable = ({ data }) => {
       columnFilters,
       pagination,
       globalFilter: searchTerm,
+      sorting,
     },
-    globalFilterFn, // <-- Añadido aquí
+    globalFilterFn,
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
+    onSortingChange: setSorting,
   })
 
 

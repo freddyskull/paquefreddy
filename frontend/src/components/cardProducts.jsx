@@ -66,7 +66,7 @@ export const ProductCard = ({ product, handleEdit }) => {
         >
           <div className="flex justify-center items-center gap-4 bg-black/20 p-2 rounded-sm w-3/4">
             <div>
-              <Link to={`/productos/editar/${product.slugs_url}`}>
+              <Link to={`/productos/editar/${product.id}`}>
                 <Button variant="outline" className="w-8 h-8">
                   <Pencil className="text-grey-300" />
                 </Button>

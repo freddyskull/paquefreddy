@@ -147,7 +147,7 @@ export const RecordPage = () => {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => navigate(`/ventas/${row.original.id}`)}
+            onClick={() => navigate(`/ventas/detalles/${row.original.id}`)}
           >
             <Eye className="w-4 h-4" />
           </Button>

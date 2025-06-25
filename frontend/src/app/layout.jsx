@@ -169,7 +169,7 @@ export default function Layout({ children }) {
               <CurrencySelector />
             </div>
           </header>
-          <div className='flex flex-wrap p-4 w-full h-[95vh] overflow-y-auto'>
+          <div className='flex flex-col flex-wrap p-4 w-full h-[95vh] overflow-y-auto'>
 
             {children}
 

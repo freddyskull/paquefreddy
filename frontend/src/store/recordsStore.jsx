@@ -100,6 +100,7 @@ export const useRecordsStore = create((set, get) => ({
     }
   },
 
+
   // Select a record
   selectRecord: (record) => set({ selectedRecord: record }),
 

@@ -100,8 +100,27 @@ export class RecordsService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} record`;
+  async findOne(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El ID de la venta es requerido',
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    return this.prisma.records
+      .findFirst({
+        where: { id: Number(id) },
+        select: this.formatedData
+      })
+      .then((record) => {
+        if (!record) {
+          throw new HttpException(
+            'No existe la venta con el ID ' + id,
+            HttpStatus.BAD_REQUEST
+          );
+        }
+        return record;
+      });
   }
 
   update(id: number, updateRecordDto: recordsDto) {

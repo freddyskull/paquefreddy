@@ -12,12 +12,16 @@ import { useConfigStore } from '@/store/configStore'
 import { useCategoriesStore } from '@/store/categoriesStore'
 import { useProductStore } from '@/store/productStore'
 
+
 import { FiltersTable } from '@/components/dataTable/products/filtersTable'
 import { PaginationProducts } from './paginationProducts'
+
 
 export const ProductsDataTable = ({ data }) => {
   const { categories } = useCategoriesStore()
   const { patchProduct } = useProductStore()
+  // Estado para mostrar/ocultar price_ent
+  const [showPriceEnt, setShowPriceEnt] = useState(true)
 
   const { config, currency, isLoading: isLoadingConfig } = useConfigStore()
 
@@ -212,12 +216,14 @@ export const ProductsDataTable = ({ data }) => {
         currency={currency}
         config={config}
         isLoadingConfig={isLoadingConfig}
+        showPriceEnt={showPriceEnt}
+        setShowPriceEnt={setShowPriceEnt}
       />
       <CardContent className="w-full overflow-y-auto">
         <div className="gap-4 grid xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 xl:grid-cols-4 transition-all duration-500">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <ProductCard key={row.original.id} product={row.original} handleEdit={handleEdit} />
+              <ProductCard key={row.original.id} product={row.original} handleEdit={handleEdit} showPriceEnt={showPriceEnt} />
             ))
           ) : (
             <div className="flex justify-center items-center col-span-full w-[82vw] h-[80vh]">

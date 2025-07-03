@@ -13,7 +13,7 @@ import { ConfirmationDialog } from '@/components/dialogs/ConfirmationDialog'
 import { Link } from 'react-router-dom'
 import { UnityBadge } from '@/components/dataTable/products/unityBadge'
 
-export const ProductCard = ({ product, handleEdit }) => {
+export const ProductCard = ({ product, handleEdit, showPriceEnt = true }) => {
   const [isDeleting, setIsDeleting] = useState(false)
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
   const { categories } = useCategoriesStore()
@@ -161,7 +161,7 @@ export const ProductCard = ({ product, handleEdit }) => {
           }}
         />
       </span>
-      <div className="bottom-5 left-0 absolute gap-4 grid grid-cols-2 px-2 w-full">
+      <div className={`flex ${showPriceEnt ? 'justify-between' : 'justify-center text-center'} bottom-5 left-0 absolute gap-4 px-2 w-full`}>
         <div className="">
           <p className="font-light text-[10px] uppercase">Venta</p>
           <div
@@ -180,22 +180,39 @@ export const ProductCard = ({ product, handleEdit }) => {
             />
           </div>
         </div>
-        <div className="text-end">
-          <p className="font-light text-[10px] uppercase">Entrada</p>
-          <div className="font-bold text-xl">
-            <EditableInput
-              value={
-                currency === 'USD'
-                  ? formatPrice(product.price_ent, roundPrice)
-                  : formatPrice(product.price_ent_bs, roundPrice)
-              }
-              type="number"
-              onBlur={(e) => {
-                handleEdit('price_ent', e.target.value, product.id)
-              }}
-            />
+        {showPriceEnt && (
+          <div className="flex flex-col justify-end items-center text-center">
+            <p className="font-light text-[10px] text-sm uppercase">Stock</p>
+            <div className={`text-sm font-bold`}>
+              <EditableInput
+                value={isNaN(product.stock) ? '' : product.stock}
+                type="number"
+                onBlur={(e) => {
+                  let value = e.target ? e.target.value : e
+                  if (value === '' || isNaN(Number(value))) return
+                  handleEdit('stock', value, product.id)
+                }}
+              />
+            </div>
+          </div>)}
+        {showPriceEnt && (
+          <div className="text-end">
+            <p className="font-light text-[10px] uppercase">Entrada</p>
+            <div className="font-bold text-xl">
+              <EditableInput
+                value={
+                  currency === 'USD'
+                    ? formatPrice(product.price_ent, roundPrice)
+                    : formatPrice(product.price_ent_bs, roundPrice)
+                }
+                type="number"
+                onBlur={(e) => {
+                  handleEdit('price_ent', e.target.value, product.id)
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Card>
   )

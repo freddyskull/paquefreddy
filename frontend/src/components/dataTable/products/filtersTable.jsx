@@ -22,6 +22,8 @@ export const FiltersTable = ({
   currency,
   config,
   isLoadingConfig,
+  showPriceEnt,
+  setShowPriceEnt,
 }) => {
 
   const dolar = isLoadingConfig ? 0 : config.dolar
@@ -200,6 +202,20 @@ export const FiltersTable = ({
             <div className="top-0 left-0 absolute bg-secondary opacity-0 rounded-md w-full h-full scale-150 animate-pulse" />
           </Button>
         )}
+        <div className="flex flex-col justify-center items-center ml-2">
+          <label htmlFor="toggle-price-ent" className="mb-1 text-[10px] uppercase">Entrada</label>
+          <button
+            id="toggle-price-ent"
+            type="button"
+            className={`w-10 h-6 rounded-full border transition-colors duration-200 ${showPriceEnt ? 'bg-primary border-primary' : 'bg-gray-300 border-gray-400'}`}
+            onClick={() => setShowPriceEnt((prev) => !prev)}
+            aria-pressed={showPriceEnt}
+          >
+            <span
+              className={`block w-5 h-5 rounded-full bg-white shadow transform transition-transform duration-200 ${showPriceEnt ? 'translate-x-4' : 'translate-x-0'}`}
+            />
+          </button>
+        </div>
         <Link to="/productos/nuevo">
           <Button variant="outline" className="bg-background! hover:bg-primary/20! p-2 px-3 border border-slate-200 dark:border-slate-700 rounded-md text-foreground/80 hover:text-foreground transition-all duration-300 cursor-pointer">
             <PlusIcon />

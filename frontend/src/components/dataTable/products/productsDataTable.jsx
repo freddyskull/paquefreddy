@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -20,8 +20,15 @@ import { PaginationProducts } from './paginationProducts'
 export const ProductsDataTable = ({ data }) => {
   const { categories } = useCategoriesStore()
   const { patchProduct } = useProductStore()
-  // Estado para mostrar/ocultar price_ent
-  const [showPriceEnt, setShowPriceEnt] = useState(true)
+  // Estado para mostrar/ocultar price_ent, persistente en localStorage
+  const [showPriceEnt, setShowPriceEnt] = useState(() => {
+    const stored = localStorage.getItem('showPriceEnt')
+    return stored === null ? true : stored === 'true'
+  })
+
+  useEffect(() => {
+    localStorage.setItem('showPriceEnt', showPriceEnt)
+  }, [showPriceEnt])
 
   const { config, currency, isLoading: isLoadingConfig } = useConfigStore()
 

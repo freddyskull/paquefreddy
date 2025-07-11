@@ -13,30 +13,25 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
     depends_on:
       - postgres
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/paquefreddy
-      - CHOKIDAR_USEPOLLING=true
     ports:
       - "3001:3001"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    command: ["npm", "run", "start:dev"]
+    command: ["npm", "run", "start:prod"]
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
     depends_on:
       - backend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    command: ["npm", "run", "dev", "--", "--host"]
+      - "4173:4173"
+    command: ["npm", "run", "preview", "--", "--host", "0.0.0.0"]
 volumes:
   pgdata:

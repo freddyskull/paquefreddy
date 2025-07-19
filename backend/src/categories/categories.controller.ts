@@ -31,6 +31,9 @@ export class CategoriesController {
     const dolarPrice = config?.dolar || 1;
     return {
       ...categorie,
+      productsCount: Array.isArray(categorie.products)
+        ? categorie.products.length
+        : 0,
       products: Array.isArray(categorie.products)
         ? categorie.products.map((product: any) => ({
             ...product,
@@ -57,9 +60,11 @@ export class CategoriesController {
   async create(@Body() createCategoryDto: CategorieDto) {
     const categorie = await this.categoriesService.create(createCategoryDto);
     const allCategories = await this.categoriesService.findAll();
-    
+
     return {
-      data: await Promise.all(allCategories.map(c => this.formatCategorie(c))),
+      data: await Promise.all(
+        allCategories.map((c) => this.formatCategorie(c))
+      ),
       categorie: await this.formatCategorie(categorie)
     };
   }
@@ -82,8 +87,14 @@ export class CategoriesController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  async update(@Param('id') id: number, @Body() updateCategoryDto: CategorieDto) {
-    const categorie = await this.categoriesService.update(id, updateCategoryDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateCategoryDto: CategorieDto
+  ) {
+    const categorie = await this.categoriesService.update(
+      id,
+      updateCategoryDto
+    );
     return await this.formatCategorie(categorie);
   }
 

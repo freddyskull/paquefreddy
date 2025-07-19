@@ -167,6 +167,21 @@ body {
   input[type='date']::-webkit-datetime-edit-year-field {
     color: var(--foreground);
   }
+  input[type='time']::-webkit-calendar-picker-indicator {
+    filter: brightness(0) invert(1);
+  }
+  input[type='time']::-webkit-datetime-edit {
+    color: var(--foreground);
+  }
+  input[type='time']::-webkit-datetime-edit-text {
+    color: var(--foreground);
+  }
+  input[type='time']::-webkit-datetime-edit-hour-field {
+    color: var(--foreground);
+  }
+  input[type='time']::-webkit-datetime-edit-minute-field {
+    color: var(--foreground);
+  }
 }
 
 input[type='number']::-webkit-inner-spin-button,

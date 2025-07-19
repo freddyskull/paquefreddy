@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { PencilIcon, XIcon } from 'lucide-react';
-import { Button } from '../ui/button';
+import React, { useEffect, useState } from 'react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { PencilIcon, XIcon } from 'lucide-react'
+import { Button } from '../ui/button'
 
 export const EditableSelect = ({
   value,
@@ -12,35 +12,35 @@ export const EditableSelect = ({
   className = '',
   ...props
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [localValue, setLocalValue] = useState('none');
+  const [isEditing, setIsEditing] = useState(false)
+  const [localValue, setLocalValue] = useState('none')
   useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
+    setLocalValue(value)
+  }, [value])
 
 
   const handleCancel = () => {
-    setIsEditing(false);
-    setLocalValue(value);
-  };
+    setIsEditing(false)
+    setLocalValue(value)
+  }
 
   const handleChange = (value) => {
-    setLocalValue(value);
-    onChange?.(value);
-    setIsEditing(false);
-    onBlur?.(value);
-  };
+    setLocalValue(value)
+    onChange?.(value)
+    setIsEditing(false)
+    onBlur?.(value)
+  }
 
   const handleDoubleClick = (e) => {
-    e.stopPropagation();
-    setIsEditing(true);
-  };
+    e.stopPropagation()
+    setIsEditing(true)
+  }
 
   return (
     <div className="flex items-center gap-1 w-full">
       <div className="flex-1">
         <div
-          className={`cursor-pointer w-full ${isEditing ? 'hidden' : ''}`}
+          className={`cursor-pointer w-full line-clamp-1 ${isEditing ? 'hidden' : ''}`}
           onDoubleClick={handleDoubleClick}
           title={value || placeholder}
         >
@@ -96,5 +96,5 @@ export const EditableSelect = ({
         )} */}
       </div>
     </div>
-  );
-};
+  )
+}

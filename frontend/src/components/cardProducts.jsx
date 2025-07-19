@@ -110,7 +110,7 @@ export const ProductCard = ({ product, handleEdit, showPriceEnt = true }) => {
             <div className="flex items-center gap-2">
               <div className="flex flex-col">
                 <span className="text-[10px] uppercase">Categoría</span>
-                <div className={`${currency === 'BS' ? 'bg-primary' : 'bg-usd'} mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase`}>
+                <div className={`${currency === 'BS' ? 'bg-primary' : 'bg-usd'} mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase line-clamp-1`}>
                   <EditableSelect
                     value={product.categorie.name}
                     options={categoryOptions}
@@ -165,7 +165,7 @@ export const ProductCard = ({ product, handleEdit, showPriceEnt = true }) => {
         <div className="">
           <p className="font-light text-[10px] uppercase">Venta</p>
           <div
-            className={`text-xl font-bold ${currency === 'USD' ? 'text-usd' : 'text-primary'}`}
+            className={`text-xl font-bold ${currency === 'USD' ? 'text-usd' : 'text-primary'} flex items-center gap-1`}
           >
             <EditableInput
               value={
@@ -178,6 +178,7 @@ export const ProductCard = ({ product, handleEdit, showPriceEnt = true }) => {
                 handleEdit('price', e.target.value, product.id)
               }}
             />
+            <span className="font-bold text-[10px]">{currency === 'USD' ? 'USD' : 'BS'}</span>
           </div>
         </div>
         {showPriceEnt && (

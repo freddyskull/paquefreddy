@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useRecordsStore } from '@/store/recordsStore'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
+import { Label } from 'recharts'
 
 export const RecordPage = () => {
   const navigate = useNavigate()
@@ -117,15 +118,19 @@ export const RecordPage = () => {
       header: () => <div className="text-center">Fecha</div>,
       cell: ({ row }) => {
         if (row.original.createdAt) {
+          const dateObj = new Date(row.original.createdAt)
+          const dateStr = dateObj.toLocaleDateString('es-VE', {
+            year: '2-digit',
+            month: '2-digit',
+            day: '2-digit',
+          })
+          const timeStr = dateObj.toLocaleTimeString('es-VE', {
+            hour: '2-digit',
+            minute: '2-digit',
+          })
           return (
             <span className="flex justify-center items-center font-bold text-center">
-              {row.original.createdAt
-                ? new Intl.DateTimeFormat('es-VE', {
-                  year: '2-digit',
-                  month: '2-digit',
-                  day: '2-digit',
-                }).format(new Date(row.original.createdAt))
-                : 'N/A'}
+              {`${dateStr} - ${timeStr}`}
             </span>
           )
         }
@@ -247,38 +252,67 @@ export const RecordPage = () => {
   return (
     <Layout>
       <Card className="w-full">
-        {/* <CardHeader>
-          <CardTitle>Registros</CardTitle>
-        </CardHeader> */}
         <CardContent>
-          <div className="mb-6">
-            <div className="flex items-center gap-4 mb-2">
-              <label htmlFor="date-input" className="font-semibold text-nowrap">Seleccionar fecha:</label>
-              <Input
-                id="date-input"
-                type="date"
-                value={selectedDate}
-                onChange={e => setSelectedDate(e.target.value)}
-                className="px-2 py-1 border rounded w-48"
-                max={dailyProfits.length > 0 ? dailyProfits[0].date : ''}
-              />
-            </div>
-            {selectedDate && selectedDayStats && (
-              <div className="flex flex-wrap items-center gap-4">
-                <span className="font-bold text-primary">Ganancias: Bs {selectedDayStats.profitsBs.toFixed(2)} | ${selectedDayStats.profitsUsd.toFixed(2)}</span>
-                <span className="font-bold text-blue-700">Ventas: Bs {selectedDayStats.totalBs.toFixed(2)} | ${selectedDayStats.totalUsd.toFixed(2)}</span>
-                <span className="font-bold text-slate-700"># Ventas: {selectedDayStats.ventas}</span>
-                <span className="font-bold text-slate-700">Productos vendidos: {selectedDayStats.productos}</span>
-                {mostSoldProduct && (
-                  <span className="font-bold text-green-700">Más vendido: {mostSoldProduct.name} ({mostSoldProduct.quantity})</span>
-                )}
+          <div className="">
+            <div className='flex justify-between items-center gap-3 mb-4'>
+              <div className="flex-col gap-4 mb-2 w-[25%]">
+                <label htmlFor="date-input" className="font-semibold text-xs text-nowrap">Seleccionar fecha</label>
+                <Input
+                  id="date-input"
+                  type="date"
+                  value={selectedDate}
+                  onChange={e => setSelectedDate(e.target.value)}
+                  max={dailyProfits.length > 0 ? dailyProfits[0].date : ''}
+                />
               </div>
-            )}
-            {selectedDate && !selectedDayStats && (
-              <span className="text-slate-400">Sin registros</span>
-            )}
+              {selectedDate && selectedDayStats && (
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className="flex flex-col font-bold">
+                    <label className="text-[10px] uppercase">Ganancias del día</label>
+                    <span className='font-bold'>
+                      <span className='text-primary'>{selectedDayStats.profitsBs.toFixed(2)} </span>
+                      <span className='text-xs'> | </span>
+                      <span className='text-usd'>${selectedDayStats.profitsUsd.toFixed(2)}</span>
+                    </span>
+                  </div>
+                  <div className="flex flex-col font-bold">
+                    <label className="text-[10px] uppercase">Ventas totales</label>
+                    <span className='font-bold'>
+                      <span className='text-primary'>{selectedDayStats.totalBs.toFixed(2)}</span>
+                      <span className='text-xs'> | </span>
+                      <span className='text-usd'>${selectedDayStats.totalUsd.toFixed(2)}</span>
+                    </span>
+                  </div>
+                  <div className='flex flex-col font-bold'>
+                    <label className="text-[10px] uppercase">número de Ventas </label>
+                    <span className='font-bold text-primary'>{selectedDayStats.ventas}</span>
+                  </div>
+                  <div className="flex flex-col font-bold">
+                    <label className="text-[10px] uppercase">Número de productos </label>
+                    <span className='font-bold text-primary'>{selectedDayStats.productos}</span>
+                  </div>
+                  {mostSoldProduct && (
+                    <div className="flex flex-col font-bold">
+                      <label className="text-[10px] uppercase">Producto más vendido: </label>
+                      <span className="max-w-[270px] font-bold text-usd text-xs text-wrap">{mostSoldProduct.name} ({mostSoldProduct.quantity})</span>
+                    </div>
+                  )}
+                </div>
+              )}
+              {selectedDate && !selectedDayStats && (
+                <div className="flex flex-col">
+                  <span className="text-slate-400 text-xl">Sin registros</span>
+                </div>
+              )}
+            </div>
           </div>
-          <DefaultDatatable columns={columns} data={recordsMemo} />
+          <DefaultDatatable
+            columns={columns}
+            data={recordsMemo}
+            searchFields={['id', 'createdAt', 'user', 'blackList', 'dolar_price', 'productList']}
+            showDateFilter={true}
+            showTimeFilter={true}
+          />
         </CardContent>
       </Card>
     </Layout>

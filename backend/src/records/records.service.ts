@@ -80,13 +80,15 @@ export class RecordsService {
       await this.productServices.updateStock(item.id, item.quantity);
     }
     // FIXED: hacer que de un mensaje diferente si hay una persona de la blackList
-    await this.prisma.records.create({
+    const createdRecord = await this.prisma.records.create({
       select: this.formatedData,
       data: { ...dto, dolar_price: dolar }
     });
     return {
       status: 'ok',
       title: 'Venta realizada',
+      data: dto,
+      id: createdRecord.id,
       message: 'La lista de productos fué descontada de el stock de productos.'
     };
   }

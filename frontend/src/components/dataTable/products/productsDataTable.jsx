@@ -233,10 +233,11 @@ export const ProductsDataTable = ({ data }) => {
               <ProductCard key={row.original.id} product={row.original} handleEdit={handleEdit} showPriceEnt={showPriceEnt} />
             ))
           ) : (
-            <div className="flex justify-center items-center col-span-full w-[82vw] h-[80vh]">
+            <div className="flex flex-col justify-center items-center col-span-full w-[82vw] h-[80vh]">
               <h1 className="font-bold text-2xl text-center uppercase">
-                Cargando productos...
+                No se encontraron productos
               </h1>
+              <p>parece que con los filtros aplicados no hay resultados o han sido eliminados</p>
             </div>
           )}
         </div>

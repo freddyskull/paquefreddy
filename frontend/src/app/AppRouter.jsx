@@ -9,6 +9,7 @@ import { RecordPage } from './records/recordPage'
 import { NoRouteUrl } from './no-exist/noRouteUrl'
 import { SinStockPage } from './sin-stock/sinStockPage'
 import { RecordDetails } from './records/recordDetails'
+import { CategoriePage } from './categories/categoriePage'
 export const AppRouter = () => {
   return (
     <Router>
@@ -24,6 +25,7 @@ export const AppRouter = () => {
         <Route path='/productos/editar/' element={<Navigate to="/productos" />} />
         <Route path='ventas' element={<RecordPage />} />
         <Route path='/ventas/detalles/:id' element={<RecordDetails />} />
+        <Route path='/categorias' element={<CategoriePage />} />
       </Routes>
     </Router>
   )

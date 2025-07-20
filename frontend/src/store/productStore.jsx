@@ -168,7 +168,7 @@ export const useProductStore = create((set, get) => ({
 
   // Partial update of a product
   patchProduct: async (id, updates) => {
-    set({ isLoading: true, error: null })
+    // set({ isLoading: true, error: null })
     try {
       const response = await axiosInstance.patch(`products/${id}`, updates)
       const updatedProduct = response.data.data
@@ -190,7 +190,7 @@ export const useProductStore = create((set, get) => ({
       handleError(error)
       set({ error: error.message })
     } finally {
-      set({ isLoading: false })
+      // set({ isLoading: false })
     }
   },
 

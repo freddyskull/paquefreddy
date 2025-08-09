@@ -8,7 +8,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  ValidationPipe
+  ValidationPipe,
+  Query
 } from '@nestjs/common';
 import { RecordsService } from './records.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -29,6 +30,17 @@ export class RecordsController {
   @HttpCode(HttpStatus.OK)
   findAll() {
     return this.recordsService.findAll();
+  }
+
+  @Get('date-range')
+  async findByDateRange(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string
+  ) {
+    return this.recordsService.findByDateRange(
+      new Date(startDate),
+      new Date(endDate)
+    );
   }
 
   @Get(':id')

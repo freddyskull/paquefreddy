@@ -151,4 +151,28 @@ export class RecordsService {
       data
     };
   }
+
+  async findByDateRange(startDate: Date, endDate: Date) {
+    const records = await this.prisma.records.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate
+        }
+      },
+      select: this.formatedData,
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    const count = await this.prisma.records.count({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate
+        }
+      }
+    });
+    return { records, count };
+  }
 }

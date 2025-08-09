@@ -15,6 +15,7 @@ async function bootstrap() {
     .addTag('Records')
     .addTag('Purhases')
     .addTag('Config')
+    .addTag('Black List')
     .build();
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1');

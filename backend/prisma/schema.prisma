@@ -82,6 +82,7 @@ model Records {
   dolar_price        Decimal
   status             Boolean     @default(false)
   sell_without_stock Boolean?    @default(false)
+  payment_method     String?
   totals             Json
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
@@ -94,13 +95,13 @@ model Records {
 model black_list {
   id          Int       @id @default(autoincrement())
   name        String
-  description String
-  total       Decimal
+  description String?
+  total       Float?    @default(0.0)
+  discount    Float?    @default(0.0)
   phone       String?
   email       String?
   address     String?
   city        String?
-  record_id   Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   Records     Records[] @relation("BlackListUser")

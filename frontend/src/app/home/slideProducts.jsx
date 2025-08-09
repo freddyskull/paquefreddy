@@ -13,8 +13,9 @@ import ProductCard from '@/components/cardProducts'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useConfigStore } from '@/store/configStore'
+import { Skeleton } from '@/components/ui/skeleton'
 
-export const SlideProducts = ({ products }) => {
+export const SlideProducts = ({ products, isLoading }) => {
 
   const autoplay = new Autoplay({ delay: 2000 })
   const { currency } = useConfigStore()
@@ -23,34 +24,51 @@ export const SlideProducts = ({ products }) => {
     <Card className="bg-white dark:bg-secondary py-6 xl:py-2">
       <CardContent>
         <div className="flex justify-center xl:justify-between items-center gap-24">
-          <div className='hidden md:block xl:ml-6 2xl:w-[50%]'>
-            <h2 className="font-bold text-2xl xl:text-4xl uppercase">Ultimos productos agregados</h2>
+          <div className="hidden md:block xl:ml-6 2xl:w-[50%]">
+            <h2 className="font-bold text-2xl xl:text-4xl uppercase">
+              Ultimos productos agregados
+            </h2>
             <p className="hidden md:block mt-4 text-foreground text-md!">
-              En esta sección se muestran los <b>últimos 5 productos</b> que se han agregado mas recientemente al stock, si deseas ver todos los productos puedes ir a la sección de productos, donde podras buscar y filtrar todos los productos.
+              En esta sección se muestran los <b>últimos 5 productos</b> que se
+              han agregado mas recientemente al stock, si deseas ver todos los
+              productos puedes ir a la sección de productos, donde podras buscar
+              y filtrar todos los productos.
             </p>
-            {/* <div className="flex items-center gap-2 mt-4">
-              <span className="mt-2 text-primary/80 text-xs uppercase">El ultimo producto fue agregado el {new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(products[0].createdAt))}</span>
-            </div> */}
 
             <Link to="/productos" className="mt-6">
-              <Button className={`${currency === 'BS' ? 'bg-primary hover:bg-primary/90' : 'bg-usd hover:bg-usd/90'} mt-6 uppercase`} size="lg">Ver todos</Button>
+              <Button
+                className={`${currency === 'BS' ? 'bg-primary hover:bg-primary/90' : 'bg-usd hover:bg-usd/90'} mt-6 uppercase`}
+                size="lg"
+              >
+                Ver todos
+              </Button>
             </Link>
           </div>
-          <Carousel className="2xl:mr-12 w-[40%] max-w-xs" plugins={[autoplay]}>
-            <CarouselContent>
-              {products.slice(0, 5).map((product) => (
-                <CarouselItem key={product.id}>
-                  <ProductCard product={product} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
+          {
+            !isLoading ? (
+              <Carousel className="2xl:mr-12 w-[40%] max-w-xs" plugins={[autoplay]}>
+                <CarouselContent>
+                  {products.slice(0, 5).map((product) => (
+                    <CarouselItem key={product.id}>
+                      <ProductCard product={product} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
 
-            <div className="hidden 2xl:block">
-              <CarouselPrevious />
-              <CarouselNext />
-            </div>
+                <div className="hidden 2xl:block">
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </div>
 
-          </Carousel>
+              </Carousel>
+            ) : (
+
+
+              <Skeleton className="rounded-md w-[100%] max-w-xs h-[42vh]" />
+            )
+          }
+
+
         </div>
       </CardContent>
     </Card>

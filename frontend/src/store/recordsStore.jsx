@@ -8,6 +8,10 @@ export const useRecordsStore = create((set, get) => ({
   selectedRecord: null,
   isLoading: false,
   error: null,
+  totalRecordsCurrent: {},
+  totalRecordsPrevious: {},
+  totalRecordsLoading: false,
+
 
   // Fetch all records
   fetchRecords: async () => {
@@ -22,6 +26,8 @@ export const useRecordsStore = create((set, get) => ({
       set({ isLoading: true })
     }
   },
+
+
 
   // Fetch a single record by ID
   fetchRecord: async (id) => {
@@ -100,6 +106,45 @@ export const useRecordsStore = create((set, get) => ({
     }
   },
 
+  // query for date-range
+
+  queryRecordsByDateRange: async (startDate, endDate) => {
+    try {
+      const response = await axiosInstance.get('/records/date-range', {
+        params: {
+          startDate,
+          endDate
+        }
+      })
+      return response.data
+    } catch (error) {
+      handleError(error)
+      set({ error: error.message })
+    }
+  },
+
+
+  calculateRecordsTotals: async () => {
+    set({ totalRecordsLoading: true, })
+    try {
+      const now = new Date()
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10)
+      const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10)
+      const firstDayOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString().slice(0, 10)
+      const lastDayOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0).toISOString().slice(0, 10)
+      const totalCurrent = await get().queryRecordsByDateRange(firstDayOfMonth, lastDayOfMonth)
+      const totalPrevious = await get().queryRecordsByDateRange(firstDayOfLastMonth, lastDayOfLastMonth)
+      set({
+        totalRecordsCurrent: totalCurrent,
+        totalRecordsPrevious: totalPrevious
+      })
+    } catch (error) {
+      handleError(error)
+      set({ error: error.message })
+    } finally {
+      set({ totalRecordsLoading: false })
+    }
+  },
 
   // Select a record
   selectRecord: (record) => set({ selectedRecord: record }),

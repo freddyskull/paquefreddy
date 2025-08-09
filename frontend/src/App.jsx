@@ -12,7 +12,7 @@ function App() {
   const { fetchConfig } = useConfigStore()
   const { fetchCategories } = useCategoriesStore()
   const { fetchSuppliers } = useSuppliersStore()
-  const { fetchRecords } = useRecordsStore()
+  const { fetchRecords, calculateRecordsTotals } = useRecordsStore()
 
   useEffect(() => {
     fetchProducts()
@@ -20,6 +20,7 @@ function App() {
     fetchCategories()
     fetchSuppliers()
     fetchRecords()
+    calculateRecordsTotals()
   }, [])
 
   return (

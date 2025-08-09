@@ -15,13 +15,7 @@ export const LastProducts = ({ products }) => {
             </CardHeader>
             <CardContent>
                 <div className="group flex flex-col gap-4 w-full h-[140px]">
-                    <style jsx global>
-                        {`
-                            .group:hover > div {
-                                overflow-y: auto;
-                            }
-                        `}
-                    </style>
+
                     <div className="flex flex-col gap-4 overflow-y-hidden">
                         {products.slice(5, 10).map((product) => (
                             <div key={product.id} className="flex items-center gap-6 w-full">

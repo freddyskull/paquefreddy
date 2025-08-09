@@ -173,6 +173,34 @@ export class RecordsService {
         }
       }
     });
-    return { records, count };
+
+    // Sumar los totals (parseando si es string)
+
+    const isObject = (val: any) =>
+      val && typeof val === 'object' && !Array.isArray(val);
+    const totals = records.reduce(
+      (acc, item) => {
+        let t: any = item.totals;
+        if (typeof t === 'string') {
+          try {
+            t = JSON.parse(t);
+          } catch {
+            t = {};
+          }
+        }
+        if (t && isObject(t)) {
+          acc.totalBs += Number((t as any).totalBs) || 0;
+          acc.totalDolar += Number((t as any).totalDolar) || 0;
+          if ((t as any).totalProfits && isObject((t as any).totalProfits)) {
+            acc.totalProfits.bs += Number((t as any).totalProfits.bs) || 0;
+            acc.totalProfits.usd += Number((t as any).totalProfits.usd) || 0;
+          }
+        }
+        return acc;
+      },
+      { totalBs: 0, totalDolar: 0, totalProfits: { bs: 0, usd: 0 } }
+    );
+
+    return { count, records, totals, 'date-range': { startDate, endDate } };
   }
 }

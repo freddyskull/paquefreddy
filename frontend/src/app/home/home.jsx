@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import { SlideProducts } from './slideProducts'
 import { useRecordsStore } from '@/store/recordsStore'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Charts } from './components/charts'
 
 export const Home = () => {
   const { products, isLoading } = useProductStore()
@@ -125,39 +126,10 @@ export const Home = () => {
           </div>
         </div>
         <div className="hidden 2xl:flex flex-col gap-4 2xl:w-[35%]">
-          <Card className="bg-white dark:bg-secondary h-[61.5vh]">
-            <CardHeader>
-              <CardTitle className="font-bold text-2xl uppercase">
-                Proveedores
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
-                repellat quod iste aperiam? Culpa corrupti, deleniti, optio
-                reiciendis soluta doloremque magnam ut mollitia sed praesentium
-                distinctio hic quidem inventore suscipit? Iste cupiditate saepe
-                mollitia amet? Quasi unde sed inventore neque fugit, iste
-                molestiae maxime dolorem earum voluptates? Error exercitationem
-                mollitia amet? Quasi unde sed inventore neque fugit, iste
-                molestiae maxime dolorem earum voluptates? Error exercitationem
-                nulla, dolore quasi quos ducimus totam ullam iusto maxime? Quos,
-                iure! Asperiores numquam eligendi distinctio similique magnam.
-                Ipsa deserunt, vero fuga, eveniet veniam tempora cum velit
-                tenetur, assumenda vel sit accusantium! Assumenda aut quas est
-                consequuntur. Natus nobis impedit cumque debitis. Aliquid earum,
-                doloremque provident perferendis aperiam, placeat non quidem
-                iste quas eum, et nulla inventore cupiditate voluptas molestiae
-                tenetur expedita ea sapiente.
-              </p>
-            </CardContent>
-          </Card>
+
+          <Charts />
+
           <Card className="flex flex-row flex-wrap bg-white dark:bg-secondary h-[27vh] overflow-x-hidden overflow-y-auto">
-            <CardHeader>
-              <CardTitle className="font-bold text-2xl uppercase">
-                Proveedores
-              </CardTitle>
-            </CardHeader>
             <CardContent>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias

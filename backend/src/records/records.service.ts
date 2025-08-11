@@ -161,46 +161,235 @@ export class RecordsService {
         }
       },
       select: this.formatedData,
-      orderBy: {
-        createdAt: 'desc'
-      }
+      orderBy: { createdAt: 'desc' }
     });
-    const count = await this.prisma.records.count({
+
+    const count = records.length;
+
+    // Variables acumuladoras
+    const totals = {
+      totalBs: 0,
+      totalDolar: 0,
+      totalProfits: { bs: 0, usd: 0 }
+    };
+    const productCount: Record<
+      string,
+      { name: string; quantity: number; category?: string }
+    > = {};
+    const categoryCount: Record<string, number> = {};
+
+    // Track para top directos
+    let topProduct: {
+      name: string;
+      quantity: number;
+      category?: string;
+    } | null = null;
+    let maxProductQty = 0;
+    let topCategory: { category: string; quantity: number } | null = null;
+    let maxCatQty = 0;
+
+    for (const record of records) {
+      // ---- Totals ----
+      let t: any = record.totals;
+      if (typeof t === 'string') {
+        try {
+          t = JSON.parse(t);
+        } catch {
+          t = null;
+        }
+      }
+      if (t && typeof t === 'object' && !Array.isArray(t)) {
+        const totalBs = Number(t.totalBs);
+        const totalDolar = Number(t.totalDolar);
+        const profitBs = Number(t?.totalProfits?.bs);
+        const profitUsd = Number(t?.totalProfits?.usd);
+
+        if (!isNaN(totalBs)) totals.totalBs += totalBs;
+        if (!isNaN(totalDolar)) totals.totalDolar += totalDolar;
+        if (!isNaN(profitBs)) totals.totalProfits.bs += profitBs;
+        if (!isNaN(profitUsd)) totals.totalProfits.usd += profitUsd;
+      }
+
+      // ---- Productos y Categorías ----
+      let productList = record.productList;
+      if (typeof productList === 'string') {
+        try {
+          productList = JSON.parse(productList);
+        } catch {
+          productList = [];
+        }
+      }
+
+      if (Array.isArray(productList)) {
+        for (const prod of productList) {
+          if (!prod || typeof prod !== 'object') continue;
+          if (!('id' in prod || 'name' in prod) || !('quantity' in prod))
+            continue;
+
+          const prodId =
+            prod.id !== undefined &&
+            (typeof prod.id === 'string' || typeof prod.id === 'number')
+              ? String(prod.id)
+              : typeof prod.name === 'string'
+                ? prod.name
+                : null;
+          if (!prodId) continue;
+
+          const prodName = prod.name ? String(prod.name) : prodId;
+          const prodQty = Number(prod.quantity);
+          if (isNaN(prodQty) || prodQty <= 0) continue;
+
+          // Detectar categoría
+          let prodCat = 'Sin categoría';
+          if (
+            prod.categorie &&
+            typeof prod.categorie === 'object' &&
+            'name' in prod.categorie &&
+            typeof (prod.categorie as any).name === 'string'
+          ) {
+            prodCat = String((prod.categorie as any).name);
+          } else if (prod.category) {
+            prodCat = String(prod.category);
+          }
+
+          // Contar producto
+          if (!productCount[prodId]) {
+            productCount[prodId] = {
+              name: prodName,
+              quantity: 0,
+              category: prodCat
+            };
+          }
+          productCount[prodId].quantity += prodQty;
+
+          // Actualizar top product en tiempo real
+          if (productCount[prodId].quantity > maxProductQty) {
+            maxProductQty = productCount[prodId].quantity;
+            topProduct = productCount[prodId];
+          }
+
+          // Contar categoría
+          if (!categoryCount[prodCat]) categoryCount[prodCat] = 0;
+          categoryCount[prodCat] += prodQty;
+
+          // Actualizar top category en tiempo real
+          if (categoryCount[prodCat] > maxCatQty) {
+            maxCatQty = categoryCount[prodCat];
+            topCategory = {
+              category: prodCat,
+              quantity: categoryCount[prodCat]
+            };
+          }
+        }
+      }
+    }
+
+    return {
+      count,
+      records,
+      totals,
+      'date-range': { startDate, endDate },
+      topProduct,
+      topCategory
+    };
+  }
+
+  async sellingProductsByThresholds(
+    startDate: Date,
+    endDate: Date,
+    lowThreshold: number = 5,
+    highThreshold: number = 10
+  ) {
+    const records = await this.prisma.records.findMany({
       where: {
-        createdAt: {
-          gte: startDate,
-          lte: endDate
-        }
+        createdAt: { gte: startDate, lte: endDate }
+      },
+      select: {
+        productList: true
       }
     });
 
-    // Sumar los totals (parseando si es string)
+    const productSales: Record<
+      string,
+      { qty: number; name?: string; category?: string }
+    > = {};
 
-    const isObject = (val: any) =>
-      val && typeof val === 'object' && !Array.isArray(val);
-    const totals = records.reduce(
-      (acc, item) => {
-        let t: any = item.totals;
-        if (typeof t === 'string') {
-          try {
-            t = JSON.parse(t);
-          } catch {
-            t = {};
-          }
+    for (const record of records) {
+      let productList = record.productList;
+      if (typeof productList === 'string') {
+        try {
+          productList = JSON.parse(productList);
+        } catch {
+          productList = [];
         }
-        if (t && isObject(t)) {
-          acc.totalBs += Number((t as any).totalBs) || 0;
-          acc.totalDolar += Number((t as any).totalDolar) || 0;
-          if ((t as any).totalProfits && isObject((t as any).totalProfits)) {
-            acc.totalProfits.bs += Number((t as any).totalProfits.bs) || 0;
-            acc.totalProfits.usd += Number((t as any).totalProfits.usd) || 0;
-          }
-        }
-        return acc;
-      },
-      { totalBs: 0, totalDolar: 0, totalProfits: { bs: 0, usd: 0 } }
-    );
+      }
+      if (!Array.isArray(productList)) continue;
 
-    return { count, records, totals, 'date-range': { startDate, endDate } };
+      for (const prod of productList) {
+        if (
+          prod &&
+          typeof prod === 'object' &&
+          ('id' in prod || 'name' in prod) &&
+          'quantity' in prod
+        ) {
+          let prodId: string | null = null;
+          if (
+            prod.id !== undefined &&
+            (typeof prod.id === 'string' || typeof prod.id === 'number')
+          ) {
+            prodId = String(prod.id);
+          } else if (prod.name && typeof prod.name === 'string') {
+            prodId = prod.name;
+          }
+          if (!prodId) continue;
+          const prodName = prod.name ? String(prod.name) : undefined;
+          const prodQty = Number(prod.quantity) || 0;
+          const prodCat =
+            'category' in prod && prod.category
+              ? String(prod.category)
+              : undefined;
+
+          if (!productSales[prodId]) {
+            productSales[prodId] = { qty: 0 };
+            if (prodName) productSales[prodId].name = prodName;
+            if (prodCat) productSales[prodId].category = prodCat;
+          }
+          productSales[prodId].qty += prodQty;
+        }
+      }
+    }
+
+    const lowSelling: Array<{
+      prodId: string;
+      qty: number;
+      name?: string;
+      category?: string;
+    }> = [];
+    const highSelling: Array<{
+      prodId: string;
+      qty: number;
+      name?: string;
+      category?: string;
+    }> = [];
+
+    for (const [prodId, data] of Object.entries(productSales)) {
+      if (data.qty < lowThreshold) {
+        lowSelling.push({
+          prodId,
+          qty: data.qty,
+          name: data.name,
+          category: data.category
+        });
+      } else if (data.qty >= highThreshold) {
+        highSelling.push({
+          prodId,
+          qty: data.qty,
+          name: data.name,
+          category: data.category
+        });
+      }
+    }
+
+    return { lowSelling, highSelling };
   }
 }

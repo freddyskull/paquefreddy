@@ -144,9 +144,10 @@ export class ProductsService {
   findAll() {
     return this.prisma.products.findMany({
       select: this.formatedData,
-      orderBy: {
-        createdAt: 'desc'
-      }
+      orderBy: [
+        { createdAt: 'desc' }, // más nuevos primero
+        { updatedAt: 'desc' } // luego los más actualizados
+      ]
     });
   }
 
@@ -329,9 +330,10 @@ export class ProductsService {
         ]
       },
       select: this.formatedData,
-      orderBy: {
-        createdAt: 'desc'
-      }
+      orderBy: [
+        { createdAt: 'desc' }, // más nuevos primero
+        { updatedAt: 'desc' } // luego los más actualizados
+      ]
     });
   }
 

@@ -11,6 +11,7 @@ import { SlideProducts } from './slideProducts'
 import { useRecordsStore } from '@/store/recordsStore'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Charts } from './components/charts'
+import { TodayStatistics } from './components/todayStadistics'
 
 export const Home = () => {
   const { products, isLoading } = useProductStore()
@@ -21,12 +22,12 @@ export const Home = () => {
 
   return (
     <Layout>
-      <div className="flex gap-4">
+      <div className="flex 2xl:flex-row flex-col gap-4">
         <div className="flex flex-col gap-4 w-full 2xl:w-[65%]">
           <div className="gap-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
             <Card className="col-span-2 lg:col-span-1 bg-white dark:bg-secondary">
               <CardContent>
-                <div className="flex 2xl:flex-row flex-col justify-center 2xl:justify-between items-center gap-2">
+                <div className="flex 3xl:flex-row flex-col justify-center 3xl:justify-between items-center gap-2">
                   <div
                     className={`h-12 w-12 rounded-full p-3 ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
                   >
@@ -51,7 +52,7 @@ export const Home = () => {
             </Card>
             <Card className="col-span-2 lg:col-span-1 bg-white dark:bg-secondary">
               <CardContent>
-                <div className="flex 2xl:flex-row flex-col justify-center 2xl:justify-between items-center gap-2">
+                <div className="flex 3xl:flex-row flex-col justify-center 3xl:justify-between items-center gap-2">
                   <div
                     className={`h-12 w-12 rounded-full p-3 ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
                   >
@@ -84,7 +85,7 @@ export const Home = () => {
             </Card>
             <Card className="col-span-2 lg:col-span-1 bg-white dark:bg-secondary">
               <CardContent>
-                <div className="flex 2xl:flex-row flex-col justify-center 2xl:justify-between items-center gap-2">
+                <div className="flex 3xl:flex-row flex-col justify-center 3xl:justify-between items-center gap-2">
                   <div
                     className={`h-12 w-12 rounded-full p-3 ${currency === 'BS' ? 'bg-primary' : 'bg-usd'}`}
                   >
@@ -125,24 +126,9 @@ export const Home = () => {
             <NoImageProduct products={products} />
           </div>
         </div>
-        <div className="hidden 2xl:flex flex-col gap-4 2xl:w-[35%]">
-
+        <div className="flex flex-col gap-4 2xl:w-[35%]">
+          <TodayStatistics />
           <Charts />
-
-          <Card className="flex flex-row flex-wrap bg-white dark:bg-secondary h-[27vh] overflow-x-hidden overflow-y-auto">
-            <CardContent>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
-                repellat quod iste aperiam? Culpa corrupti, deleniti, optio
-                reiciendis soluta doloremque magnam ut mollitia sed praesentium
-                distinctio hic quidem inventore suscipit? Iste cupiditate saepe
-                mollitia amet? Quasi unde sed inventore neque fugit, iste
-                molestiae maxime dolorem earum voluptates? Error exercitationem
-                doloremque ut dolorum? Reiciendis necessitatibus totam corrupti
-                nisi ducimus? Magni, veritatis? Ratione dolorum
-              </p>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </Layout>

@@ -144,7 +144,10 @@ export const Charts = () => {
                 offset={8}
                 className="fill-foreground"
                 fontSize={12}
-                formatter={(value) => `$${new Intl.NumberFormat('en-US').format(value)}`}
+                formatter={(value) => `$${new Intl.NumberFormat('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                }).format(value)}`}
               />
             </Bar>
           </BarChart>

@@ -43,6 +43,25 @@ export class RecordsController {
     );
   }
 
+  @Get('sales-stats')
+  async sellingProductsByThresholds(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+    @Query('lowThreshold') lowThreshold: string,
+    @Query('highThreshold') highThreshold: string,
+    @Query('limit') limit: string,
+    @Query('page') page: string
+  ) {
+    return this.recordsService.sellingProductsByThresholds(
+      new Date(startDate),
+      new Date(endDate),
+      Number(lowThreshold),
+      Number(highThreshold),
+      limit === 'all' ? 'all' : Number(limit),
+      Number(page)
+    );
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.recordsService.findOne(+id);

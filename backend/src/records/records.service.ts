@@ -294,12 +294,42 @@ export class RecordsService {
     };
   }
 
+  /**
+   * Obtiene productos vendidos por thresholds, con paginación y límite.
+   * @param startDate Fecha inicio
+   * @param endDate Fecha fin
+   * @param lowThreshold Límite bajo
+   * @param highThreshold Límite alto
+   * @param limit Cantidad máxima de productos a mostrar por grupo (default 30, 'all' para sin límite)
+   * @param page Página de resultados (default 1)
+   */
   async sellingProductsByThresholds(
     startDate: Date,
     endDate: Date,
     lowThreshold: number = 5,
-    highThreshold: number = 10
+    highThreshold: number = 10,
+    limit: number | 'all' = 30,
+    page: number = 1
   ) {
+    if (!startDate || !endDate) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Debe proporcionar startDate y endDate válidos.'
+        },
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    if (typeof lowThreshold !== 'number' || typeof highThreshold !== 'number') {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'lowThreshold y highThreshold deben ser números.'
+        },
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
     const records = await this.prisma.records.findMany({
       where: {
         createdAt: { gte: startDate, lte: endDate }
@@ -359,37 +389,115 @@ export class RecordsService {
       }
     }
 
-    const lowSelling: Array<{
+    let lowSelling: Array<{
       prodId: string;
       qty: number;
+      profits: number;
       name?: string;
       category?: string;
+      slugs_url?: string;
+      image: string | null;
     }> = [];
-    const highSelling: Array<{
+    let highSelling: Array<{
       prodId: string;
       qty: number;
+      profits: number;
       name?: string;
       category?: string;
+      slugs_url?: string;
+      image: string | null;
     }> = [];
 
     for (const [prodId, data] of Object.entries(productSales)) {
+      let slugs_url: string | undefined = undefined;
+      let image: string | null = null;
+      let price: number = 0;
+      try {
+        const product = await this.productServices.findOne(prodId);
+        if (product) {
+          if (product.slugs_url) slugs_url = product.slugs_url;
+          image = product.image ?? null;
+          price = typeof product.price === 'number' ? product.price : 0;
+        }
+      } catch (e) {
+        // Si no se encuentra el producto, ignorar el error
+      }
+      const profits = Number((data.qty * price).toFixed(2));
       if (data.qty < lowThreshold) {
         lowSelling.push({
           prodId,
           qty: data.qty,
+          profits,
           name: data.name,
-          category: data.category
+          category: data.category,
+          slugs_url,
+          image
         });
       } else if (data.qty >= highThreshold) {
         highSelling.push({
           prodId,
           qty: data.qty,
+          profits,
           name: data.name,
-          category: data.category
+          category: data.category,
+          slugs_url,
+          image
         });
       }
     }
 
-    return { lowSelling, highSelling };
+    // Ordenar por cantidad descendente
+    lowSelling = lowSelling.sort((a, b) => b.qty - a.qty);
+    highSelling = highSelling.sort((a, b) => b.qty - a.qty);
+
+    // Paginación y límite
+    const applyPagination = (arr: any[]) => {
+      if (limit === 'all') return arr;
+      const pageNum = page && page > 0 ? page : 1;
+      const lim = typeof limit === 'number' && limit > 0 ? limit : 30;
+      const start = (pageNum - 1) * lim;
+      return arr.slice(start, start + lim);
+    };
+
+    const paginatedLowSelling = applyPagination(lowSelling);
+
+    const paginatedHighSelling = applyPagination(highSelling);
+
+    // Calcular totales vendidos en la página actual
+    const totalLowSoldPage = paginatedLowSelling.reduce(
+      (acc, item) => acc + item.profits,
+      0
+    );
+    const totalHighSoldPage = paginatedHighSelling.reduce(
+      (acc, item) => acc + item.profits,
+      0
+    );
+
+    // Agregar porcentaje a cada producto
+    const paginatedLowSellingWithPercent = paginatedLowSelling.map((item) => ({
+      ...item,
+      percentage:
+        totalLowSoldPage > 0
+          ? Number(((item.profits / totalLowSoldPage) * 100).toFixed(2))
+          : 0
+    }));
+    const paginatedHighSellingWithPercent = paginatedHighSelling.map(
+      (item) => ({
+        ...item,
+        percentage:
+          totalHighSoldPage > 0
+            ? Number(((item.profits / totalHighSoldPage) * 100).toFixed(2))
+            : 0
+      })
+    );
+
+    return {
+      lowSelling: paginatedLowSellingWithPercent,
+      highSelling: paginatedHighSellingWithPercent,
+      totalLowSelling: lowSelling.length,
+      totalHighSelling: highSelling.length,
+      page,
+      limit
+    };
   }
 }

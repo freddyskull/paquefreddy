@@ -25,7 +25,6 @@ export const TodayStatistics = () => {
     const semana = getWeekRange()
   }, [records])
 
-  console.log(data)
 
   return (
     <Card className="bg-white dark:bg-secondary">

@@ -3,7 +3,7 @@ import Layout from '../layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useProductStore } from '@/store/productStore'
 import { useCategoriesStore } from '@/store/categoriesStore'
-import { LastProducts } from './lastProducts'
+import { SellingProductsTrends } from './components/sellingProductsTrends'
 import { NoImageProduct } from './noImageProduct'
 import { BoxIcon, HandCoins, ListCheck, TruckIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -122,7 +122,7 @@ export const Home = () => {
             <SlideProducts products={products} isLoading={isLoading} />
           </div>
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mb-8 xl:mb-0">
-            <LastProducts products={products} />
+            <SellingProductsTrends />
             <NoImageProduct products={products} />
           </div>
         </div>

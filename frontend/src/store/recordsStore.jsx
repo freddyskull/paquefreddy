@@ -152,6 +152,24 @@ export const useRecordsStore = create((set, get) => ({
   // Clear selected record
   clearSelectedRecord: () => set({ selectedRecord: null }),
 
+  salesStats: async (startDate, endDate, lowThreshold = 8, highThreshold = 40) => {
+    try {
+      const response = await axiosInstance.get(`records/sales-stats`, {
+        params: {
+          startDate,
+          endDate,
+          lowThreshold,
+          highThreshold
+        }
+      })
+      return response.data
+    } catch (error) {
+      handleError(error)
+      set({ error: error.message })
+    }
+  },
+
+
   // Clear all state
   clearState: () => set({
     records: [],

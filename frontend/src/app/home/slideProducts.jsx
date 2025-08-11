@@ -64,7 +64,7 @@ export const SlideProducts = ({ products, isLoading }) => {
             ) : (
 
 
-              <Skeleton className="rounded-md w-[100%] max-w-xs h-[42vh]" />
+              <Skeleton className="rounded-md w-[100%] max-w-xs h-[47.6vh]" />
             )
           }
 

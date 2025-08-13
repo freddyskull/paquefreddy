@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -40,9 +41,9 @@ model Config {
   default_currency        String?  @default("BS")
   expiration_default      Int?     @default(30)
   bundle_discount         Float?   @default(0.05)
-  moreConfig              String[] @default([])
   createdAt               DateTime @default(now())
   updatedAt               DateTime
+  moreConfig              String[] @default([])
 }
 
 model Products {
@@ -53,7 +54,6 @@ model Products {
   price        Float
   price_ent    Float
   slugs        String[]    @default([])
-  slug_url     String      @unique
   image        String?
   brand        String?
   bundle       Int?
@@ -64,9 +64,10 @@ model Products {
   sell_unity   Boolean?    @default(false)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime
+  slug_url     String      @unique
   categories   Categories? @relation(fields: [categorie_id], references: [id])
   suppliers    Suppliers?  @relation(fields: [supplier_id], references: [id])
-  purhases     Purhases[]
+  purhases     Purhases[]  @relation("ProductsToPurhases")
 }
 
 model Purhases {
@@ -81,20 +82,20 @@ model Purhases {
   createdAt            DateTime   @default(now())
   updatedAt            DateTime
   User                 User?      @relation(fields: [user_id], references: [id])
-  Products             Products[]
+  Products             Products[] @relation("ProductsToPurhases")
 }
 
 model Records {
-  id                 Int         @id @default(autoincrement())
+  id                 Int      @id @default(autoincrement())
   productList        Json
   dolar_price        Decimal
-  status             Boolean     @default(false)
+  status             Boolean  @default(false)
   totals             Json
-  createdAt          DateTime    @default(now())
+  createdAt          DateTime @default(now())
   updatedAt          DateTime
-  user_id            String?     
-  black_list_user_id Int?        
-  sell_without_stock Boolean?    @default(false)
+  user_id            String?
+  black_list_user_id Int?
+  sell_without_stock Boolean? @default(false)
 }
 
 model Suppliers {
@@ -115,12 +116,12 @@ model Suppliers {
 }
 
 model black_list {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   description String
   total       Decimal
   record_id   Int
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime @default(now())
   updatedAt   DateTime
   address     String?
   city        String?

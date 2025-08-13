@@ -38,6 +38,7 @@ CREATE TABLE "Config" (
     "bundle_discount" DOUBLE PRECISION DEFAULT 0.05,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "moreConfig" TEXT[] DEFAULT ARRAY[]::TEXT[],
 
     CONSTRAINT "Config_pkey" PRIMARY KEY ("id")
 );
@@ -51,7 +52,6 @@ CREATE TABLE "Products" (
     "price" DOUBLE PRECISION NOT NULL,
     "price_ent" DOUBLE PRECISION NOT NULL,
     "slugs" TEXT[] DEFAULT ARRAY[]::TEXT[],
-    "slugs_url" TEXT NOT NULL,
     "image" TEXT,
     "brand" TEXT,
     "bundle" INTEGER,
@@ -62,6 +62,7 @@ CREATE TABLE "Products" (
     "sell_unity" BOOLEAN DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "slug_url" TEXT NOT NULL,
 
     CONSTRAINT "Products_pkey" PRIMARY KEY ("id")
 );
@@ -69,7 +70,7 @@ CREATE TABLE "Products" (
 -- CreateTable
 CREATE TABLE "Purhases" (
     "id" SERIAL NOT NULL,
-    "user_id" TEXT,
+    "user_id" TEXT DEFAULT 'null',
     "total_purchase_amout" DOUBLE PRECISION[] DEFAULT ARRAY[]::DOUBLE PRECISION[],
     "dolar_amout" DOUBLE PRECISION,
     "date_credit" INTEGER,
@@ -130,6 +131,7 @@ CREATE TABLE "black_list" (
     "city" TEXT,
     "email" TEXT,
     "phone" TEXT,
+    "Records" TEXT[] DEFAULT ARRAY[]::TEXT[],
 
     CONSTRAINT "black_list_pkey" PRIMARY KEY ("id")
 );
@@ -149,7 +151,7 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "Categories_slug_url_key" ON "Categories"("slug_url");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Products_slugs_url_key" ON "Products"("slugs_url");
+CREATE UNIQUE INDEX "Products_slug_url_key" ON "Products"("slug_url");
 
 -- CreateIndex
 CREATE INDEX "_ProductsToPurhases_B_index" ON "_ProductsToPurhases"("B");
@@ -162,12 +164,6 @@ ALTER TABLE "Products" ADD CONSTRAINT "Products_supplier_id_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "Purhases" ADD CONSTRAINT "Purhases_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Records" ADD CONSTRAINT "Records_black_list_user_id_fkey" FOREIGN KEY ("black_list_user_id") REFERENCES "black_list"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Records" ADD CONSTRAINT "Records_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ProductsToPurhases" ADD CONSTRAINT "_ProductsToPurhases_A_fkey" FOREIGN KEY ("A") REFERENCES "Products"("id") ON DELETE CASCADE ON UPDATE CASCADE;

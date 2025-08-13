@@ -37,6 +37,5 @@ services:
       - backend
     ports:
       - "4173:4173"
-    command: ["npm", "run", "preview", "--", "--host", "0.0.0.0"]
 volumes:
   pgdata:

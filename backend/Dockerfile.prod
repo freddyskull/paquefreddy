@@ -20,7 +20,7 @@ COPY --from=builder /builder/dist ./dist
 COPY --from=builder /builder/package.json ./
 COPY --from=builder /builder/node_modules ./node_modules
 COPY --from=builder /builder/prisma ./prisma
-COPY --from=builder /builder/entrypoint.sh ./entrypoint.sh
+COPY --from=builder /builder/entrypoint.prod.sh ./entrypoint.prod.sh
 
 ENV NODE_ENV=production
 
@@ -31,8 +31,9 @@ RUN npx prisma generate
 EXPOSE 3001
 
 # Usar entrypoint para esperar DB, migrar y arrancar
-RUN chmod +x /app/entrypoint.sh
-ENTRYPOINT ["/app/entrypoint.sh"]
+RUN sed -i 's/\r$//' /app/entrypoint.prod.sh \
+  && chmod +x /app/entrypoint.prod.sh
+ENTRYPOINT ["/app/entrypoint.prod.sh"]
 
 # Al no pasar comando desde compose, usamos start:prod por defecto
 CMD ["npm", "run", "start:prod"]

@@ -13,4 +13,6 @@ COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
 EXPOSE 4173
 ENV NODE_ENV=production
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]
+COPY --from=builder /app/entrypoint.prod.sh ./entrypoint.prod.sh
+RUN chmod +x /app/entrypoint.prod.sh
+ENTRYPOINT ["/app/entrypoint.prod.sh"]

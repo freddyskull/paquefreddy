@@ -9,7 +9,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
-COPY entrypoint.sh ./
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh
 
 # Install dependencies
 RUN npm install --legacy-peer-deps
@@ -27,5 +28,5 @@ COPY . .
 EXPOSE 3001
 
 # Ensure entrypoint is executable and use it
-RUN chmod +x /app/entrypoint.sh
-ENTRYPOINT ["/app/entrypoint.sh"]
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

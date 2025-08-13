@@ -44,6 +44,7 @@ export const ProductCard = ({ product, handleEdit, showPriceEnt = true }) => {
 
   const isProductSelected = selectedProducts.some((p) => p.id === product.id)
 
+
   return (
     <Card
       key={product.id}
@@ -106,13 +107,13 @@ export const ProductCard = ({ product, handleEdit, showPriceEnt = true }) => {
       </div>
       <div className="flex justify-center gap-2 text-center">
         <div className="flex flex-col text-center">
-          {product.categorie && (
+          {product.categories && (
             <div className="flex items-center gap-2">
               <div className="flex flex-col">
                 <span className="text-[10px] uppercase">Categoría</span>
                 <div className={`${currency === 'BS' ? 'bg-primary' : 'bg-usd'} mt-1 rounded-full p-1 px-2 text-[10px] text-white uppercase line-clamp-1`}>
                   <EditableSelect
-                    value={product.categorie.name}
+                    value={product.categories.name}
                     options={categoryOptions}
                     onBlur={(e) => {
                       handleEdit('categorie_id', e, product.id)

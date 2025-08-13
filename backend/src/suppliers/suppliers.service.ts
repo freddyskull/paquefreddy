@@ -72,7 +72,9 @@ export class SuppliersService {
           state: dto.state || null,
           country: dto.country || null,
           zip: dto.zip || null,
-          phone: dto.phone || null
+          phone: dto.phone || null,
+          createdAt: new Date(),
+          updatedAt: new Date()
         },
         select: this.formatedData
       });

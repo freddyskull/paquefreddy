@@ -14,7 +14,7 @@ export class recordsDto {
         price: 0.8,
         price_ent: 0.61,
         slugs: [],
-        slugs_url: 'oreo-mostrador-48gr-x-6-unidades',
+        slug_url: 'oreo-mostrador-48gr-x-6-unidades',
         image:
           'https://farmatina.com/wp-content/uploads/2025/05/Oreo-Chocolate-Mostrador-x-6-Unid-48Gr-595x595.jpg',
         brand: 'OREO',

@@ -7,4 +7,9 @@ export class CategorieDto {
   @IsString({ message: 'El nombre debe ser una cadena de texto' })
   @MaxLength(100, { message: 'El nombre no puede exceder los 100 caracteres' })
   name: string;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'El slug es requerido' })
+  @IsString({ message: 'El slug debe ser una cadena de texto' })
+  slug_url: string;
 }

@@ -395,7 +395,7 @@ export class RecordsService {
       profits: number;
       name?: string;
       category?: string;
-      slugs_url?: string;
+      slug_url?: string;
       image: string | null;
     }> = [];
     let highSelling: Array<{
@@ -404,18 +404,18 @@ export class RecordsService {
       profits: number;
       name?: string;
       category?: string;
-      slugs_url?: string;
+      slug_url?: string;
       image: string | null;
     }> = [];
 
     for (const [prodId, data] of Object.entries(productSales)) {
-      let slugs_url: string | undefined = undefined;
+      let slug_url: string | undefined = undefined;
       let image: string | null = null;
       let price: number = 0;
       try {
         const product = await this.productServices.findOne(prodId);
         if (product) {
-          if (product.slugs_url) slugs_url = product.slugs_url;
+          if (product.slug_url) slug_url = product.slug_url;
           image = product.image ?? null;
           price = typeof product.price === 'number' ? product.price : 0;
         }
@@ -430,7 +430,7 @@ export class RecordsService {
           profits,
           name: data.name,
           category: data.category,
-          slugs_url,
+          slug_url,
           image
         });
       } else if (data.qty >= highThreshold) {
@@ -440,7 +440,7 @@ export class RecordsService {
           profits,
           name: data.name,
           category: data.category,
-          slugs_url,
+          slug_url,
           image
         });
       }

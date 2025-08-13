@@ -23,7 +23,7 @@ const productSchema = z
     price_ent: z.number().min(0, 'debe ser mayor o igual a 0'),
     slugs: z.array(z.string()).default(null),
     image: z.string().optional(),
-    slugs_url: z.string().optional(),
+    slug_url: z.string().optional(),
     brand: z.string().optional(),
     bundle: z.number().optional(),
     sell_unity: z.boolean().optional(),
@@ -89,7 +89,7 @@ export const NewProductPage = ({ product }) => {
       unity: product?.unity || 'und',
       supplier_id: product?.supplier_id || undefined,
       categorie_id: product?.categorie_id || defaultCategoryId,
-      slugs_url: product?.slugs_url || '',
+      slug_url: product?.slug_url || '',
     },
     mode: 'onChange',
   })

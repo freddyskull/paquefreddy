@@ -18,7 +18,7 @@ export class ProductsService {
       stock: dto.stock,
       status: dto.status,
       slugs: dto.slugs.length === 0 ? [] : dto.slugs,
-      slugs_url: slugify(dto.name),
+      slug_url: slugify(dto.name),
       image: dto.image?.trim() === '' ? null : dto.image,
       brand: dto.brand?.trim() === '' ? null : dto.brand,
       bundle: dto.bundle === 0 ? null : dto.bundle,
@@ -47,7 +47,7 @@ export class ProductsService {
     price: true,
     price_ent: true,
     slugs: true,
-    slugs_url: true,
+    slug_url: true,
     image: true,
     brand: true,
     bundle: true,
@@ -55,8 +55,8 @@ export class ProductsService {
     sell_unity: true,
     expiration: true,
     unity: true,
-    categorie: true,
-    supplier: true,
+    categories: true,
+    suppliers: true,
     createdAt: true,
     updatedAt: true
   };
@@ -115,14 +115,14 @@ export class ProductsService {
   async create(dto: productDto) {
     this.validatePrices(dto.price_ent, dto.price);
     await this.productExists('name', dto.name);
-    // Validar que el slugs_url sea único
+    // Validar que el slug_url sea único
     // Generar slug eliminando paréntesis, comillas y caracteres especiales
     const slugUrl = slugify(
       dto.name.replace(/[()"'`´!¡¿?.,:;[\]{}<>@#$%^&*+=~|\\/]/g, ''),
       { lower: true, strict: true }
     );
     await this.productExists(
-      'slugs_url',
+      'slug_url',
       slugUrl,
       'La "URL del producto" ya existe, por favor elige otro nombre'
     );
@@ -154,7 +154,7 @@ export class ProductsService {
   async findOne(id: any) {
     if (isNaN(Number(id))) {
       const product = await this.prisma.products.findFirst({
-        where: { slugs_url: id },
+        where: { slug_url: id },
         select: this.formatedData
       });
 
@@ -183,8 +183,8 @@ export class ProductsService {
     const dolar = config?.dolar || 0;
     this.validatePrices(dto.price_ent, dto.price);
     // await this.productExists(
-    //   'slugs_url',
-    //   dto.slugs_url,
+    //   'slug_url',
+    //   dto.slug_url,
     //   'La "URL del producto" ya existe, por favor elige otro nombre'
     // );
     const newData = { ...product, ...dto };
@@ -212,8 +212,8 @@ export class ProductsService {
       throw new HttpException('No existe el producto', HttpStatus.BAD_REQUEST);
     }
     // await this.productExists(
-    //   'slugs_url',
-    //   dto.slugs_url,
+    //   'slug_url',
+    //   dto.slug_url,
     //   'La "URL del producto" ya existe, por favor elige otro nombre'
     // );
     if (dto.price_ent && dto.price) {
@@ -249,9 +249,9 @@ export class ProductsService {
       updatedData.price_ent = product.price_ent;
     }
 
-    // Eliminar slugs_url para no actualizarlo
-    if ('slugs_url' in updatedData) {
-      delete updatedData.slugs_url;
+    // Eliminar slug_url para no actualizarlo
+    if ('slug_url' in updatedData) {
+      delete updatedData.slug_url;
     }
 
     await this.prisma.products.update({

@@ -23,22 +23,23 @@ CREATE TABLE "Categories" (
 );
 
 -- CreateTable
-CREATE TABLE "Suppliers" (
+CREATE TABLE "Config" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "credit_days" INTEGER NOT NULL DEFAULT 0,
-    "company" TEXT,
-    "email" TEXT,
-    "address" TEXT,
-    "city" TEXT,
-    "state" TEXT,
-    "country" TEXT,
-    "zip" TEXT,
-    "phone" TEXT,
+    "dolar" DOUBLE PRECISION NOT NULL,
+    "useIva" BOOLEAN DEFAULT false,
+    "autoPrice" BOOLEAN DEFAULT true,
+    "profit" DOUBLE PRECISION NOT NULL DEFAULT 0.3,
+    "roundPrice" BOOLEAN DEFAULT false,
+    "default_categories_id" INTEGER DEFAULT 1,
+    "default_categories_slug" TEXT DEFAULT 'varios',
+    "threshold" INTEGER,
+    "default_currency" TEXT DEFAULT 'BS',
+    "expiration_default" INTEGER DEFAULT 30,
+    "bundle_discount" DOUBLE PRECISION DEFAULT 0.05,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Suppliers_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Config_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -66,34 +67,6 @@ CREATE TABLE "Products" (
 );
 
 -- CreateTable
-CREATE TABLE "Records" (
-    "id" SERIAL NOT NULL,
-    "productList" JSONB NOT NULL,
-    "dolar_price" DECIMAL(65,30) NOT NULL,
-    "status" BOOLEAN NOT NULL DEFAULT false,
-    "totals" JSONB NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "user_id" TEXT,
-    "black_list_user_id" INTEGER,
-
-    CONSTRAINT "Records_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "black_list" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "total" DECIMAL(65,30) NOT NULL,
-    "record_id" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "black_list_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Purhases" (
     "id" SERIAL NOT NULL,
     "user_id" TEXT,
@@ -110,23 +83,55 @@ CREATE TABLE "Purhases" (
 );
 
 -- CreateTable
-CREATE TABLE "Config" (
+CREATE TABLE "Records" (
     "id" SERIAL NOT NULL,
-    "dolar" DOUBLE PRECISION NOT NULL,
-    "useIva" BOOLEAN DEFAULT false,
-    "autoPrice" BOOLEAN DEFAULT true,
-    "profit" DOUBLE PRECISION NOT NULL DEFAULT 0.3,
-    "roundPrice" BOOLEAN DEFAULT false,
-    "default_categories_id" INTEGER DEFAULT 1,
-    "default_categories_slug" TEXT DEFAULT 'varios',
-    "threshold" INTEGER,
-    "default_currency" TEXT DEFAULT 'BS',
-    "expiration_default" INTEGER DEFAULT 30,
-    "bundle_discount" DOUBLE PRECISION DEFAULT 0.05,
+    "productList" JSONB NOT NULL,
+    "dolar_price" DECIMAL(65,30) NOT NULL,
+    "status" BOOLEAN NOT NULL DEFAULT false,
+    "totals" JSONB NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "user_id" TEXT,
+    "black_list_user_id" INTEGER,
+    "sell_without_stock" BOOLEAN DEFAULT false,
+
+    CONSTRAINT "Records_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Suppliers" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "credit_days" INTEGER NOT NULL DEFAULT 0,
+    "company" TEXT,
+    "email" TEXT,
+    "address" TEXT,
+    "city" TEXT,
+    "state" TEXT,
+    "country" TEXT,
+    "zip" TEXT,
+    "phone" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Config_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Suppliers_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "black_list" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "total" DECIMAL(65,30) NOT NULL,
+    "record_id" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "address" TEXT,
+    "city" TEXT,
+    "email" TEXT,
+    "phone" TEXT,
+
+    CONSTRAINT "black_list_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -150,19 +155,19 @@ CREATE UNIQUE INDEX "Products_slugs_url_key" ON "Products"("slugs_url");
 CREATE INDEX "_ProductsToPurhases_B_index" ON "_ProductsToPurhases"("B");
 
 -- AddForeignKey
-ALTER TABLE "Products" ADD CONSTRAINT "Products_supplier_id_fkey" FOREIGN KEY ("supplier_id") REFERENCES "Suppliers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Products" ADD CONSTRAINT "Products_categorie_id_fkey" FOREIGN KEY ("categorie_id") REFERENCES "Categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Records" ADD CONSTRAINT "Records_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Products" ADD CONSTRAINT "Products_supplier_id_fkey" FOREIGN KEY ("supplier_id") REFERENCES "Suppliers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Purhases" ADD CONSTRAINT "Purhases_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Records" ADD CONSTRAINT "Records_black_list_user_id_fkey" FOREIGN KEY ("black_list_user_id") REFERENCES "black_list"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Purhases" ADD CONSTRAINT "Purhases_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Records" ADD CONSTRAINT "Records_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ProductsToPurhases" ADD CONSTRAINT "_ProductsToPurhases_A_fkey" FOREIGN KEY ("A") REFERENCES "Products"("id") ON DELETE CASCADE ON UPDATE CASCADE;

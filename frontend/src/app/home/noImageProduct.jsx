@@ -149,7 +149,7 @@ export const NoImageProduct = ({ products }) => {
                               >
                                 <Pencil />
                               </Button>
-                              <Link to={`/productos/editar/${product.slugs_url}`}>
+                              <Link to={`/productos/editar/${product.slug_url}`}>
                                 <Button
                                   variant="outline"
                                   className="uppercase"

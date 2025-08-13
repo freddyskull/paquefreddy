@@ -2,7 +2,6 @@ import React from 'react'
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -23,7 +22,7 @@ export const SellingStatsLoop = ({ data }) => {
       </TableHeader>
       <TableBody>
         {data.map((item) => (
-          <TableRow>
+          <TableRow key={item.prodId}>
             <TableCell className="max-w-[150px] overflow-hidden font-medium text-ellipsis">
               {item.name}
             </TableCell>

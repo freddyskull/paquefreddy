@@ -71,7 +71,7 @@ export const ProductForm = ({
           <div className="w-1/2">
             <ChadCnFormInput
               control={form.control}
-              name="slugs_url"
+              name="slug_url"
               type="text"
               label="URL del producto"
               placeholder="Ejm: harina-pan"

@@ -74,7 +74,7 @@ export class productDto {
   @IsString({
     message: 'El slug debe ser una cadena de texto y no debe tener espacios'
   })
-  slugs_url: string;
+  slug_url: string;
 
   @ApiProperty()
   @IsOptional()

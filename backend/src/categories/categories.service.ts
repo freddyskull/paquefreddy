@@ -14,7 +14,6 @@ export class CategoriesService {
   private formatedData = {
     id: true,
     name: true,
-    products: true,
     slug_url: true,
     createdAt: true,
     updatedAt: true
@@ -27,19 +26,17 @@ export class CategoriesService {
   ): Promise<void> {
     const category = await this.prisma.categories.findFirst({
       where: {
-        OR: [
-          { name: value },
-          { slug_url: value }
-        ]
+        OR: [{ name: value }, { slug_url: value }]
       }
     });
     if (category) {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          message: field === 'name' 
-            ? 'El nombre de la categoría ya existe' 
-            : 'La URL amigable ya está en uso'
+          message:
+            field === 'name'
+              ? 'El nombre de la categoría ya existe'
+              : 'La URL amigable ya está en uso'
         },
         HttpStatus.BAD_REQUEST
       );
@@ -54,7 +51,9 @@ export class CategoriesService {
         name: dto.name,
         slug_url: slugify(dto.name, {
           lower: true
-        })
+        }),
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     });
 

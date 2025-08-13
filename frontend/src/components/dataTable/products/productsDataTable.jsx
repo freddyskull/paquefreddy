@@ -89,7 +89,7 @@ export const ProductsDataTable = ({ data }) => {
       },
     },
     {
-      accessorKey: 'slugs_url',
+      accessorKey: 'slug_url',
       header: 'Slugs URL',
       filterFn: (row, columnId, value) => {
         return value

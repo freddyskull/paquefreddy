@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -22,8 +15,7 @@ model User {
   avatar    String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  records   Records[]
-  purhases  Purhases[]
+  Purhases  Purhases[]
 }
 
 model Categories {
@@ -31,8 +23,78 @@ model Categories {
   name      String
   slug_url  String     @unique
   createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  products  Products[]
+  updatedAt DateTime
+  Products  Products[]
+}
+
+model Config {
+  id                      Int      @id @default(autoincrement())
+  dolar                   Float
+  useIva                  Boolean? @default(false)
+  autoPrice               Boolean? @default(true)
+  profit                  Float    @default(0.3)
+  roundPrice              Boolean? @default(false)
+  default_categories_id   Int?     @default(1)
+  default_categories_slug String?  @default("varios")
+  threshold               Int?
+  default_currency        String?  @default("BS")
+  expiration_default      Int?     @default(30)
+  bundle_discount         Float?   @default(0.05)
+  moreConfig              String[] @default([])
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime
+}
+
+model Products {
+  id           Int         @id @default(autoincrement())
+  name         String
+  stock        Int
+  status       Boolean?    @default(true)
+  price        Float
+  price_ent    Float
+  slugs        String[]    @default([])
+  slug_url     String      @unique
+  image        String?
+  brand        String?
+  bundle       Int?
+  expiration   DateTime?
+  unity        String?
+  supplier_id  Int?
+  categorie_id Int?
+  sell_unity   Boolean?    @default(false)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime
+  categories   Categories? @relation(fields: [categorie_id], references: [id])
+  suppliers    Suppliers?  @relation(fields: [supplier_id], references: [id])
+  purhases     Purhases[]
+}
+
+model Purhases {
+  id                   Int        @id @default(autoincrement())
+  user_id              String?    @default("null")
+  total_purchase_amout Float[]    @default([])
+  dolar_amout          Float?
+  date_credit          Int?
+  reference            String?
+  quantity             Int
+  status               Boolean?   @default(true)
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime
+  User                 User?      @relation(fields: [user_id], references: [id])
+  Products             Products[]
+}
+
+model Records {
+  id                 Int         @id @default(autoincrement())
+  productList        Json
+  dolar_price        Decimal
+  status             Boolean     @default(false)
+  totals             Json
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime
+  user_id            String?     
+  black_list_user_id Int?        
+  sell_without_stock Boolean?    @default(false)
 }
 
 model Suppliers {
@@ -48,93 +110,21 @@ model Suppliers {
   zip         String?
   phone       String?
   createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  updatedAt   DateTime
   Products    Products[]
-}
-
-model Products {
-  id           Int         @id @default(autoincrement())
-  name         String
-  stock        Int
-  status       Boolean?    @default(true)
-  price        Float
-  price_ent    Float
-  slugs        String[]    @default([])
-  slugs_url    String      @unique
-  image        String?
-  brand        String?
-  bundle       Int?
-  expiration   DateTime?
-  unity        String?
-  supplier_id  Int?
-  categorie_id Int?
-  sell_unity   Boolean?    @default(false)
-  supplier     Suppliers?  @relation(fields: [supplier_id], references: [id])
-  categorie    Categories? @relation(fields: [categorie_id], references: [id])
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  purhases     Purhases[]
-}
-
-model Records {
-  id                 Int         @id @default(autoincrement())
-  productList        Json
-  dolar_price        Decimal
-  status             Boolean     @default(false)
-  sell_without_stock Boolean?    @default(false)
-  payment_method     String?
-  totals             Json
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
-  user_id            String?
-  user               User?       @relation(fields: [user_id], references: [id])
-  black_list_user_id Int?
-  black_list_user    black_list? @relation("BlackListUser", fields: [black_list_user_id], references: [id])
 }
 
 model black_list {
   id          Int       @id @default(autoincrement())
   name        String
-  description String?
-  total       Float?    @default(0.0)
-  discount    Float?    @default(0.0)
-  phone       String?
-  email       String?
+  description String
+  total       Decimal
+  record_id   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
   address     String?
   city        String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  Records     Records[] @relation("BlackListUser")
-}
-
-model Purhases {
-  id                   Int        @id @default(autoincrement())
-  user_id              String?
-  products             Products[]
-  total_purchase_amout Float[]    @default([])
-  dolar_amout          Float?
-  date_credit          Int? // 0 = 30 days, 1 = 60 days, 2 = 90 days
-  reference            String?
-  quantity             Int
-  status               Boolean?   @default(true)
-  createdAt            DateTime   @default(now())
-  updatedAt            DateTime   @updatedAt
-  user                 User?      @relation(fields: [user_id], references: [id])
-}
-
-model Config {
-  id                      Int      @id @default(autoincrement())
-  dolar                   Float
-  useIva                  Boolean? @default(false)
-  autoPrice               Boolean? @default(true)
-  profit                  Float    @default(0.3) // 30%
-  roundPrice              Boolean? @default(false)
-  default_categories_id   Int?     @default(1)
-  default_categories_slug String?  @default("varios")
-  threshold               Int?
-  default_currency        String?  @default("BS")
-  expiration_default      Int?     @default(30)
-  bundle_discount         Float?   @default(0.05) // 5%
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+  email       String?
+  phone       String?
+  Records     String[] @default([])
 }

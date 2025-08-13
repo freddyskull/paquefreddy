@@ -9,11 +9,30 @@ COPY . .
 RUN npm run build
 
 FROM node:20-alpine
-WORKDIR /builder
-RUN apk add --no-cache python3 make g++ \
-  && npm install -g npm@9.6.7
+
+# Dependencias necesarias en runtime para Prisma y checks de DB
+RUN apk add --no-cache openssl postgresql-client
+
+WORKDIR /app
+
+# Copiar artefactos y recursos necesarios
 COPY --from=builder /builder/dist ./dist
 COPY --from=builder /builder/package.json ./
 COPY --from=builder /builder/node_modules ./node_modules
+COPY --from=builder /builder/prisma ./prisma
+COPY --from=builder /builder/entrypoint.sh ./entrypoint.sh
+
 ENV NODE_ENV=production
+
+# Generar el cliente de Prisma para el entorno de producción
+RUN npx prisma generate
+
+# Exponer el puerto correcto
+EXPOSE 3001
+
+# Usar entrypoint para esperar DB, migrar y arrancar
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+# Al no pasar comando desde compose, usamos start:prod por defecto
 CMD ["npm", "run", "start:prod"]

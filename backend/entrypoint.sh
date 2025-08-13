@@ -27,6 +27,16 @@ fi
 echo "[entrypoint] Running Prisma migrate deploy..."
 npx prisma migrate deploy
 
+if [ "${RUN_SEED}" = "true" ]; then
+  echo "[entrypoint] RUN_SEED=true => running seed script..."
+  # Prefer Prisma seeding if configured; fallback to direct ts-node
+  if npx prisma --help | grep -q "db seed"; then
+    npx prisma db seed || ts-node prisma/seed.ts || true
+  else
+    ts-node prisma/seed.ts || true
+  fi
+fi
+
 echo "[entrypoint] Starting application..."
 if [ "$#" -gt 0 ]; then
   echo "[entrypoint] Executing passed command: $@"

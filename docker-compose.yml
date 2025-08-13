@@ -24,6 +24,7 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/paquefreddy
       - CHOKIDAR_USEPOLLING=true
+      - RUN_SEED=true
     ports:
       - "3001:3001"
     volumes:

@@ -118,14 +118,13 @@ model Suppliers {
 model black_list {
   id          Int      @id @default(autoincrement())
   name        String
-  description String
-  total       Decimal
-  record_id   Int
+  description String?
+  total       Decimal?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   address     String?
   city        String?
   email       String?
   phone       String?
-  Records     String[] @default([])
+  records     String[] @default([])
 }

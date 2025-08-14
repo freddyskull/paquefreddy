@@ -251,7 +251,7 @@ export const RecordPage = () => {
 
   return (
     <Layout>
-      <Card className="w-full">
+      <Card className="w-full h-[90vh]">
         <CardContent>
           <div className="">
             <div className='flex justify-between items-center gap-3 mb-4'>

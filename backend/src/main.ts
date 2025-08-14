@@ -17,12 +17,18 @@ async function bootstrap() {
     .addTag('Config')
     .addTag('Black List')
     .build();
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/v1');
+  try {
+    const app = await NestFactory.create(AppModule);
+    app.setGlobalPrefix('api/v1');
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
-  app.enableCors();
-  await app.listen(process.env.PORT ?? 3001);
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+    app.enableCors();
+    await app.listen(process.env.PORT ?? 3001);
+    console.log('[API] Server started successfully');
+  } catch (err: any) {
+    console.error('[API] Error al iniciar el servidor:', err?.message || err);
+    process.exit(1);
+  }
 }
 bootstrap();

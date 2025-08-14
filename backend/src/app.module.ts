@@ -5,6 +5,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { RecordsModule } from './records/records.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { BlacklistModule } from './blacklist/blacklist.module';
+import { PrimasService } from './primas/primas.service';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { BlacklistModule } from './blacklist/blacklist.module';
     // BlacklistModule
   ],
   controllers: [],
-  providers: []
+  providers: [PrimasService]
 })
 export class AppModule {}

@@ -10,6 +10,10 @@ import { NoRouteUrl } from './no-exist/noRouteUrl'
 import { SinStockPage } from './sin-stock/sinStockPage'
 import { RecordDetails } from './records/recordDetails'
 import { CategoriePage } from './categories/categoriePage'
+import { Blacklist } from './blackList/blacklist'
+import { AddUserBlackList } from './blackList/components/addUserBlackList'
+import { EditUserBlackList } from './blackList/components/editUserBlackList'
+import { ShowUserBlackList } from './blackList/components/showUserBlackList'
 export const AppRouter = () => {
   return (
     <Router>
@@ -26,6 +30,10 @@ export const AppRouter = () => {
         <Route path='ventas' element={<RecordPage />} />
         <Route path='/ventas/detalles/:id' element={<RecordDetails />} />
         <Route path='/categorias' element={<CategoriePage />} />
+        <Route path='/lista-negra' element={<Blacklist />} />
+        <Route path='/lista-negra/nuevo' element={<AddUserBlackList />} />
+        <Route path='/lista-negra/editar/:id' element={<EditUserBlackList />} />
+        <Route path='/lista-negra/:id' element={<ShowUserBlackList />} />
       </Routes>
     </Router>
   )

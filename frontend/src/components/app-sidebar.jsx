@@ -1,6 +1,19 @@
 import * as React from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import logo from "/logo.svg"
+import {
+  Home,
+  Package,
+  Tag,
+  Factory,
+  ShoppingCart,
+  Ban,
+  Settings,
+  List,
+  Plus,
+  ImageOff,
+  AlertTriangle,
+} from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -23,10 +36,12 @@ const data = {
     {
       title: "Home",
       url: "/home",
+      icon: Home,
     },
     {
       title: "Productos",
       url: "/productos",
+      icon: Package,
       items: [
         {
           title: "Lista de productos",
@@ -51,22 +66,27 @@ const data = {
     {
       title: "Categorías",
       url: "/categorias",
+      icon: Tag,
     },
     {
       title: "Proveedores",
       url: "/proveedores",
+      icon: Factory,
     },
     {
       title: "Ventas",
       url: "/ventas",
+      icon: ShoppingCart,
     },
     {
       title: "Lista negra",
       url: "/lista-negra",
+      icon: List,
     },
     {
       title: "Configuraciones",
       url: "/configuraciones",
+      icon: Settings,
     }
 
   ],
@@ -79,6 +99,7 @@ export function AppSidebar({
   const { currency } = useConfigStore()
   const [sinStockCount, setSinStockCount] = React.useState(0)
   const [sinImagenCount, setSinImagenCount] = React.useState(0)
+  const { pathname } = useLocation()
 
   React.useEffect(() => {
     if (!isLoading) {
@@ -114,18 +135,42 @@ export function AppSidebar({
           <SidebarMenu>
             {data.navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <Link to={item.url} className="font-medium">
-                    {item.title}
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === item.url || pathname.startsWith(item.url + "/")}
+                >
+                  <Link
+                    to={item.url}
+                    className={`font-medium ${
+                      pathname === item.url || pathname.startsWith(item.url + "/")
+                        ? "active"
+                        : ""
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      {item.icon ? (
+                        <item.icon className="h-4 w-4" aria-hidden="true" />
+                      ) : null}
+                      {item.title}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
                 {item.items?.length ? (
                   <SidebarMenuSub>
                     {item.items.map((item) => (
                       <SidebarMenuSubItem key={item.title}>
-                        <SidebarMenuSubButton asChild isActive={item.isActive}>
-                          <Link className="" to={item.url}>
-                            <span className="flex items-center gap-1">
+                        <SidebarMenuSubButton
+                          asChild
+                          isActive={pathname === item.url}
+                        >
+                          <Link
+                            className={`${pathname === item.url ? "active" : ""}`}
+                            to={item.url}
+                          >
+                            <span className="flex items-center gap-2">
+                              {item.icon ? (
+                                <item.icon className="h-4 w-4" aria-hidden="true" />
+                              ) : null}
                               {item.title}
                               {item.title === "Sin stock" && sinStockCount > 0 && (
                                 <span className={`text-[8px] ${currency === 'USD' ? 'bg-usd' : 'bg-primary'} py-[2px] px-[4px] rounded-full text-white font-bold  `}>

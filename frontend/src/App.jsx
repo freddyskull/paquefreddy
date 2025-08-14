@@ -4,6 +4,7 @@ import { useConfigStore } from "./store/configStore"
 import { useCategoriesStore } from "./store/categoriesStore"
 import { useEffect } from "react"
 import { useRecordsStore } from "./store/recordsStore"
+import { useBlacklistStore } from "./store/blacklistStore"
 
 function App() {
 
@@ -11,6 +12,7 @@ function App() {
   const { fetchConfig } = useConfigStore()
   const { fetchCategories } = useCategoriesStore()
   const { fetchRecords, calculateRecordsTotals } = useRecordsStore()
+  const { fetchBlacklist } = useBlacklistStore()
 
   useEffect(() => {
     fetchProducts()
@@ -18,6 +20,7 @@ function App() {
     fetchCategories()
     fetchRecords()
     calculateRecordsTotals()
+    fetchBlacklist()
   }, [])
 
   return (

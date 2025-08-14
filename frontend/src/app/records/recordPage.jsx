@@ -4,11 +4,12 @@ import { DefaultDatatable } from '@/components/dataTable/default/defaultDatatabl
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Eye } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useRecordsStore } from '@/store/recordsStore'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { Label } from 'recharts'
+import { Badge } from "@/components/ui/badge"
 
 export const RecordPage = () => {
   const navigate = useNavigate()
@@ -107,9 +108,11 @@ export const RecordPage = () => {
       enableSorting: false,
       header: () => <div className="text-center">Lista negra</div>,
       cell: ({ row }) => (
-        <span className="flex justify-center items-center font-bold text-center">
-          {row.original.blackList != null ? row.original.blackList : 'N/A'}
-        </span>
+        <Link className="flex justify-center items-center" to={`/lista-negra/${row.original.BlackList.id}`}>
+          <Badge className="uppercase font-bold">
+            {row.original.BlackList.name != null ? row.original.BlackList.name : 'N/A'}
+          </Badge>
+        </Link>
       ),
     },
     {

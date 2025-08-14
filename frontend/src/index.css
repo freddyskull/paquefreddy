@@ -55,6 +55,92 @@ body {
   }
 } */
 
+a.active { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:hover { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:focus { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:active { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:hover { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:focus { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:active { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:disabled { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:disabled:hover { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:disabled:focus { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:disabled:active { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:disabled:disabled { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:disabled:disabled:hover { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:disabled:disabled:focus { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:disabled:disabled:active { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+a.active:disabled:disabled:disabled:disabled { 
+  background-color: var(--primary); 
+  color: var(--primary-foreground); 
+  font-weight: 600; 
+}
+
 :root {
   --radius: 0.625rem;
   --background: #e2e8f1;

@@ -12,9 +12,9 @@ import { PrimasService } from './primas/primas.service';
     ProductsModule,
     ConfigModule,
     CategoriesModule,
-    RecordsModule
+    RecordsModule,
     // SuppliersModule,
-    // BlacklistModule
+    BlacklistModule
   ],
   controllers: [],
   providers: [PrimasService]

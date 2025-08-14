@@ -15,10 +15,10 @@ import { UpdateBlacklistDto } from './dto/update-blacklist.dto';
 export class BlacklistController {
   constructor(private readonly blacklistService: BlacklistService) {}
 
-  // @Post()
-  // create(@Body() createBlacklistDto: CreateBlacklistDto) {
-  //   return this.blacklistService.create(createBlacklistDto);
-  // }
+  @Post()
+  create(@Body() createBlacklistDto: CreateBlacklistDto) {
+    return this.blacklistService.create(createBlacklistDto);
+  }
 
   @Get()
   findAll() {

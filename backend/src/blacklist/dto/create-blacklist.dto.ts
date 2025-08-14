@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 export class CreateBlacklistDto {
   @ApiProperty({
-    description: 'Campo para determinar el nombre del producto',
+    description: 'Campo para determinar el del usuario de la lista negra',
     default: false
   })
   @IsNotEmpty({ message: 'El nombre es requerido' })

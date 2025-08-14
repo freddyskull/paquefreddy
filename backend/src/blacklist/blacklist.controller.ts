@@ -5,7 +5,8 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  Query
 } from '@nestjs/common';
 import { BlacklistService } from './blacklist.service';
 import { CreateBlacklistDto } from './dto/create-blacklist.dto';
@@ -28,6 +29,14 @@ export class BlacklistController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.blacklistService.findOne(+id);
+  }
+
+  @Get(':id/records')
+  findRecords(
+    @Param('id') id: string,
+    @Query('status') status?: string
+  ) {
+    return this.blacklistService.findRecords(+id, status);
   }
 
   @Patch(':id')

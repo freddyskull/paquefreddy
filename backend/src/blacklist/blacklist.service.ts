@@ -23,18 +23,11 @@ export class BlacklistService {
     city: true,
     email: true,
     phone: true,
-    records: true
+    records: {
+      where: { status: true }
+    },
   };
 
-  // async create(dto: CreateBlacklistDto) {
-  //   await this.prisma.black_list.create({
-  //     data: {
-  //       ...dto,
-  //     }
-  //   });
-
-  //   return { status: 'ok', message: 'Categoría creada correctamente' };
-  // }
 
   async create(dto: CreateBlacklistDto) {
     const blacklisted = await this.prisma.black_list.findFirst({
@@ -137,6 +130,59 @@ export class BlacklistService {
       where: {
         id: id,
       },
+    });
+  }
+
+  // Obtener records asociados a un blacklist, opcionalmente filtrando por status
+  async findRecords(id: number, status?: string | boolean) {
+    const blacklisted = await this.prisma.black_list.findFirst({
+      where: { id }
+    });
+
+    if (!blacklisted)
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Este usuario no se encuentra en la lista negra',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+
+    let statusBool: boolean | undefined = undefined;
+    if (typeof status !== 'undefined') {
+      if (typeof status === 'string') {
+        const s = status.toLowerCase();
+        if (s === 'true' || s === '1') statusBool = true;
+        else if (s === 'false' || s === '0') statusBool = false;
+      } else {
+        statusBool = status;
+      }
+    }
+
+    return this.prisma.records.findMany({
+      where: {
+        blacklist_id: id,
+        ...(typeof statusBool === 'boolean' ? { status: statusBool } : {})
+      },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        productList: true,
+        dolar_price: true,
+        status: true,
+        totals: true,
+        user_id: true,
+        createdAt: true,
+        updatedAt: true,
+        User: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true
+          }
+        }
+      }
     });
   }
 }

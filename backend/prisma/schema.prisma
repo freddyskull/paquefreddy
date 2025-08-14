@@ -17,6 +17,7 @@ model User {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   Purhases  Purhases[]
+  Records   Records[]
 }
 
 model Categories {
@@ -94,7 +95,9 @@ model Records {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
   user_id            String?
-  black_list_user_id Int?
+  User               User?    @relation(fields: [user_id], references: [id])
+  blacklist_id       Int?
+  BlackList          black_list? @relation(fields: [blacklist_id], references: [id])
   sell_without_stock Boolean? @default(false)
 }
 
@@ -126,5 +129,5 @@ model black_list {
   city        String?
   email       String?
   phone       String?
-  records     String[] @default([])
+  records     Records[]
 }

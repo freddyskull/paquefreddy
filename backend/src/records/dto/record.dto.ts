@@ -59,12 +59,16 @@ export class recordsDto {
     description: 'Se almacena el id del usuario que generó la venta'
   })
   user_id: string;
+
+  @ApiProperty({
+    description: 'Id del registro en lista negra asociado a la venta',
+    required: false,
+    nullable: true
+  })
+  @IsOptional()
+  blacklist_id?: number;
   @ApiProperty({
     description: 'Usuario dentro de la lista negra'
-  })
-  black_list_user_id: number;
-  @ApiProperty({
-    description: 'Fecha de creación'
   })
   @IsOptional()
   createdAt: Date;

@@ -28,8 +28,14 @@ export class RecordsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll() {
-    return this.recordsService.findAll();
+  findAll(@Query('status') status?: string) {
+    return this.recordsService.findAll(status);
+  }
+
+  @Get('by-status')
+  @HttpCode(HttpStatus.OK)
+  async findByStatusGroup() {
+    return this.recordsService.findByStatusGroup();
   }
 
   @Get('date-range')

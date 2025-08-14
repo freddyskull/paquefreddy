@@ -22,9 +22,28 @@ export class RecordsService {
     status: true,
     totals: true,
     user_id: true,
-    black_list_user_id: true,
     createdAt: true,
-    updatedAt: true
+    updatedAt: true,
+    User: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatar: true
+      }
+    },
+    BlackList: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        total: true,
+        email: true,
+        phone: true,
+        address: true,
+        city: true
+      }
+    }
   };
 
   async recordExists(
@@ -80,9 +99,66 @@ export class RecordsService {
       await this.productServices.updateStock(item.id, item.quantity);
     }
     // FIXED: hacer que de un mensaje diferente si hay una persona de la blackList
+    const { user_id, blacklist_id, ...rest } = dto;
+
+    // Validaciones previas para evitar errores de Prisma y dar mensajes claros
+    let userIdStr: string | undefined = undefined;
+    if (user_id !== undefined && user_id !== null && user_id !== '') {
+      userIdStr = String(user_id);
+      const userExists = await this.prisma.user.findUnique({
+        where: { id: userIdStr }
+      });
+      if (!userExists) {
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            title: 'Usuario no encontrado',
+            message:
+              "El 'user_id' proporcionado no corresponde a un usuario válido. Asegúrate de enviar el ID 'String' (cuid) del usuario."
+          },
+          HttpStatus.BAD_REQUEST
+        );
+      }
+    }
+
+    let blacklistIdNum: number | undefined = undefined;
+    if (blacklist_id !== undefined && blacklist_id !== null) {
+      blacklistIdNum = Number(blacklist_id);
+      if (Number.isNaN(blacklistIdNum)) {
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            title: 'ID inválido',
+            message: "El 'blacklist_id' debe ser un número válido"
+          },
+          HttpStatus.BAD_REQUEST
+        );
+      }
+      const blExists = await this.prisma.black_list.findUnique({
+        where: { id: blacklistIdNum }
+      });
+      if (!blExists) {
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_REQUEST,
+            title: 'Lista negra no encontrada',
+            message: "El 'blacklist_id' proporcionado no existe"
+          },
+          HttpStatus.BAD_REQUEST
+        );
+      }
+    }
+
     const createdRecord = await this.prisma.records.create({
       select: this.formatedData,
-      data: { ...dto, dolar_price: dolar }
+      data: {
+        ...rest,
+        dolar_price: dolar,
+        ...(userIdStr ? { User: { connect: { id: userIdStr } } } : {}),
+        ...(blacklistIdNum !== undefined
+          ? { BlackList: { connect: { id: blacklistIdNum } } }
+          : {})
+      }
     });
     return {
       status: 'ok',
@@ -93,13 +169,47 @@ export class RecordsService {
     };
   }
 
-  findAll() {
+  findAll(status?: string | boolean) {
+    // Permitir status como string ('true'/'false') o booleano
+    let statusFilter: boolean | undefined = undefined;
+    if (typeof status === 'string') {
+      if (status.toLowerCase() === 'true') statusFilter = true;
+      else if (status.toLowerCase() === 'false') statusFilter = false;
+    } else if (typeof status === 'boolean') {
+      statusFilter = status;
+    }
+
     return this.prisma.records.findMany({
+      where: statusFilter !== undefined ? { status: statusFilter } : undefined,
       select: this.formatedData,
       orderBy: {
         createdAt: 'desc'
       }
     });
+  }
+
+  async findByStatusGroup() {
+    const [statusTrue, statusFalse] = await Promise.all([
+      this.prisma.records.findMany({
+        where: { status: true },
+        select: this.formatedData,
+        orderBy: { createdAt: 'desc' }
+      }),
+      this.prisma.records.findMany({
+        where: { status: false },
+        select: this.formatedData,
+        orderBy: { createdAt: 'desc' }
+      })
+    ]);
+
+    return {
+      statusTrue,
+      statusFalse,
+      totals: {
+        true: statusTrue.length,
+        false: statusFalse.length
+      }
+    };
   }
 
   async findOne(id: number) {

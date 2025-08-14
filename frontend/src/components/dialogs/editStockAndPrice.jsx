@@ -44,7 +44,13 @@ export const EditStockAndPrice = ({ product }) => {
             <CurrencySelector />
           </div>
         </DialogHeader>
-        <div className="gap-4 grid py-4">
+        <form
+          className="gap-4 grid py-4"
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleSave()
+          }}
+        >
           <div className="flex gap-2">
             <div className='w-24'>
               <label className='text-xs' htmlFor="stock">Stock</label>
@@ -73,9 +79,9 @@ export const EditStockAndPrice = ({ product }) => {
             <DialogClose asChild >
               <Button variant="outline">Cancelar</Button>
             </DialogClose>
-            <Button onClick={handleSave}>Guardar</Button>
+            <Button type="submit">Guardar</Button>
           </DialogFooter>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   )

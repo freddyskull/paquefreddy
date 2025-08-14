@@ -13,7 +13,7 @@ import ProductCard from '@/components/cardProducts'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useConfigStore } from '@/store/configStore'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
 
 export const SlideProducts = ({ products, isLoading }) => {
 
@@ -63,8 +63,9 @@ export const SlideProducts = ({ products, isLoading }) => {
               </Carousel>
             ) : (
 
-
-              <Skeleton className="rounded-md w-[100%] max-w-xs h-[47.6vh]" />
+              <div className="flex justify-center items-center w-[140%] max-w-xs h-[47.6vh] bg-accent/20 rounded-md">
+                <Spinner variant="ring" size={120} className="text-primary" />
+              </div>
             )
           }
 

@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Layout from '../layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useProductStore } from '@/store/productStore'
-import { useCategoriesStore } from '@/store/categoriesStore'
 import { SellingProductsTrends } from './components/sellingProductsTrends'
 import { NoImageProduct } from './noImageProduct'
 import { BoxIcon, HandCoins, ListCheck, TruckIcon } from 'lucide-react'
@@ -12,11 +11,11 @@ import { useRecordsStore } from '@/store/recordsStore'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Charts } from './components/charts'
 import { TodayStatistics } from './components/todayStadistics'
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
 
 export const Home = () => {
   const { products, isLoading } = useProductStore()
-  const { categories } = useCategoriesStore()
-  const { records, totalRecordsCurrent, totalRecordsPrevious, totalRecordsLoading } = useRecordsStore()
+  const { totalRecordsCurrent, totalRecordsPrevious, totalRecordsLoading } = useRecordsStore()
   const currency = localStorage.getItem('currency')
 
 
@@ -74,7 +73,7 @@ export const Home = () => {
                   >
                     {
                       totalRecordsLoading ? (
-                        <Skeleton className="w-15 h-12" />
+                        <Spinner variant="ring" size={48} className="text-primary" />
                       ) : (
                         totalRecordsCurrent.count
                       )
@@ -108,7 +107,7 @@ export const Home = () => {
 
                     {
                       totalRecordsLoading ? (
-                        <Skeleton className="w-15 h-12" />
+                        <Spinner variant="ring" size={48} className="text-primary" />
                       ) : (
                         totalRecordsPrevious.count
                       )

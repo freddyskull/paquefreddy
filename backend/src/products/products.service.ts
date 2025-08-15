@@ -183,7 +183,6 @@ export class ProductsService {
   }
 
   async update(id: string, dto: productDto) {
-    console.log(dto);
     const product = await this.findOne(id);
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;

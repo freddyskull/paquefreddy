@@ -22,6 +22,10 @@ export class ProductsService {
       image: dto.image?.trim() === '' ? null : dto.image,
       brand: dto.brand?.trim() === '' ? null : dto.brand,
       bundle: dto.bundle === 0 ? null : dto.bundle,
+      low_stock:
+        dto.low_stock === undefined || dto.low_stock === null
+          ? undefined
+          : Number(dto.low_stock),
       expiration:
         dto.expiration === ''
           ? null
@@ -53,6 +57,7 @@ export class ProductsService {
     bundle: true,
     categorie_id: true,
     sell_unity: true,
+    low_stock: true,
     expiration: true,
     unity: true,
     categories: true,
@@ -178,15 +183,11 @@ export class ProductsService {
   }
 
   async update(id: string, dto: productDto) {
+    console.log(dto);
     const product = await this.findOne(id);
     const config = await this.configService.findAll();
     const dolar = config?.dolar || 0;
     this.validatePrices(dto.price_ent, dto.price);
-    // await this.productExists(
-    //   'slug_url',
-    //   dto.slug_url,
-    //   'La "URL del producto" ya existe, por favor elige otro nombre'
-    // );
     const newData = { ...product, ...dto };
     const updatedData =
       dto.currency === 'USD' || !dto.currency

@@ -140,6 +140,16 @@ export class productDto {
   categorie_id: number;
 
   @ApiProperty({
+    description:
+      'Campo para determinar la cantidad mínima de stock para alertar',
+    default: 0
+  })
+  @IsOptional()
+  @IsNumber({}, { message: 'La cantidad mínima de stock debe ser un número' })
+  @Min(0, { message: 'La cantidad mínima de stock no puede ser negativa' })
+  low_stock: number;
+
+  @ApiProperty({
     enum: ['USD', 'BS'],
     description:
       'Este campo es opcional. Si no se proporciona, se asumirá que el valor por defecto es USD y sirve para hacer una transformación y guardar todos los productos en base a dolares.',

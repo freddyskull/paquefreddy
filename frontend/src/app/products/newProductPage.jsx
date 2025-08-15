@@ -23,6 +23,7 @@ const productSchema = z
     price_ent: z.number().min(0, 'debe ser mayor o igual a 0'),
     slugs: z.array(z.string()).default(null),
     image: z.string().optional(),
+    low_stock: z.number().optional(),
     slug_url: z.string().optional(),
     brand: z.string().optional(),
     bundle: z.number().optional(),
@@ -38,7 +39,6 @@ const productSchema = z
   })
 
 export const NewProductPage = ({ product }) => {
-
   const navigate = useNavigate()
   const { categories, isLoading: isLoadingCategories } = useCategoriesStore()
   const { config, currency, isLoading: isLoadingConfig } = useConfigStore()
@@ -83,6 +83,7 @@ export const NewProductPage = ({ product }) => {
       slugs: product?.slugs || [],
       image: product?.image || '',
       brand: product?.brand || '',
+      low_stock: product?.low_stock || 0,
       bundle: product?.bundle || 0,
       sell_unity: product?.sell_unity || false,
       expiration: product?.expiration ? new Date(product.expiration).toISOString().split('T')[0] : '',

@@ -1,14 +1,14 @@
-import React from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
-import { TagsInput } from '@/components/inputs/tagsInput'
-import { Form } from '@/components/ui/form'
-import { ChadCnFormInput } from '@/components/inputs/chadCnFormInput'
-import { ChadCnFormSelect } from '@/components/inputs/chadCnFormSelect'
-import { Button } from '@/components/ui/button'
-import { Switch } from '@/components/ui/switch'
-import { CategoryDialog } from '@/components/dialogs/categoryDialog'
-import { Link2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { TagsInput } from '@/components/inputs/tagsInput';
+import { Form } from '@/components/ui/form';
+import { ChadCnFormInput } from '@/components/inputs/chadCnFormInput';
+import { ChadCnFormSelect } from '@/components/inputs/chadCnFormSelect';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { CategoryDialog } from '@/components/dialogs/categoryDialog';
+import { Link2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const ProductForm = ({
   form,
@@ -25,17 +25,17 @@ export const ProductForm = ({
   watch,
 }) => {
   const handleSetPrice = (percentage) => {
-    const price_ent = form.watch('price_ent')
-    const price = price_ent + (price_ent * percentage) / 100
-    form.setValue('price', price)
-  }
+    const price_ent = form.watch('price_ent');
+    const price = price_ent + (price_ent * percentage) / 100;
+    form.setValue('price', price);
+  };
 
-  const badgeClass = `cursor-pointer rounded-full border transition-colors duration-200 border-slate-300 hover:text-white px-2 py-1 text-xs ${currency === 'BS' ? 'hover:bg-primary hover:border-primary' : 'hover:bg-usd hover:border-usd'}`
+  const badgeClass = `cursor-pointer rounded-full border transition-colors duration-200 border-slate-300 hover:text-white px-2 py-1 text-xs ${currency === 'BS' ? 'hover:bg-primary hover:border-primary' : 'hover:bg-usd hover:border-usd'}`;
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="gap-4 grid grid-cols-2 md:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
           <ChadCnFormInput
             control={form.control}
             name="name"
@@ -43,13 +43,22 @@ export const ProductForm = ({
             label="Nombre"
             placeholder="Nombre del producto"
           />
-          <ChadCnFormInput
-            control={form.control}
-            name="stock"
-            type="number"
-            label="Stock"
-            placeholder="Stock del producto"
-          />
+          <div className="col-span-2 md:col-span-1 flex gap-2">
+            <ChadCnFormInput
+              control={form.control}
+              name="stock"
+              type="number"
+              label="Stock"
+              placeholder="Stock del producto"
+            />
+            <ChadCnFormInput
+              control={form.control}
+              name="low_stock"
+              type="number"
+              label="Poca existencia"
+              placeholder="cantidad minima de productos"
+            />
+          </div>
           <ChadCnFormInput
             control={form.control}
             name="bundle"
@@ -77,7 +86,7 @@ export const ProductForm = ({
               placeholder="Ejm: harina-pan"
             />
           </div>
-          <div className="flex flex-col justify-center items-start gap-2 w-32">
+          <div className="flex w-32 flex-col items-start justify-center gap-2">
             <p>Buscar imágen</p>
             <Link
               className="cursor-pointer"
@@ -100,7 +109,7 @@ export const ProductForm = ({
             </Link>
           </div>
         </div>
-        <div className="gap-4 grid grid-cols-2">
+        <div className="grid grid-cols-2 gap-4">
           <div className="w-full">
             <ChadCnFormInput
               control={form.control}
@@ -126,7 +135,7 @@ export const ProductForm = ({
               <span className={badgeClass} onClick={() => handleSetPrice(30)}>
                 30%
               </span>
-              <span className="font-bold text-xs">
+              <span className="text-xs font-bold">
                 Establecer porcentaje de ganancia
               </span>
             </div>
@@ -142,8 +151,8 @@ export const ProductForm = ({
           />
         </div>
 
-        <div className="gap-4 grid grid-cols-3">
-          <div className="flex gap-2 col-span-3 md:col-span-1">
+        <div className="grid grid-cols-3 gap-4">
+          <div className="col-span-3 flex gap-2 md:col-span-1">
             <div className="w-full">
               <ChadCnFormSelect
                 control={form.control}
@@ -160,7 +169,7 @@ export const ProductForm = ({
                 placeholder="Ingrese la unidad del producto"
               />
             </div>
-            <div className="flex flex-col items-center w-1/2">
+            <div className="flex w-1/2 flex-col items-center">
               <label
                 htmlFor="unity"
                 className="text-muted-foreground text-xs text-nowrap"
@@ -169,20 +178,20 @@ export const ProductForm = ({
                 <span className="font-bold">{form.watch('unity')}</span>
               </label>
               <Switch
-                className="data-[state=unchecked]:bg-gray-300 mt-4"
+                className="mt-4 data-[state=unchecked]:bg-gray-300"
                 id="unity"
                 checked={form.watch('sell_unity')}
                 onCheckedChange={(value) => {
-                  form.setValue('sell_unity', value)
+                  form.setValue('sell_unity', value);
                 }}
               />
             </div>
           </div>
 
           {isLoadingCategories ? (
-            <div className="flex flex-col justify-center col-span-3 md:col-span-1 h-full">
-              <Skeleton className="rounded-md w-12 h-[10px]" />
-              <Skeleton className="mt-2 rounded-md w-full h-[35px]" />
+            <div className="col-span-3 flex h-full flex-col justify-center md:col-span-1">
+              <Skeleton className="h-[10px] w-12 rounded-md" />
+              <Skeleton className="mt-2 h-[35px] w-full rounded-md" />
             </div>
           ) : (
             <div className="col-span-3 md:col-span-1">
@@ -206,9 +215,9 @@ export const ProductForm = ({
           )}
 
           {isLoadingSuppliers ? (
-            <div className="flex flex-col justify-center col-span-3 md:col-span-1 h-full">
-              <Skeleton className="rounded-md w-12 h-[10px]" />
-              <Skeleton className="mt-2 rounded-md w-full h-[35px]" />
+            <div className="col-span-3 flex h-full flex-col justify-center md:col-span-1">
+              <Skeleton className="h-[10px] w-12 rounded-md" />
+              <Skeleton className="mt-2 h-[35px] w-full rounded-md" />
             </div>
           ) : (
             <div className="col-span-3 md:col-span-1">
@@ -223,7 +232,7 @@ export const ProductForm = ({
             </div>
           )}
         </div>
-        <div className="gap-4 grid grid-cols-2">
+        <div className="grid grid-cols-2 gap-4">
           <ChadCnFormInput
             control={form.control}
             ClassName="col-span-2 md:col-span-1"
@@ -260,5 +269,5 @@ export const ProductForm = ({
         </Button>
       </form>
     </Form>
-  )
-}
+  );
+};

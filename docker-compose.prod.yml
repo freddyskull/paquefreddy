@@ -3,8 +3,8 @@ services:
     build: ./db
     restart: always
     environment:
-      POSTGRES_USER: freddyBlack
-      POSTGRES_PASSWORD: Freddyblack20054*
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: paquefreddy
     ports:
       - "5432:5432"
@@ -24,7 +24,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      - "DATABASE_URL=postgres://freddyBlack:Freddyblack20054*@postgres:5432/paquefreddy"
+      - "DATABASE_URL=postgres://postgres:postgres@postgres:5432/paquefreddy"
       - RUN_SEED=false
     ports:
       - "3001:3001"

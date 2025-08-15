@@ -76,6 +76,7 @@ export const CalculateProducts = ({ open, onOpenChange }) => {
       const resp = await createRecord(record);
       if (resp === 'success') {
         clearSelectedAllProducts();
+        setBlackListData(null);
       }
     }
   };

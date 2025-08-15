@@ -78,6 +78,11 @@ export class RecordsController {
     return this.recordsService.update(+id, dto);
   }
 
+  @Patch('status/:id')
+  updateStatus(@Param('id') id: string, @Body() dto: recordsDto) {
+    return this.recordsService.updateStatus(+id, dto.status);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.recordsService.remove(+id);

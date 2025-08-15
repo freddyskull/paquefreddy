@@ -57,6 +57,7 @@ model Products {
   price_ent    Float
   slugs        String[]    @default([])
   image        String?
+  low_stock    Int?        @default(3)
   brand        String?
   bundle       Int?
   expiration   DateTime?

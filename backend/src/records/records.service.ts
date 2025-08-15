@@ -235,8 +235,52 @@ export class RecordsService {
       });
   }
 
-  update(id: number, updateRecordDto: recordsDto) {
-    return `This action updates a #${id} record`;
+  async update(id: number, updateRecordDto: recordsDto) {
+    const record = await this.prisma.records.findFirst({
+      where: { id: Number(id) }
+    });
+    if (!record) {
+      throw new HttpException(
+        'No existe la venta con el ID ' + id,
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    await this.prisma.records.update({
+      where: { id },
+      data: updateRecordDto,
+      select: this.formatedData
+    });
+    const data = await this.findAll();
+    return {
+      status: 'ok',
+      title: 'Registro actualizado',
+      message: `El registro con ID ${id} ha sido actualizado correctamente.`,
+      data
+    };
+  }
+
+  async updateStatus(id: number, status: boolean) {
+    const record = await this.prisma.records.findFirst({
+      where: { id: Number(id) }
+    });
+    if (!record) {
+      throw new HttpException(
+        'No existe la venta con el ID ' + id,
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    await this.prisma.records.update({
+      where: { id },
+      data: { status },
+      select: this.formatedData
+    });
+    const data = await this.findAll();
+    return {
+      status: 'ok',
+      title: 'Registro actualizado',
+      message: `El registro con ID ${id} ha sido actualizado correctamente.`,
+      data
+    };
   }
 
   async remove(id: number) {

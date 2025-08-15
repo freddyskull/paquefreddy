@@ -1,6 +1,6 @@
-import * as React from "react"
-import { Link, useLocation } from "react-router-dom"
-import logo from "/logo.svg"
+import * as React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import logo from '/logo.svg';
 import {
   Home,
   Package,
@@ -13,7 +13,7 @@ import {
   Plus,
   ImageOff,
   AlertTriangle,
-} from "lucide-react"
+} from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -26,107 +26,103 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { useProductStore } from "@/store/productStore"
-import { useConfigStore } from "@/store/configStore"
+} from '@/components/ui/sidebar';
+import { useProductStore } from '@/store/productStore';
+import { useConfigStore } from '@/store/configStore';
 
 // This is sample data.
 const data = {
   navMain: [
     {
-      title: "Home",
-      url: "/home",
+      title: 'Home',
+      url: '/home',
       icon: Home,
     },
     {
-      title: "Productos",
-      url: "/productos",
+      title: 'Productos',
+      url: '/productos',
       icon: Package,
       items: [
         {
-          title: "Lista de productos",
-          url: "/productos",
+          title: 'Lista de productos',
+          url: '/productos',
         },
         {
-          title: "Agregar productos",
-          url: "/productos/nuevo",
+          title: 'Agregar productos',
+          url: '/productos/nuevo',
         },
         {
-          title: "Sin imágen",
-          url: "/productos/sin-imagen",
+          title: 'Sin imágen',
+          url: '/productos/sin-imagen',
         },
         {
-          title: "Sin stock",
-          url: "/productos/sin-stock",
+          title: 'Sin stock',
+          url: '/productos/sin-stock',
         },
-
       ],
     },
 
     {
-      title: "Categorías",
-      url: "/categorias",
+      title: 'Categorías',
+      url: '/categorias',
       icon: Tag,
     },
     {
-      title: "Proveedores",
-      url: "/proveedores",
+      title: 'Proveedores',
+      url: '/proveedores',
       icon: Factory,
     },
     {
-      title: "Ventas",
-      url: "/ventas",
+      title: 'Ventas',
+      url: '/ventas',
       icon: ShoppingCart,
     },
     {
-      title: "Lista negra",
-      url: "/lista-negra",
+      title: 'Lista negra',
+      url: '/lista-negra',
       icon: List,
     },
     {
-      title: "Configuraciones",
-      url: "/configuraciones",
+      title: 'Configuraciones',
+      url: '/configuraciones',
       icon: Settings,
-    }
-
+    },
   ],
-}
+};
 
-export function AppSidebar({
-  ...props
-}) {
-  const { isLoading, getProductsWithIssues } = useProductStore()
-  const { currency } = useConfigStore()
-  const [sinStockCount, setSinStockCount] = React.useState(0)
-  const [sinImagenCount, setSinImagenCount] = React.useState(0)
-  const { pathname } = useLocation()
+export function AppSidebar({ ...props }) {
+  const { isLoading, getProductsWithIssues } = useProductStore();
+  const { currency } = useConfigStore();
+  const [sinStockCount, setSinStockCount] = React.useState(0);
+  const [sinImagenCount, setSinImagenCount] = React.useState(0);
+  const { pathname } = useLocation();
 
   React.useEffect(() => {
     if (!isLoading) {
-      const issues = getProductsWithIssues()
-      setSinStockCount(issues.productsWithoutStock.count)
-      setSinImagenCount(issues.productsWithoutImage.count)
+      const issues = getProductsWithIssues();
+      setSinStockCount(issues.productsWithoutStock.count);
+      setSinImagenCount(issues.productsWithoutImage.count);
     }
-  }, [isLoading])
+  }, [isLoading, getProductsWithIssues]);
 
-  console.log()
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="md" asChild>
-              <div >
-                <div
-                  className="flex justify-center items-center">
-                  <img src={logo} className="w-22 h-auto" alt="Logo" />
-                </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-medium text-[17px] text-primary">Pa'que Freddy</span>
-                  <span className="ligth:text-slate-500 text-xs">V 3.5.0</span>
-                </div>
+            <div className='flex items-center gap-2 my-2'>
+              <div className="flex items-center justify-center">
+                <img src={logo} className="h-auto w-22" alt="Logo" />
               </div>
-            </SidebarMenuButton>
+              <div className="flex flex-col gap-0.5 leading-none">
+                <span
+                  className={`text-[17px] font-bold ${currency === 'USD' ? 'text-usd' : 'text-primary'}`}
+                >
+                  Pa'que Freddy
+                </span>
+                <span className="ligth:text-slate-500 text-xs">V 3.5.0</span>
+              </div>
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -137,14 +133,17 @@ export function AppSidebar({
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === item.url || pathname.startsWith(item.url + "/")}
+                  isActive={
+                    pathname === item.url || pathname.startsWith(item.url + '/')
+                  }
                 >
                   <Link
                     to={item.url}
                     className={`font-medium ${
-                      pathname === item.url || pathname.startsWith(item.url + "/")
-                        ? "active"
-                        : ""
+                      pathname === item.url ||
+                      pathname.startsWith(item.url + '/')
+                        ? `active ${currency === 'USD' ? 'bg-usd!' : 'bg-primary!'}`
+                        : ''
                     }`}
                   >
                     <span className="flex items-center gap-2">
@@ -156,7 +155,7 @@ export function AppSidebar({
                   </Link>
                 </SidebarMenuButton>
                 {item.items?.length ? (
-                  <SidebarMenuSub>
+                  <SidebarMenuSub className="mt-2">
                     {item.items.map((item) => (
                       <SidebarMenuSubItem key={item.title}>
                         <SidebarMenuSubButton
@@ -164,26 +163,34 @@ export function AppSidebar({
                           isActive={pathname === item.url}
                         >
                           <Link
-                            className={`${pathname === item.url ? "active" : ""}`}
+                            className={`${pathname === item.url ? `active ${currency === 'USD' ? 'bg-usd!' : 'bg-primary!'}` : ''}`}
                             to={item.url}
                           >
                             <span className="flex items-center gap-2">
                               {item.icon ? (
-                                <item.icon className="h-4 w-4" aria-hidden="true" />
+                                <item.icon
+                                  className="h-4 w-4"
+                                  aria-hidden="true"
+                                />
                               ) : null}
                               {item.title}
-                              {item.title === "Sin stock" && sinStockCount > 0 && (
-                                <span className={`text-[8px] ${currency === 'USD' ? 'bg-usd' : 'bg-primary'} py-[2px] px-[4px] rounded-full text-white font-bold  `}>
-                                  {sinStockCount}
-                                </span>
-                              )}
-                              {item.title === "Sin imágen" && sinImagenCount > 0 && (
-                                <span className={`text-[8px] ${currency === 'USD' ? 'bg-usd' : 'bg-primary'} py-[2px] px-[4px] rounded-full text-white font-bold  `}>
-                                  {sinImagenCount}
-                                </span>
-                              )}
+                              {item.title === 'Sin stock' &&
+                                sinStockCount > 0 && (
+                                  <span
+                                    className={`text-[8px] ${currency === 'USD' ? 'bg-usd!' : 'bg-primary!'} rounded-full px-[4px] py-[2px] font-bold text-white`}
+                                  >
+                                    {sinStockCount}
+                                  </span>
+                                )}
+                              {item.title === 'Sin imágen' &&
+                                sinImagenCount > 0 && (
+                                  <span
+                                    className={`text-[8px] ${currency === 'USD' ? 'bg-usd!' : 'bg-primary!'} rounded-full px-[4px] py-[2px] font-bold text-white`}
+                                  >
+                                    {sinImagenCount}
+                                  </span>
+                                )}
                             </span>
-
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
@@ -197,5 +204,5 @@ export function AppSidebar({
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

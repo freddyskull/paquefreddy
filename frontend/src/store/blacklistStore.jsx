@@ -47,9 +47,19 @@ export const useBlacklistStore = create((set, get) => ({
     }
   },
 
+
+  fetchBlacklistRecordStatus: async (id, status) => {
+    try {
+      const response = await axiosInstance.get(`blacklist/${id}/records?status=${status}`)
+      return response.data
+    } catch (error) {
+      handleError(error)
+      return null
+    }
+  },
+
   // Create a new blacklist entry
   createBlacklist: async (entry) => {
-    set({ isLoading: true, error: null })
     try {
       const response = await axiosInstance.post('blacklist', entry)
       const newList = response.data.data ?? response.data
@@ -65,8 +75,6 @@ export const useBlacklistStore = create((set, get) => ({
     } catch (error) {
       handleError(error)
       set({ error: error.message })
-    } finally {
-      set({ isLoading: false })
     }
   },
 

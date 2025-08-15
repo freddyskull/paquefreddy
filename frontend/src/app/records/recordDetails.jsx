@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../layout'
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { useRecordsStore } from '@/store/recordsStore'
 import { DefaultDatatable } from '@/components/dataTable/default/defaultDatatable'
 import { Button } from '@/components/ui/button'
-import { BackpackIcon } from 'lucide-react'
 
 export const RecordDetails = () => {
   const { id } = useParams()
@@ -19,6 +18,8 @@ export const RecordDetails = () => {
     }
     getRecord()
   }, [id])
+
+  const navigate = useNavigate()
 
   console.log(data)
 
@@ -98,16 +99,16 @@ export const RecordDetails = () => {
             <h4 className="font-bold text-xs uppercase">ganancias Totales: <span className='text-primary'>{data?.totals.totalProfits.bs.toFixed(2) || 0}</span> | <span className='text-usd'>{data?.totals.totalProfits.bs.toFixed(2) || 0}</span> </h4>
           </div>
           <h2 className="font-bold text-sm uppercase">
-            Lista negra: {data?.blacklist || 'N/A'}
+            Lista negra: <span className='text-primary hover:underline cursor-pointer' onClick={() => navigate(`/lista-negra/${data?.BlackList?.id}`)}>{data?.BlackList?.name || 'N/A'}</span>
           </h2>
-          <Link to="/ventas">
-            <Button variant="outline"  >
-              Ver lista
+          
+            <Button variant="outline" className="uppercase" onClick={() => navigate(-1)}>
+              Volver
             </Button>
-          </Link>
+          
         </CardHeader>
         <CardContent className="w-full overflow-y-auto">
-          <DefaultDatatable columns={columns} data={data?.productList || []} />
+          <DefaultDatatable columns={columns} data={data?.productList || []} disableFilters={true} />
         </CardContent>
       </Card>
     </Layout>

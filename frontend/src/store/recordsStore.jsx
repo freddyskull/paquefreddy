@@ -53,7 +53,7 @@ export const useRecordsStore = create((set, get) => ({
       toast.success("La venta fue realizada puede ver los detalles en el historial de ventas, el ID es: " + newRecord.id, {
         action: {
           label: 'Ver ventas',
-          onClick: () => window.location.href = '/ventas/detalles/' + newRecord.id
+          onClick: () => window.open('/ventas/detalles/' + newRecord.id, '_blank')
         },
       })
       return 'success'
@@ -69,7 +69,6 @@ export const useRecordsStore = create((set, get) => ({
 
   // Update a record
   updateRecord: async (record) => {
-    set({ isLoading: true, error: null })
     try {
       const response = await axiosInstance.put(`records/${record.id}`, record)
       const updatedRecord = response.data
@@ -82,14 +81,25 @@ export const useRecordsStore = create((set, get) => ({
       handleError(error)
       set({ error: error.message })
       throw error
-    } finally {
-      set({ isLoading: true })
+    }
+  },
+
+  updateStatus: async (id, status) => {
+    try {
+      const response = await axiosInstance.patch(`records/status/${id}`, { status })
+      const updatedRecord = response.data
+      set({ records: get().records.map(r => r.id === id ? updatedRecord : r) })
+      toast.success("La venta ha sido actualizada ahora se mostrará en el tab de " + (status ? "pendientes" : "solventes"))
+      return updatedRecord
+    } catch (error) {
+      handleError(error)
+      set({ error: error.message })
+      throw error
     }
   },
 
   // Delete a record
   deleteRecord: async (id) => {
-    set({ isLoading: true, error: null })
     try {
       await axiosInstance.delete(`records/${id}`)
       set({
@@ -101,8 +111,6 @@ export const useRecordsStore = create((set, get) => ({
       handleError(error)
       set({ error: error.message })
       throw error
-    } finally {
-      set({ isLoading: true })
     }
   },
 
@@ -125,7 +133,6 @@ export const useRecordsStore = create((set, get) => ({
 
 
   calculateRecordsTotals: async () => {
-    set({ totalRecordsLoading: true, })
     try {
       const now = new Date()
       const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10)
@@ -141,8 +148,6 @@ export const useRecordsStore = create((set, get) => ({
     } catch (error) {
       handleError(error)
       set({ error: error.message })
-    } finally {
-      set({ totalRecordsLoading: false })
     }
   },
 
@@ -174,7 +179,6 @@ export const useRecordsStore = create((set, get) => ({
   clearState: () => set({
     records: [],
     selectedRecord: null,
-    isLoading: true,
     error: null
   })
 }))

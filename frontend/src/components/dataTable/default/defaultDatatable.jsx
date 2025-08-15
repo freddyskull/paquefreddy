@@ -21,6 +21,7 @@ export const DefaultDatatable = ({
   searchFields = [],
   showDateFilter = true,
   showTimeFilter = true,
+  disableFilters = false,
 }) => {
   const [pageIndex, setPageIndex] = useState(0)
   const [pageSize, setPageSize] = useState(initialPageSize)
@@ -34,6 +35,8 @@ export const DefaultDatatable = ({
   // Filtrado por búsqueda, rango de fechas y rango de horas
   const filteredData = useMemo(() => {
     const safeData = Array.isArray(data) ? data : []
+    // Si los filtros están deshabilitados, retornamos los datos tal cual.
+    if (disableFilters) return safeData
     let result = safeData
     // Filtro de texto
     if (search && searchFields.length > 0) {
@@ -80,7 +83,7 @@ export const DefaultDatatable = ({
       })
     }
     return result
-  }, [data, search, searchFields, dateFrom, dateTo, timeFrom, timeTo, showDateFilter])
+  }, [data, search, searchFields, dateFrom, dateTo, timeFrom, timeTo, showDateFilter, disableFilters])
 
   const pageCount = Math.ceil(filteredData.length / pageSize)
 
@@ -104,45 +107,47 @@ export const DefaultDatatable = ({
 
   return (
     <>
-      {/* Buscador */}
-      <DefaultTableSearch
-        value={search}
-        onChange={val => {
-          setSearch(val)
-          setPageIndex(0)
-        }}
-        searchFields={searchFields}
-        dateFrom={dateFrom}
-        dateTo={dateTo}
-        onDateFromChange={val => {
-          setDateFrom(val)
-          setPageIndex(0)
-        }}
-        onDateToChange={val => {
-          setDateTo(val)
-          setPageIndex(0)
-        }}
-        timeFrom={timeFrom}
-        timeTo={timeTo}
-        onTimeFromChange={val => {
-          setTimeFrom(val)
-          setPageIndex(0)
-        }}
-        onTimeToChange={val => {
-          setTimeTo(val)
-          setPageIndex(0)
-        }}
-        showDateFilter={showDateFilter}
-        showTimeFilter={showTimeFilter}
-        onClearFilters={() => {
-          setSearch('')
-          setDateFrom('')
-          setDateTo('')
-          setTimeFrom('')
-          setTimeTo('')
-          setPageIndex(0)
-        }}
-      />
+      {/* Buscador (oculto si disableFilters) */}
+      {!disableFilters && (
+        <DefaultTableSearch
+          value={search}
+          onChange={val => {
+            setSearch(val)
+            setPageIndex(0)
+          }}
+          searchFields={searchFields}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+          onDateFromChange={val => {
+            setDateFrom(val)
+            setPageIndex(0)
+          }}
+          onDateToChange={val => {
+            setDateTo(val)
+            setPageIndex(0)
+          }}
+          timeFrom={timeFrom}
+          timeTo={timeTo}
+          onTimeFromChange={val => {
+            setTimeFrom(val)
+            setPageIndex(0)
+          }}
+          onTimeToChange={val => {
+            setTimeTo(val)
+            setPageIndex(0)
+          }}
+          showDateFilter={showDateFilter}
+          showTimeFilter={showTimeFilter}
+          onClearFilters={() => {
+            setSearch('')
+            setDateFrom('')
+            setDateTo('')
+            setTimeFrom('')
+            setTimeTo('')
+            setPageIndex(0)
+          }}
+        />
+      )}
       <div className="bg-white dark:bg-accent/50 shadow-md p-2 rounded-md">
         <Table>
           <TableHeader>
@@ -180,27 +185,37 @@ export const DefaultDatatable = ({
             ))}
           </TableHeader>
           <TableBody>
-            {paginatedRows.map(row => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map(cell => {
-                  const isCentered = cell.column.columnDef.center
-                  return (
-                    <TableCell key={cell.id} className={isCentered ? 'text-center' : ''}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  )
-                })}
+            {paginatedRows.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center text-sm text-muted-foreground py-6">
+                  No hay items para mostrar
+                </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              paginatedRows.map(row => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map(cell => {
+                    const isCentered = cell.column.columnDef.center
+                    return (
+                      <TableCell key={cell.id} className={isCentered ? 'text-center' : ''}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
-        <DefaultTablePagination
-          pageIndex={pageIndex}
-          setPageIndex={setPageIndex}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-          pageCount={pageCount}
-        />
+        {pageCount > 0 && (
+          <DefaultTablePagination
+            pageIndex={pageIndex}
+            setPageIndex={setPageIndex}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+            pageCount={pageCount}
+          />
+        )}
       </div>
 
     </>

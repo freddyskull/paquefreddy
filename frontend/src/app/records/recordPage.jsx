@@ -10,10 +10,12 @@ import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { Label } from 'recharts'
 import { Badge } from "@/components/ui/badge"
+import { useConfigStore } from '@/store/configStore'
 
 export const RecordPage = () => {
   const navigate = useNavigate()
   const { records } = useRecordsStore()
+  const { currency } = useConfigStore()
   const recordsMemo = useMemo(() => records, [records])
   const columns = [
     {
@@ -42,7 +44,7 @@ export const RecordPage = () => {
       cell: ({ row }) => (
         <div className='text-center'>
           <span className="bg-slate-300 px-3 py-1 rounded-md font-bold text-slate-500 text-xs text-center">
-            {row.original.productList.length}
+            {row.original?.productList?.length || 0}
           </span>
         </div>
       )
@@ -108,9 +110,9 @@ export const RecordPage = () => {
       enableSorting: false,
       header: () => <div className="text-center">Lista negra</div>,
       cell: ({ row }) => (
-        <Link className="flex justify-center items-center" to={`/lista-negra/${row.original.BlackList.id}`}>
-          <Badge className="uppercase font-bold">
-            {row.original.BlackList.name != null ? row.original.BlackList.name : 'N/A'}
+        <Link className="flex justify-center items-center" to={`/lista-negra/${row.original.BlackList?.id}`}>
+          <Badge className={`uppercase font-bold ${currency === 'USD' ? 'bg-usd!' : 'bg-primary!'}`}>
+            {row.original.BlackList?.name != null ? row.original.BlackList?.name : 'N/A'}
           </Badge>
         </Link>
       ),

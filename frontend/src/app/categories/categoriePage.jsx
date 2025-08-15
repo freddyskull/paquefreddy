@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom'
 
 export const CategoriePage = () => {
   const { categories, isLoading } = useCategoriesStore()
-  console.log(categories)
   const columns = [
     {
       accessorKey: 'id',
@@ -59,35 +58,35 @@ export const CategoriePage = () => {
         </div>
       ),
     },
-    {
-      accessorKey: 'createdAt',
-      center: true,
-      header: () => <div className="text-center">Fecha</div>,
-      cell: ({ row }) => {
-        if (row.original.createdAt) {
-          const dateObj = new Date(row.original.createdAt)
-          const dateStr = dateObj.toLocaleDateString('es-VE', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-          })
-          const timeStr = dateObj.toLocaleTimeString('es-VE', {
-            hour: '2-digit',
-            minute: '2-digit',
-          })
-          return (
-            <span className="flex justify-center items-center font-bold text-center">
-              {`${dateStr} - ${timeStr}`}
-            </span>
-          )
-        }
-        return (
-          <span className="flex justify-center items-center font-bold text-center">
-            N/A
-          </span>
-        )
-      },
-    },
+    // {
+    //   accessorKey: 'createdAt',
+    //   center: true,
+    //   header: () => <div className="text-center">Fecha</div>,
+    //   cell: ({ row }) => {
+    //     if (row.original.createdAt) {
+    //       const dateObj = new Date(row.original.createdAt)
+    //       const dateStr = dateObj.toLocaleDateString('es-VE', {
+    //         year: '2-digit',
+    //         month: '2-digit',
+    //         day: '2-digit',
+    //       })
+    //       const timeStr = dateObj.toLocaleTimeString('es-VE', {
+    //         hour: '2-digit',
+    //         minute: '2-digit',
+    //       })
+    //       return (
+    //         <span className="flex justify-center items-center font-bold text-center">
+    //           {`${dateStr} - ${timeStr}`}
+    //         </span>
+    //       )
+    //     }
+    //     return (
+    //       <span className="flex justify-center items-center font-bold text-center">
+    //         N/A
+    //       </span>
+    //     )
+    //   },
+    // },
   ]
 
 

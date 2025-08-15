@@ -32,17 +32,8 @@ import {
 } from "@/components/ui/chart"
 import { useEffect, useState } from "react"
 import { useRecordsStore } from "@/store/recordsStore"
+import { useConfigStore } from "@/store/configStore"
 
-const chartConfig = {
-  total: {
-    label: "Total",
-    color: "var(--primary)",
-  },
-  label: {
-    color: "var(--secondary)",
-  },
-
-}
 
 export const Charts = () => {
 
@@ -50,6 +41,7 @@ export const Charts = () => {
   const getMonthName = (date) =>
     date.toLocaleString("es-ES", { month: "long" })
   const ahora = new Date()
+  const { currency } = useConfigStore()
   const nombreMesActual = getMonthName(ahora)
   const haceCincoMeses = new Date(ahora.getFullYear(), ahora.getMonth() - 5, 1)
   const nombreMesHaceCincoMeses = getMonthName(haceCincoMeses)
@@ -64,10 +56,23 @@ export const Charts = () => {
     { month: "Cargando", total: 100 }
   ])
 
+
+  const chartConfig = {
+    total: {
+      label: "Total",
+      color: currency === 'BS' ? "var(--primary)" : "var(--usd)",
+    },
+    // label: {
+    //   color: currency === 'BS' ? "var(--primary)" : "var(--usd)",
+    // },
+  
+  }
+
   useEffect(() => {
     const ahora = new Date()
     const inicio = new Date(ahora.getFullYear(), ahora.getMonth() - 5, 1)
-    const fin = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0)
+    // const fin = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0)
+    
     async function getData() {
       const meses = []
       for (let i = 0; i < 6; i++) {

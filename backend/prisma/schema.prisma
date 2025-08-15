@@ -18,6 +18,7 @@ model User {
   updatedAt DateTime   @updatedAt
   Purhases  Purhases[]
   Records   Records[]
+  products  Products[]
 }
 
 model Categories {
@@ -68,6 +69,8 @@ model Products {
   slug_url     String      @unique
   categories   Categories? @relation(fields: [categorie_id], references: [id])
   suppliers    Suppliers?  @relation(fields: [supplier_id], references: [id])
+  user_id      String?
+  User         User?       @relation(fields: [user_id], references: [id])
   purhases     Purhases[]  @relation("ProductsToPurhases")
 }
 
@@ -87,18 +90,19 @@ model Purhases {
 }
 
 model Records {
-  id                 Int      @id @default(autoincrement())
+  id                 Int         @id @default(autoincrement())
   productList        Json
   dolar_price        Decimal
-  status             Boolean  @default(false)
+  status             Boolean     @default(false)
   totals             Json
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
   user_id            String?
-  User               User?    @relation(fields: [user_id], references: [id])
+  payment_type       String?
+  User               User?       @relation(fields: [user_id], references: [id])
   blacklist_id       Int?
   BlackList          black_list? @relation(fields: [blacklist_id], references: [id])
-  sell_without_stock Boolean? @default(false)
+  sell_without_stock Boolean?    @default(false)
 }
 
 model Suppliers {
@@ -119,12 +123,12 @@ model Suppliers {
 }
 
 model black_list {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   description String?
   total       Decimal?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   address     String?
   city        String?
   email       String?
